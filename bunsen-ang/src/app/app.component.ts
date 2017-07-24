@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Bunsen';
+  value = '';
+  update(value: string) {
+    this.value = value;
+    console.log("dat uri: " + this.value)
+  }
 }
