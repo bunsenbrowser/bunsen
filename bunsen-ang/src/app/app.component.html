@@ -5,11 +5,11 @@
   </h1>
 </div>
 
-<p>Enter a dat uri (dat://path/to/resource)</p>
+<p>Enter a dat datUri (dat://path/to/resource)</p>
 <input #box class="wider"
        (keyup.enter)="update(box.value)"
        (blur)="update(box.value)">
-<p>{{value}}</p>
+<p>{{datUri}}</p>
 
 <!--<nav>-->
   <!--<a routerLink="/discovery" routerLinkActive="active">Discovery</a>-->
