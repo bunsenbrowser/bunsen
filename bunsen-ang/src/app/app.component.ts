@@ -10,7 +10,7 @@ export class AppComponent {
   title = 'Bunsen';
   datUri = '';
   results: string[];
-  serverUrl = 'http://localhost:8080'
+  serverUrl = 'http://localhost:8080/dat'
   // Inject HttpClient into your component or service.
   constructor(private http: HttpClient) {}
   update(datUri: string) {

@@ -14,6 +14,14 @@ To deploy to a connected android device, run installapp.sh.  Modify installapp.j
 
 The Angular webapp is inside bunsen-ang directory. To develop, cd to that dir and `ng serve`
 
+### Bunsen-server
+
+In development, launch the bunsen-server using `npm start`. It listens on port 8080.
+
+To deploy, copy to your termux directory and run.
+
+### Dev notes
+
 Much of this app was created using the Angular CLI. Some sample commands:
 
 ````
@@ -23,5 +31,6 @@ ng g m discovery -m app.module --routing
 
 ````
 
-The discovery component is currently unused; it was an experiment in bootstrapping a node.js app. Not yet ready (if ever!)
+The discovery component is currently unused; it was an experiment in bootstrapping a node.js app.
+Not yet ready (if ever!)
 
