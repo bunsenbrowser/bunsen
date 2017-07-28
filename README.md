@@ -1,5 +1,7 @@
 # Bunsen
 
+![bunsen logo](bunsen-logo.png)
+
 Bunsen is a front-end for dat. It is a Cordova app that renders an Angular 4 app. It creates Android APK's.
 This repo also contains bunsen-server, which you may install on your Android device to listen for incoming dat uri's.
 
@@ -38,4 +40,7 @@ ng g m discovery -m app.module --routing
 
 The discovery component is currently unused; it was an experiment in bootstrapping a node.js app.
 Not yet ready (if ever!)
+
+## Credit
+Thanks to Ben Davis for providing the original Bunsen image for the logo. https://thenounproject.com/search/?q=bunsen&i=490710
 
