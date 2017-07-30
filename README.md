@@ -54,5 +54,8 @@ In order to get verified content, they spend less money going online as the same
 In that example, perhaps Jane and Sally don't even know each other. They can still trust that when they receive updates for their Dat archives, it came from the actual source.
 
 ## Credit
-Thanks to Ben Davis for providing the original Bunsen image for the logo. https://thenounproject.com/search/?q=bunsen&i=490710
+- Chris Kelley https://github.com/chrisekelley
+- R.J. Steinert https://github.com/rjsteinert
+- Thanks to Ben Davis for providing the original Bunsen image for the logo. https://thenounproject.com/search/?q=bunsen&i=490710
+- And thank you to all the wonderful people who have worked so hard to make Dat (https://datproject.org/) and Beaker Browser (beakerbrowser.com) what is today! 
 
