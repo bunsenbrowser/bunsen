@@ -33,6 +33,10 @@ To deploy, copy to your termux directory and run `npm start`.
 
 ### Dev notes
 
+I added a skeleton Cordova plugin
+
+ `cordova plugin add --link ../cordova-plugin-node`
+
 Much of this app was created using the Angular CLI. Some sample commands:
 
 ````

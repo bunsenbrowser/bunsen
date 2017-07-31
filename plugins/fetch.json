@@ -6,5 +6,29 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-hello-c": {
+        "source": {
+            "type": "local",
+            "path": "/Users/chrisk/source/bunsen/node_modules/cordova-plugin-hello-c"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-node-plugin": {
+        "source": {
+            "type": "local",
+            "path": "/Users/chrisk/source/bunsen/node_modules/cordova-node-plugin"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

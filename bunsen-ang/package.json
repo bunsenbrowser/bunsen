@@ -21,6 +21,8 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "@types/cordova-plugin-device": "0.0.3",
+    "cordova-node-plugin": "github:chrisekelley/cordova-node-plugin",
     "core-js": "^2.4.1",
     "rxjs": "^5.4.1",
     "zone.js": "^0.8.14"
