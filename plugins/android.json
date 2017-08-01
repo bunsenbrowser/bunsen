@@ -15,7 +15,14 @@
         },
         "cordova-node-plugin": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        }
+    }
 }
