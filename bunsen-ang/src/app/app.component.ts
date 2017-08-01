@@ -25,7 +25,7 @@ export class AppComponent {
   ngOnInit() {
     document.addEventListener('deviceready', () => {
       console.log("deviceready");
-      console.log('Using Cordova plugins with Angular 2. Cordova version: ' + device.cordova);
+      // console.log('Using Cordova plugins with Angular 2. Cordova version: ' + device.cordova);
       CordovaNodePlugin.startServer(function (result) {
         console.log('Result of starting Node: ' + result);
       }, function (err) {
