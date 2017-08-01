@@ -7,13 +7,13 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-node-plugin": {
-            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
-        },
-        "cordova-plugin-hello-c": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        },
+        "cordova-node-plugin": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         }
     },
