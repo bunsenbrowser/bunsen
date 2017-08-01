@@ -12,15 +12,13 @@
     "license": "Apache-2.0",
     "dependencies": {
         "cordova-android": "^6.2.3",
-        "cordova-node-plugin": "https://github.com/bunsenbrowser/cordova-node-plugin",
+        "cordova-node-plugin": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
         "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-hello-c": "https://github.com/chrisekelley/cordova-plugin-hello-c",
         "cordova-plugin-whitelist": "^1.3.2"
     },
     "cordova": {
         "plugins": {
             "cordova-plugin-whitelist": {},
-            "cordova-plugin-hello-c": {},
             "cordova-node-plugin": {}
         },
         "platforms": [
@@ -32,6 +30,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/chrisekelley/bunsen.git"
+        "url": "https://github.com/bunsenbrowser/bunsen.git"
     }
 }

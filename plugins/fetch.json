@@ -2,23 +2,7 @@
     "cordova-plugin-whitelist": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-whitelist@1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-hello-c": {
-        "source": {
-            "type": "local",
-            "path": "/Users/chrisk/source/bunsen/node_modules/cordova-plugin-hello-c"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-node-plugin": {
-        "source": {
-            "type": "local",
-            "path": "/Users/chrisk/source/bunsen/node_modules/cordova-node-plugin"
+            "id": "cordova-node-plugin"
         },
         "is_top_level": true,
         "variables": {}
@@ -27,6 +11,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-node-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-node-plugin@https://github.com/bunsenbrowser/cordova-node-plugin.git"
         },
         "is_top_level": true,
         "variables": {}

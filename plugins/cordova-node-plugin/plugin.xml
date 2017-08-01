@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-node-plugin"
+    version="1.0.0">
+    <name>Cordova Node Plugin</name>
+    <description></description>
+    <license>MIT</license>
+    <keywords></keywords>
+    <repo>https://github.com/chrisekelley/cordova-node-plugin.git</repo>
+    <issue>https://github.com/chrisekelley/cordova-node-plugin/issues</issue>
+
+    <!-- android -->
+    <platform name="android">
+      <js-module src="www/plugin.js" name="CordovaNodePlugin">
+        <!-- This is the window variable name you want, like window.MyCordovaPlugin -->
+        <clobbers target="CordovaNodePlugin" />
+      </js-module>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="CordovaNodePlugin">
+          <param name="android-package" value="com.mafintosh.nodeonandroid.NodeService" />
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+
+      <source-file src="src/android/com/mafintosh/nodeonandroid/NodeService.java" target-dir="src/mafintosh/nodeonandroid/" />
+      <source-file src="src/android/libs/armeabi/libnode.so" target-dir="libs/arm64-v8a" />
+      <source-file src="src/android/libs/armeabi/libc++_shared.so" target-dir="libs/arm64-v8a" />
+      <source-file src="src/android/libs/armeabi/libnative-lib.so" target-dir="libs/arm64-v8a" />
+    </platform>
+</plugin>
