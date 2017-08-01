@@ -5,7 +5,9 @@
     "baseUrl": "./",
     "module": "es2015",
     "types": [
-      "cordova-plugin-device"
+      "cordova",
+      "cordova-plugin-device",
+      "cordova-plugin-file"
     ]
   },
   "exclude": [

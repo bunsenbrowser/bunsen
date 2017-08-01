@@ -13,13 +13,16 @@
     "dependencies": {
         "cordova-android": "^6.2.3",
         "cordova-node-plugin": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
+        "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-device": "^1.1.6",
+        "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-whitelist": "^1.3.2"
     },
     "cordova": {
         "plugins": {
             "cordova-plugin-whitelist": {},
-            "cordova-node-plugin": {}
+            "cordova-node-plugin": {},
+            "cordova-plugin-file": {}
         },
         "platforms": [
             "android"
