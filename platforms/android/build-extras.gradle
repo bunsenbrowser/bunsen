@@ -1,0 +1,15 @@
+android {
+    defaultConfig {
+        externalNativeBuild {
+            ndkBuild {
+                arguments "-j4"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path "src/c/android/jni/Android.mk"
+        }
+    }
+}

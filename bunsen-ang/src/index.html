@@ -9,6 +9,44 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>Loading...</app-root>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript">
+function log(msg){
+  document.body.innerHTML += '<p>' + msg + '</p>';
+}
+
+//function onDeviceReady() {
+//  console.log("deviceready");
+//  log("deviceready");
+//
+//  helloc.getArch(function (arch) {
+//  log("Current architecture: " + arch);
+//  }, function (err) {
+//  log(err);
+//  });
+//
+//  helloc.hello("Hello World", function(msg){
+//  log(msg);
+//  },function(err){
+//  log(err);
+//  });
+//
+//  helloc.calculate(2, 3, function(result){
+//  log("mylib calculate() result: " + result);
+//  },function(err){
+//  log(err);
+//  });
+//  }
+//
+//  window.CordovaNodePlugin.startServer(function (result) {
+//    log("Result of starting Node: " + result);
+//  }, function (err) {
+//    log(err);
+//  });
+//
+//  document.addEventListener('deviceready', onDeviceReady, false);
+
+  </script>
 </body>
 </html>

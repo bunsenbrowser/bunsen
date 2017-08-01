@@ -1,0 +1,94 @@
+{
+  "_from": "cordova-plugin-device",
+  "_id": "cordova-plugin-device@1.1.6",
+  "_inBundle": false,
+  "_integrity": "sha1-LSF2TK18m4AVI+TgmjDgJLJJM0s=",
+  "_location": "/cordova-plugin-device",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-device",
+    "name": "cordova-plugin-device",
+    "escapedName": "cordova-plugin-device",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-device/-/cordova-plugin-device-1.1.6.tgz",
+  "_shasum": "2d21764cad7c9b801523e4e09a30e024b249334b",
+  "_spec": "cordova-plugin-device",
+  "_where": "/Users/chrisk/source/bunsen/node_modules",
+  "author": {
+    "name": "Apache Software Foundation"
+  },
+  "bugs": {
+    "url": "https://github.com/apache/cordova-plugin-device/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-device",
+    "platforms": [
+      "firefoxos",
+      "tizen",
+      "android",
+      "amazon-fireos",
+      "ubuntu",
+      "ios",
+      "blackberry10",
+      "wp7",
+      "wp8",
+      "windows8",
+      "windows",
+      "browser",
+      "osx"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova Device Plugin",
+  "devDependencies": {
+    "jshint": "^2.6.0"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "2.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "homepage": "https://github.com/apache/cordova-plugin-device#readme",
+  "keywords": [
+    "cordova",
+    "device",
+    "ecosystem:cordova",
+    "cordova-firefoxos",
+    "cordova-tizen",
+    "cordova-android",
+    "cordova-amazon-fireos",
+    "cordova-ubuntu",
+    "cordova-ios",
+    "cordova-blackberry10",
+    "cordova-wp7",
+    "cordova-wp8",
+    "cordova-windows8",
+    "cordova-windows",
+    "cordova-browser",
+    "cordova-osx"
+  ],
+  "license": "Apache-2.0",
+  "name": "cordova-plugin-device",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apache/cordova-plugin-device.git"
+  },
+  "scripts": {
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
+    "test": "npm run jshint"
+  },
+  "types": "./types/index.d.ts",
+  "version": "1.1.6"
+}

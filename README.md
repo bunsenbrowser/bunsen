@@ -2,7 +2,12 @@
 
 ![bunsen logo](bunsen-logo.png)
 
-Bunsen is a front-end for dat. It is a Cordova app that renders an Angular 4 app. It creates Android APK's.
+Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an Angular 4 app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support IOS someday. 
+This repo also contains bunsen-server, which you may install on your Android device to listen for incoming dat uri's.
+
+## What is dat?
+
+You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
 
 ## Development
 
@@ -16,6 +21,22 @@ To deploy to a connected android device, run installapp.sh.  Modify installapp.j
 
 The Angular webapp is inside bunsen-ang directory. To develop, cd to that dir and `ng serve`
 
+### Bunsen-server
+
+In development, launch the bunsen-server using `npm start`. It listens on port 8080.
+
+Bunsen-server will run on an Android device that has installed [Termux](https://termux.com).
+
+Setup your Android device according to the instructions [here](https://medium.freecodecamp.org/building-a-node-js-application-on-android-part-1-termux-vim-and-node-js-dfa90c28958f)
+
+To deploy, copy to your termux directory and run `npm start`.
+
+### Dev notes
+
+I added a skeleton Cordova plugin
+
+ `cordova plugin add --link ../cordova-plugin-node`
+
 Much of this app was created using the Angular CLI. Some sample commands:
 
 ```
@@ -24,7 +45,8 @@ ng g c discovery -m discovery.module
 ng g m discovery -m app.module --routing
 ```
 
-The discovery component is currently unused; it was an experiment in bootstrapping a node.js app. Not yet ready (if ever!)
+The discovery component is currently unused; it was an experiment in bootstrapping a node.js app.
+Not yet ready (if ever!)
 
 ### The "offline web" is a dark place, Bunsen shines a light
 > In the following explanation we talk about Bunsen Browser. Bunsen Browser runs on Android and Beaker Browser runs on Linux and macOS. They both use the same underlying technology known as Dat which makes this all possible.

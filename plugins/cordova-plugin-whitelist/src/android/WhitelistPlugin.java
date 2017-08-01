@@ -109,27 +109,27 @@ public class WhitelistPlugin extends CordovaPlugin {
     }
 
     @Override
-    public Boolean shouldAllowNavigation(String url) {
-        if (allowedNavigations.isUrlWhiteListed(url)) {
+    public Boolean shouldAllowNavigation(String datUri) {
+        if (allowedNavigations.isUrlWhiteListed(datUri)) {
             return true;
         }
         return null; // Default policy
     }
 
     @Override
-    public Boolean shouldAllowRequest(String url) {
-        if (Boolean.TRUE == shouldAllowNavigation(url)) {
+    public Boolean shouldAllowRequest(String datUri) {
+        if (Boolean.TRUE == shouldAllowNavigation(datUri)) {
             return true;
         }
-        if (allowedRequests.isUrlWhiteListed(url)) {
+        if (allowedRequests.isUrlWhiteListed(datUri)) {
             return true;
         }
         return null; // Default policy
     }
 
     @Override
-    public Boolean shouldOpenExternalUrl(String url) {
-        if (allowedIntents.isUrlWhiteListed(url)) {
+    public Boolean shouldOpenExternalUrl(String datUri) {
+        if (allowedIntents.isUrlWhiteListed(datUri)) {
             return true;
         }
         return null; // Default policy
