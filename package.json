@@ -12,7 +12,8 @@
     "license": "Apache-2.0",
     "dependencies": {
         "cordova-android": "^6.2.3",
-        "cordova-node-plugin": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
+        "cordova-node-plugin": "../cordova-node-plugin",
+        "cordova-plugin-android-permissions": "^1.0.0",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-file": "^4.3.3",
@@ -21,8 +22,9 @@
     "cordova": {
         "plugins": {
             "cordova-plugin-whitelist": {},
+            "cordova-plugin-file": {},
             "cordova-node-plugin": {},
-            "cordova-plugin-file": {}
+            "cordova-plugin-android-permissions": {}
         },
         "platforms": [
             "android"

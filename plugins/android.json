@@ -13,10 +13,13 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        },
         "cordova-node-plugin": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         },
-        "cordova-plugin-file": {
+        "cordova-plugin-android-permissions": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         }
     },
