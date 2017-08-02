@@ -53,11 +53,33 @@ export class AppComponent {
         console.log("Error loading filesystem "+ error.code);
       }
 
-      CordovaNodePlugin.startServer(function (result) {
-        console.log('Result of starting Node: ' + result);
-      }, function (err) {
-        console.log(err);
-      });
+      var permissions = cordova.plugins.permissions;
+      permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
+
+      function checkPermissionCallback(status) {
+        if (!status.hasPermission) {
+          var errorCallback = function () {
+            console.warn('Storage permission is not turned on');
+          }
+          permissions.requestPermission(
+            permissions.READ_EXTERNAL_STORAGE,
+            function (status) {
+              if (!status.hasPermission) {
+                errorCallback();
+              } else {
+                // continue with starting server
+                CordovaNodePlugin.startServer(function (result) {
+                  console.log('Result of starting Node: ' + result);
+                }, function (err) {
+                  console.log(err);
+                });
+              }
+            },
+            errorCallback);
+        }
+      }
+
+
     }, false);
   }
 
