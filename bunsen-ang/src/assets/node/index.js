@@ -1,17 +1,18 @@
 var http = require('http')
 var net = require('net')
 
-var android = function () { // TODO: move to internal module
-    var port = Number(process.argv[process.argv.length - 1])
-    var sock = net.connect(port, '127.0.0.1')
-    return {
-        loadUrl: function (u) {
-            sock.write(u)
-        }
-    }
-}()
+// var android = function () { // TODO: move to internal module
+//     var port = Number(process.argv[process.argv.length - 1])
+//     var sock = net.connect(port, '127.0.0.1')
+//     return {
+//         loadUrl: function (u) {
+//             sock.write(u)
+//         }
+//     }
+// }()
 
-console.log("hello world")
+console.log("hello new world again")
+console.log("looks pretty here.")
 console.log('argv', process.argv)
 
 var server = http.createServer(function (req, res) {
@@ -27,6 +28,9 @@ var server = http.createServer(function (req, res) {
     `)
 })
 
-server.listen(0, function () {
-    android.loadUrl('http://localhost:' + server.address().port)
-})
+// server.listen(0, function () {
+//     // android.loadUrl('http://localhost:' + server.address().port)
+// })
+
+server.listen(8080);
+console.log("Server is listening");
