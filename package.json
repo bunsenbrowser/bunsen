@@ -23,8 +23,8 @@
         "plugins": {
             "cordova-plugin-whitelist": {},
             "cordova-plugin-file": {},
-            "cordova-node-plugin": {},
-            "cordova-plugin-android-permissions": {}
+            "cordova-plugin-android-permissions": {},
+            "cordova-node-plugin": {}
         },
         "platforms": [
             "android"

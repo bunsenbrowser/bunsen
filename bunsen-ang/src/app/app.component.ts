@@ -33,19 +33,31 @@ export class AppComponent {
       function createDirs(rootDirEntry) {
         rootDirEntry.getDirectory('bunsen', { create: true }, function (entry) {
           console.log("Created dir at " + entry.toURL());
-          createCopyDir(entry, 'node');
-          createCopyDir(entry, 'node_modules');
+          createCopyDir(entry, 'node', true);
+          // createCopyDir(entry, 'node_modules', false)
         })
       }
 
       // create/copy dirs from assets dir.
-      function createCopyDir(rootDirEntry, dir) {
+      function createCopyDir(rootDirEntry, dir, startNodeServer) {
+        console.log("startNodeServer: " + startNodeServer);
         var url = cordova.file.applicationDirectory+"www/assets/" + dir;
         console.log("url: " + url)
         window.resolveLocalFileSystemURL(url, function(entry) {
             entry.copyTo(rootDirEntry, null, function(rs) {
               console.log(JSON.stringify(rs)); //success
-            }, function(rs) { console.log("Error copying to " + dir + ' result:'+JSON.stringify(rs));} );
+              if (startNodeServer == true) {
+                console.log("Starting Node");
+                startNode();
+              }
+            }, function(rs) {
+                console.log("Error copying to " + dir + ' result:'+JSON.stringify(rs));
+                if (startNodeServer == true) {
+                  console.log("Starting Node");
+                  startNode();
+                }
+            }
+              );
         }, function(rs) { console.log("Error in resolveLocalFileSystemURL result for " + dir + ": "+JSON.stringify(rs));} );
       }
 
@@ -53,32 +65,44 @@ export class AppComponent {
         console.log("Error loading filesystem "+ error.code);
       }
 
-      var permissions = cordova.plugins.permissions;
-      permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
+      function startNode() {
+        var permissions = cordova.plugins.permissions;
+        console.log("permissions: " + JSON.stringify(permissions));
+        permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
-      function checkPermissionCallback(status) {
-        if (!status.hasPermission) {
-          var errorCallback = function () {
-            console.warn('Storage permission is not turned on');
+        function checkPermissionCallback(status) {
+          console.log("checking perms");
+          if (!status.hasPermission) {
+            var errorCallback = function () {
+              console.warn('Storage permission is not turned on');
+            }
+            permissions.requestPermission(
+              permissions.READ_EXTERNAL_STORAGE,
+              function (status) {
+                if (!status.hasPermission) {
+                  console.log("Does not have perms");
+                  errorCallback();
+                } else {
+                  console.log("Has perms");
+                  // continue with starting server
+                  startNodeServer();
+                }
+              },
+              errorCallback);
+          } else {
+            console.log("status.has Permission");
+            startNodeServer();
           }
-          permissions.requestPermission(
-            permissions.READ_EXTERNAL_STORAGE,
-            function (status) {
-              if (!status.hasPermission) {
-                errorCallback();
-              } else {
-                // continue with starting server
-                CordovaNodePlugin.startServer(function (result) {
-                  console.log('Result of starting Node: ' + result);
-                }, function (err) {
-                  console.log(err);
-                });
-              }
-            },
-            errorCallback);
         }
       }
 
+      function startNodeServer() {
+        CordovaNodePlugin.startServer(function (result) {
+          console.log('Result of starting Node: ' + result);
+        }, function (err) {
+          console.log(err);
+        });
+      }
 
     }, false);
   }
