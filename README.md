@@ -16,6 +16,10 @@ Modify scripts/prepareAngular2App.js if path to your Angular app changes.
 
 To deploy to a connected android device, run installapp.sh.  Modify installapp.sh to suit your paths.
 
+Node scripts and node_modules are copied over to the root of the android device into the bunsen directory.
+These assets are located in this repo's bunsen-ang/src/assets directory. They are copied over to this repo's
+www/assets when cordova build runs.
+
 ### cordova-node-plugin
 
 This Cordova application depends on the [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin)
