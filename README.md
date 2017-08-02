@@ -12,6 +12,9 @@ You could say that dat is a distributed data sharing tool that uses p2p peers li
 
 Kudos to https://www.becompany.ch/en/blog/2016/10/19/creating-apache-cordova-app-with-angular2 for the primer on running an Angular app inside Cordova.
 
+If you are having issues building the app, fork or clone [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin) - more info below.
+The package.json file may be linking to the local version.
+
 Modify scripts/prepareAngular2App.js if path to your Angular app changes.
 
 To deploy to a connected android device, run installapp.sh.  Modify installapp.sh to suit your paths.
