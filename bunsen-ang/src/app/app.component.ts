@@ -2,13 +2,6 @@
 ///<reference path="../../node_modules/cordova-node-plugin/index.d.ts"/>
 import { Component } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-// import {CordovaNodePlugin} from './CordovaNodePlugin';
-// import CordovaNodePlugin = require('./CordovaNodePlugin');
-// import {CordovaNodePlugin} from './CordovaNodePlugin';
-// import {CordovaNodePlugin} from './CordovaNodePlugin';
-// import {CordovaNodePlugin} from '../typings';
-// import * as CordovaNodePlugin from 'cordova-node-module';
-// import * as CordovaNodePlugin from './CordovaNodePlugin';
 
 @Component({
   selector: 'app-root',
@@ -26,75 +19,7 @@ export class AppComponent {
       console.log("deviceready");
       // console.log(cordova.file);
 
-      // Gain access to the main user file system.
-      window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, createDirs, onErrorLoadFs);
-
-      // Create bunsen dir and copy subdirs
-      function createDirs(rootDirEntry) {
-        rootDirEntry.getDirectory('bunsen', { create: true }, function (entry) {
-          console.log("Created dir at " + entry.toURL());
-          createCopyDir(entry, 'node', true);
-          // createCopyDir(entry, 'node_modules', false)
-        })
-      }
-
-      // create/copy dirs from assets dir.
-      function createCopyDir(rootDirEntry, dir, startNodeServer) {
-        console.log("startNodeServer: " + startNodeServer);
-        var url = cordova.file.applicationDirectory+"www/assets/" + dir;
-        console.log("url: " + url)
-        window.resolveLocalFileSystemURL(url, function(entry) {
-            entry.copyTo(rootDirEntry, null, function(rs) {
-              console.log(JSON.stringify(rs)); //success
-              if (startNodeServer == true) {
-                console.log("Starting Node");
-                startNode();
-              }
-            }, function(rs) {
-                console.log("Error copying to " + dir + ' result:'+JSON.stringify(rs));
-                if (startNodeServer == true) {
-                  console.log("Starting Node");
-                  startNode();
-                }
-            }
-              );
-        }, function(rs) { console.log("Error in resolveLocalFileSystemURL result for " + dir + ": "+JSON.stringify(rs));} );
-      }
-
-      function onErrorLoadFs(error) {
-        console.log("Error loading filesystem "+ error.code);
-      }
-
-      function startNode() {
-        var permissions = cordova.plugins.permissions;
-        console.log("permissions: " + JSON.stringify(permissions));
-        permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
-
-        function checkPermissionCallback(status) {
-          console.log("checking perms");
-          if (!status.hasPermission) {
-            var errorCallback = function () {
-              console.warn('Storage permission is not turned on');
-            }
-            permissions.requestPermission(
-              permissions.READ_EXTERNAL_STORAGE,
-              function (status) {
-                if (!status.hasPermission) {
-                  console.log("Does not have perms");
-                  errorCallback();
-                } else {
-                  console.log("Has perms");
-                  // continue with starting server
-                  startNodeServer();
-                }
-              },
-              errorCallback);
-          } else {
-            console.log("status.has Permission");
-            startNodeServer();
-          }
-        }
-      }
+      startNodeServer();
 
       function startNodeServer() {
         CordovaNodePlugin.startServer(function (result) {
