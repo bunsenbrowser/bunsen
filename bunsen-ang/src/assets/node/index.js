@@ -22,11 +22,21 @@ console.log("looks pretty here.")
 console.log('argv', process.argv)
 
 
-var link = "dat://778f8d955175c92e4ced5e4f5563f69bfec0c86cc6f670352c457943666fe639"
+// var link = "dat://778f8d955175c92e4ced5e4f5563f69bfec0c86cc6f670352c457943666fe639"
+var link = "778f8d955175c92e4ced5e4f5563f69bfec0c86cc6f670352c457943666fe639"
 
 var archive = hyperdrive(ram, link)
-archive.ready(function () {
-  discovery(archive)
+archive.ready(function (err) {
+  if (err) throw err
+  console.log('key', archive.key.toString('hex'))
+  var sw = discovery(archive)
+  sw.on('connection', function (peer, type) {
+    console.log('got', peer, type) // type is 'webrtc-swarm' or 'discovery-swarm'
+    console.log('connected to', sw.connections, 'peers')
+    peer.on('close', function () {
+      console.log('peer disconnected')
+    })
+  })
 })
 
 var server = http.createServer(function (req, res) {
