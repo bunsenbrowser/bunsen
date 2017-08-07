@@ -27,35 +27,68 @@ export class AppComponent {
       // console.log(cordova.file);
 
       // Gain access to the main user file system.
-      window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, createDirs, onErrorLoadFs);
+      // dataDirectory
+      // cacheDirectory
+      // externalRootDirectory
+      // window.resolveLocalFileSystemURL(cordova.file.cacheDirectory , removeDir, onErrorLoadFs);
 
-      // Create bunsen dir and copy subdirs
+      startNodeServer();
+
+      // Delete bunsen dir
+      function removeDir(rootDirEntry) {
+        console.log("removeDir for " + rootDirEntry);
+        rootDirEntry.getDirectory('bunsen', { create: false }, function (entry) {
+          entry.removeRecursively(function(){
+            // The file has been removed succesfully
+            console.log("Removed dir at " + entry.toURL());
+            createDirs(rootDirEntry)
+          },function(error){
+            // Error deleting the file
+            console.log("Error deleting dir at " + entry.toURL() + " Error: " + error);
+            createDirs(rootDirEntry)
+          })
+        }, function(error) {
+          console.log("Unable to get the directory: " + error);
+          createDirs(rootDirEntry)
+        })
+      }
+      // Create node_modules dir
       function createDirs(rootDirEntry) {
         rootDirEntry.getDirectory('bunsen', { create: true }, function (entry) {
           console.log("Created dir at " + entry.toURL());
-          createCopyDir(entry, 'node', true);
+          createCopyDir(entry, 'node_modules');
           // createCopyDir(entry, 'node_modules', false)
         })
       }
 
       // create/copy dirs from assets dir.
-      function createCopyDir(rootDirEntry, dir, startNodeServer) {
-        console.log("startNodeServer: " + startNodeServer);
+      function createCopyDir(rootDirEntry, dir) {
         var url = cordova.file.applicationDirectory+"www/assets/" + dir;
         console.log("url: " + url)
         window.resolveLocalFileSystemURL(url, function(entry) {
             entry.copyTo(rootDirEntry, null, function(rs) {
               console.log(JSON.stringify(rs)); //success
-              if (startNodeServer == true) {
-                console.log("Starting Node");
-                startNode();
-              }
+              createCopyNodeDir(entry, 'node');
+            }, function(rs) {
+                console.log("Error copying " + entry.toURL() + " to " + rootDirEntry.toURL() + ' result:'+JSON.stringify(rs));
+                createCopyNodeDir(entry, 'node');
+            }
+              );
+        }, function(rs) { console.log("Error in resolveLocalFileSystemURL result for " + dir + ": "+JSON.stringify(rs));} );
+      }
+      // create/copy dirs from assets dir.
+      function createCopyNodeDir(rootDirEntry, dir) {
+        var url = cordova.file.applicationDirectory+"www/assets/" + dir;
+        console.log("url: " + url)
+        window.resolveLocalFileSystemURL(url, function(entry) {
+            entry.copyTo(rootDirEntry, null, function(rs) {
+              console.log(JSON.stringify(rs)); //success
+              console.log("Starting Node");
+              startNodeServer();
             }, function(rs) {
                 console.log("Error copying to " + dir + ' result:'+JSON.stringify(rs));
-                if (startNodeServer == true) {
-                  console.log("Starting Node");
-                  startNode();
-                }
+                console.log("Starting Node");
+                startNodeServer();
             }
               );
         }, function(rs) { console.log("Error in resolveLocalFileSystemURL result for " + dir + ": "+JSON.stringify(rs));} );
@@ -65,10 +98,10 @@ export class AppComponent {
         console.log("Error loading filesystem "+ error.code);
       }
 
-      function startNode() {
+      function checkPerms(callback) {
         var permissions = cordova.plugins.permissions;
-        console.log("permissions: " + JSON.stringify(permissions));
-        permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
+        // console.log("permissions: " + JSON.stringify(permissions));
+        permissions.checkPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
         function checkPermissionCallback(status) {
           console.log("checking perms");
@@ -85,13 +118,13 @@ export class AppComponent {
                 } else {
                   console.log("Has perms");
                   // continue with starting server
-                  startNodeServer();
+                  callback();
                 }
               },
               errorCallback);
           } else {
             console.log("status.has Permission");
-            startNodeServer();
+            callback();
           }
         }
       }

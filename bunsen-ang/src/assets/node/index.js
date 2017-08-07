@@ -1,5 +1,11 @@
 var http = require('http')
 var net = require('net')
+console.log("loading ram")
+var ram = require('random-access-memory')
+console.log("loading hyperdrive")
+var hyperdrive = require('hyperdrive')
+console.log("loading hyperdiscovery")
+var discovery = require('hyperdiscovery')
 
 // var android = function () { // TODO: move to internal module
 //     var port = Number(process.argv[process.argv.length - 1])
@@ -14,6 +20,14 @@ var net = require('net')
 console.log("hello new world again")
 console.log("looks pretty here.")
 console.log('argv', process.argv)
+
+
+var link = "dat://778f8d955175c92e4ced5e4f5563f69bfec0c86cc6f670352c457943666fe639"
+
+var archive = hyperdrive(ram, link)
+archive.ready(function () {
+  discovery(archive)
+})
 
 var server = http.createServer(function (req, res) {
     res.setHeader('Content-Type', 'text/html')
