@@ -26,9 +26,7 @@
             "cordova-plugin-android-permissions": {},
             "cordova-node-plugin": {}
         },
-        "platforms": [
-            "android"
-        ]
+        "platforms": []
     },
     "devDependencies": {
         "@angular/cli": "^1.2.3"
