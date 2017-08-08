@@ -12,7 +12,9 @@ export class AppComponent {
   title = 'Bunsen';
   datUri = '';
   results: string[];
-  serverUrl = 'http://localhost:8080/dat';
+  serverUrl = 'http://localhost:8080/';
+  serverDatUrl = this.serverUrl + 'dat/';
+  responseData = '';
 
   ngOnInit() {
     document.addEventListener('deviceready', () => {
@@ -34,16 +36,20 @@ export class AppComponent {
 
   // Inject HttpClient into your component or service.
   constructor(private http: HttpClient) {}
+
   update(datUri: string) {
     this.datUri = datUri;
     console.log('dat datUri: ' + this.datUri);
     const body = {uri: this.datUri};
+    var url = this.serverDatUrl + this.datUri;
     // Make the HTTP request:
-    this.http.post(this.serverUrl, body ).subscribe(data => {
+    this.http.get(url, {observe: 'response'}).subscribe(data => {
       // Read the result field from the JSON response.
       // this.results = data['results'];
       // console.log("results: " + this.results)
-      console.log('data: ' + data);
+      console.log('url: ' + url + ' data: ' + JSON.stringify(data));
+      this.responseData = JSON.stringify(data);
+      window.location.href=this.serverUrl;
     });
   }
 }

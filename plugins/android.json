@@ -9,6 +9,9 @@
     "installed_plugins": {
         "cordova-node-plugin": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         }
     },
     "dependent_plugins": {}
