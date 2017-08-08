@@ -1,13 +1,7 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-</div>
-
-<p>Enter a dat datUri (dat://path/to/resource)</p>
+<p>Enter a dat hash</p>
 <input #box class="wider"
        (keyup.enter)="update(box.value)"
        (blur)="update(box.value)" value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5">
+<button (click)="update(box.value)">Go</button>
 <p>&nbsp;</p>
 <p>{{responseData}}</p>

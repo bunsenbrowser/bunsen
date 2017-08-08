@@ -13,6 +13,7 @@ export class AppComponent {
   datUri = '';
   results: string[];
   serverUrl = 'http://localhost:8080/';
+  serverDatUrl = this.serverUrl + 'dat/';
   responseData = '';
 
   ngOnInit() {
@@ -40,14 +41,15 @@ export class AppComponent {
     this.datUri = datUri;
     console.log('dat datUri: ' + this.datUri);
     const body = {uri: this.datUri};
-    var url = this.serverUrl + this.datUri;
+    var url = this.serverDatUrl + this.datUri;
     // Make the HTTP request:
-    this.http.get(url).subscribe(data => {
+    this.http.get(url, {observe: 'response'}).subscribe(data => {
       // Read the result field from the JSON response.
       // this.results = data['results'];
       // console.log("results: " + this.results)
-      console.log('url' + url + ' data: ' + JSON.stringify(data));
+      console.log('url: ' + url + ' data: ' + JSON.stringify(data));
       this.responseData = JSON.stringify(data);
+      window.location.href=this.serverUrl;
     });
   }
 }
