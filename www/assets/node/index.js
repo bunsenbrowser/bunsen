@@ -26,9 +26,7 @@ var Dat = require('dat-node')
 var mirror = require('mirror-folder')
 
 console.log("hello new world again")
-console.log("looks pretty sesame here.")
 console.log('argv', process.argv)
-
 
 var deleteFolderRecursive = function(path) {
   if( fs.existsSync(path) ) {
@@ -50,21 +48,31 @@ var deleteFolderRecursive = function(path) {
 var opts = {}
 var app = express()
 app.set('port', process.env.PORT || 8080);
-// app.get('/', function( req, res) {
-//   res.send('hello world');
-// });
 var dat = ""
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
 // var dir = "www"
 var dest = path.join(__dirname, 'www')
+var index = path.join(__dirname, 'www/index.html')
+
 // var dest = path.join('/data/data/org.rti.sses.rcd.bunsen/cache/node/', 'www')
 if (!fs.existsSync(dest)){
   fs.mkdirSync(dest)
-} {
-  deleteFolderRecursive(dest)
-  fs.mkdirSync(dest)
 }
+
+fs.readdir(dest, function(err, files) {
+  if (!files.length) {
+      // directory appears to be empty
+    if (!fs.existsSync(index)){
+      console.log("Np Bunsen app here.")
+      app.get('/', function( req, res) {
+        res.send('This is an empty Bunsen application. Enter a dat and go man go!');
+      });
+    }
+    }
+});
+
+
 app.use(express.static(dest))
 app.get('/dat/:dat', function(req, res) {
   // var name = decodeURI(req.url.split('/')[0])
@@ -73,8 +81,6 @@ app.get('/dat/:dat', function(req, res) {
   console.log("name: " + name + " dat: " + dat)
   // res.send("dat is set to " + req.params.dat);
   // var link = "778f8d955175c92e4ced5e4f5563f69bfec0c86cc6f670352c457943666fe639"
-
-
 
   // 1. Tell Dat where to download the files
   Dat(ram, {key: dat, sparse: true}, function (err, dat) {
@@ -104,7 +110,26 @@ app.get('/dat/:dat', function(req, res) {
   })
 });
 
-app.listen(8080);
+app.get('/deleteDat', function(req, res) {
+  console.log("Deleting www dir containing the dat.")
+  deleteFolderRecursive(dest)
+  if (!fs.existsSync(dest)){
+    console.log("Need to create the www directory.")
+    fs.mkdirSync(dest)
+    res.send('Dat deleted.');
+  }
+
+  // server.close(
+  //   function() {
+  //     app.listen(8080, function() {
+  //       console.log("Server is back up.")
+  //       res.send('Dat deleted.');
+  //     });
+  //   }
+  // )
+})
+
+var server = app.listen(8080);
 
 // kudos: https://github.com/joehand/hyperdrive-http/blob/master/index.js
 function onfile (archive, name, req, res) {

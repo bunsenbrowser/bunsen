@@ -1,7 +1,37 @@
-<p>Enter a dat hash</p>
+<md-toolbar>
+    <button md-icon-button [mdMenuTriggerFor]="menu">
+  <md-icon>more_vert</md-icon>
+</button>
+<md-menu #menu="mdMenu">
+  <button md-menu-item (click)="deleteAction()">
+    <md-icon>settings_remote</md-icon>
+    <span>Delete Installed Application</span>
+  </button>
+</md-menu>
+  <span>Beaker</span>
+</md-toolbar>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+  <div id = "progressSpinner" >
+    <md-card-content>
+      <md-progress-spinner
+        class="example-margin"
+        color="primary"
+        mode="indeterminate"
+        style="margin:0 auto;"
+      >
+      </md-progress-spinner>
+    </md-card-content>
+  </div>
+</div>
+
 <input #box class="wider"
-       (keyup.enter)="update(box.value)"
-       (blur)="update(box.value)" value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5">
-<button (click)="update(box.value)">Go</button>
-<p>&nbsp;</p>
-<p>{{responseData}}</p>
+       value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
+        placeholder="Enter a dat hash" >
+<button (click)="update(box.value)"><md-icon>arrow_forward</md-icon></button>
+<button (click)="refreshIframe()"><md-icon>refresh</md-icon></button>
+<iframe class="e2e-iframe-trusted-src"  width="100%" height="480px." id="iframe" [src]="datUrl">
+  Hope we can use iframe here.
+</iframe>
+
+
