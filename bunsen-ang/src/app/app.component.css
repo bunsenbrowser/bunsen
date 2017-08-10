@@ -1,3 +1,15 @@
 .wider {
   width: 400px;
 }
+.opaque{
+  opacity :0;
+}
+.fa-spinner{
+  opacity :0.2;
+}
+.ops{
+  opacity :0;
+}
+#progressSpinner {
+  display: none;
+}
