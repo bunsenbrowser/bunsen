@@ -1,36 +1,23 @@
-<md-toolbar>
+<md-toolbar color="primary">
     <button md-icon-button [mdMenuTriggerFor]="menu">
-  <md-icon>more_vert</md-icon>
-</button>
-<md-menu #menu="mdMenu">
-  <button md-menu-item (click)="deleteAction()">
-    <md-icon>settings_remote</md-icon>
-    <span>Delete Installed Application</span>
-  </button>
-</md-menu>
-  <span>Bunsen</span>
+    <md-icon>more_vert</md-icon>
+    </button>
+    <md-menu #menu="mdMenu">
+      <button md-menu-item (click)="deleteAction()">
+        <md-icon>settings_remote</md-icon>
+        <span>Delete Installed Application</span>
+      </button>
+    </md-menu>
+    <span>Bunsen</span>
+    <span class="toolbar-spacer"></span>
+    <md-icon (click)="update(box.value)"class="menu-button-spacer">arrow_forward</md-icon>
+    <md-icon (click)="refreshIframe()"class="menu-button-spacer">refresh</md-icon>
 </md-toolbar>
-
-<div style="display: flex; justify-content: center; align-items: center;">
-  <div id = "progressSpinner" >
-    <md-card-content>
-      <md-progress-spinner
-        class="example-margin"
-        color="primary"
-        mode="indeterminate"
-        style="margin:0 auto;"
-      >
-      </md-progress-spinner>
-    </md-card-content>
-  </div>
-</div>
 
 <input #box class="wider"
        value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
         placeholder="Enter a dat hash" >
-<button (click)="update(box.value)"><md-icon>arrow_forward</md-icon></button>
-<button (click)="refreshIframe()"><md-icon>refresh</md-icon></button>
-<iframe class="e2e-iframe-trusted-src"  width="100%" height="480px." id="iframe" [src]="datUrl">
+<iframe class="e2e-iframe-trusted-src"  width="100%" height="480px." id="iframe" [src]="datUrl" frameBorder="0">
   Hope we can use iframe here.
 </iframe>
 

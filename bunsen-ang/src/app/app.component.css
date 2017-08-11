@@ -1,15 +1,30 @@
 .wider {
   width: 400px;
 }
-.opaque{
-  opacity :0;
+/*.opaque{*/
+  /*opacity :0;*/
+/*}*/
+/*.fa-spinner{*/
+  /*opacity :0.2;*/
+/*}*/
+/*.ops{*/
+  /*opacity :0;*/
+/*}*/
+/*#progressSpinner {*/
+  /*display: none;*/
+/*}*/
+
+.menu-button-spacer {
+  margin-left: 20px;
+  margin-left: 40px;
+  float: right;
 }
-.fa-spinner{
-  opacity :0.2;
+.example-icon {
+  padding: 0 14px;
 }
-.ops{
-  opacity :0;
-}
-#progressSpinner {
-  display: none;
+
+.toolbar-spacer {
+  flex-shrink: 1;
+  flex-grow: 5;
+  flex-basis: auto;
 }
