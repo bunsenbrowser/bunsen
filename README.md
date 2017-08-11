@@ -4,6 +4,20 @@
 
 Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an Angular 4 app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support IOS someday. 
 
+[![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
+
+## How to use Bunsen
+
+Bunsen is currently very alpha-quality software.
+
+When Bunsen starts, it will display an error message in the lower part of the screen. The node express server is still launching.
+Wait a few seconds, and press the refresh button on the far right of the toolbar.
+
+Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
+It comes with a dat address pre-loaded, so give it a try!
+
+To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+
 ## What is dat?
 
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
