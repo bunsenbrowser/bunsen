@@ -52,11 +52,11 @@ var dat = ""
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
 // var dir = "www"
-var dest = path.join(__dirname, 'www')
-var bunsenDir = path.join(__dirname, 'bunsen')
-var datIdFile = path.join(__dirname, 'bunsen/datIdFile')
+var dest = path.join(__dirname, '.www')
+var bunsenDir = path.join(__dirname, '.bunsen')
+var datIdFile = path.join(__dirname, '.bunsen/datIdFile')
 var images = path.join(__dirname, 'images')
-var index = path.join(__dirname, 'www/index.html')
+var index = path.join(__dirname, '.www/index.html')
 
 // var dest = path.join('/data/data/org.rti.sses.rcd.bunsen/cache/node/', 'www')
 if (!fs.existsSync(dest)){
@@ -84,7 +84,7 @@ app.get('/dat/:dat', function(req, res) {
       console.log('Connected')
     })
     dat.network.on('connection', function () {
-      console.log('I connected to someone for ' + dat)
+      console.log('I connected to someone for ' + datId)
       console.log('connected to', network.connections.length, 'peers')
     })
     dat.archive.metadata.update(download)

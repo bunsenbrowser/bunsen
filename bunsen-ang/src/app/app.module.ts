@@ -17,10 +17,11 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { DialogComponent } from './dialog/dialog.component';
+import {LoadingComponent} from './dialog/loading.component';
 
 @NgModule({
   declarations: [
-    AppComponent, DialogComponent
+    AppComponent, DialogComponent, LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +40,6 @@ import { DialogComponent } from './dialog/dialog.component';
     MdDialogModule
   ],
   providers: [BunsenServerService],
-  bootstrap: [AppComponent, DialogComponent]
+  bootstrap: [AppComponent, DialogComponent, LoadingComponent]
 })
 export class AppModule { }
