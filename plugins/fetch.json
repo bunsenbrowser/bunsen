@@ -46,5 +46,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "com.borismus.webintent": {
+        "source": {
+            "type": "local",
+            "path": "/Users/chrisk/source/bunsenbrowser/bunsen/node_modules/cordova-webintent"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

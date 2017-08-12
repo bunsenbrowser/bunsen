@@ -14,10 +14,11 @@
     <md-icon (click)="refreshIframe()"class="menu-button-spacer">refresh</md-icon>
 </md-toolbar>
 
-<input #box class="wider"
+<input #box id="box" class="wider"
        value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
         placeholder="Enter a dat hash" >
-<iframe class="e2e-iframe-trusted-src"  width="100%" height="480px." id="iframe" [src]="datUrl" frameBorder="0">
+<div [innerHTML]="fetchedHtml"></div>
+<iframe class="e2e-iframe-trusted-src" #iframe  id="iframe" width="100%" height="480px." [src]="datUrl" frameBorder="0" (load)="onLoadIframe()">
   Hope we can use iframe here.
 </iframe>
 

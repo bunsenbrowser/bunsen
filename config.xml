@@ -19,12 +19,14 @@
     <access origin="*" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <hook src="hooks/after_prepare/android/020_add_dat_intent.js" type="after_prepare" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
     <hook src="scripts/prepareAngular2App.js" type="before_prepare" />
+    <plugin name="com.borismus.webintent" spec="../../cordova-misc/cordova-webintent" />
     <plugin name="cordova-node-plugin" spec="../cordova-node-plugin" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
