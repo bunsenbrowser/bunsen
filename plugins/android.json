@@ -21,6 +21,9 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+        },
+        "com.borismus.webintent": {
+            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         }
     },
     "dependent_plugins": {
