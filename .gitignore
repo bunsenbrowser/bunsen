@@ -4,3 +4,6 @@ platforms/
 bunsen-ang/src/assets/node/www/*
 
 www/assets/node/www/*
+
+bunsen-ang/src/assets/node/.www/*
+www/assets/node/.www/*
