@@ -10,13 +10,15 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 Bunsen is currently very alpha-quality software.
 
-When Bunsen starts, it will display an error message in the lower part of the screen. The node express server is still launching.
-Wait a few seconds, and press the refresh button on the far right of the toolbar.
+When Bunsen starts, it will display a "Loading the application" message; the node express server is still launching.
+Wait abut ten seconds, and it will display a screen welcoming you to enter a dat url in order to load an application. 
 
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
 It comes with a dat address pre-loaded, so give it a try!
 
 To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+
+In the background, Bunsen will share the dat you have loaded.
 
 ## What is dat?
 
