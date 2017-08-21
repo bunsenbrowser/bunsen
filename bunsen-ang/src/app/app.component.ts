@@ -102,6 +102,8 @@ export class AppComponent {
       }
     }
 
+    this.dialog.open(LoadingComponent);
+
     var ping_loop = setInterval(() => {
 
       ping("localhost", "8080", function(msg){
@@ -120,7 +122,6 @@ export class AppComponent {
       } else {
         // this.fetchedHtml = this.noDat;
         // (document.querySelector('#box') as HTMLElement).style.display = "block";
-        this.dialog.open(LoadingComponent);
       }
       }, TIME_PERIOD)
 
