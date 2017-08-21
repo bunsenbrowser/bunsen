@@ -1,7 +1,11 @@
-node_modules
 platforms/
 
 www/assets/node/.www/*
 www/assets/node/.bunsen/*
 bunsen-ang/src/assets/node/.www/*
 bunsen-ang/src/assets/node/.bunsen/*
+
+www/assets/node_modules/
+!bunsen-ang/src/assets/node_modules/
+node_modules/*
+
