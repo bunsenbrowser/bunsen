@@ -19,6 +19,10 @@ It comes with a dat address pre-loaded, so give it a try!
 
 To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
 
+In the background, Bunsen will share the dat you have loaded.
+
+For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with screenshots.
+
 ## What is dat?
 
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
