@@ -8,10 +8,11 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## How to use Bunsen
 
-Bunsen is currently very alpha-quality software.
+Bunsen is currently very alpha-quality software. It runs only on mobile devices runnning ARM64 processors such as Nexus 5X and Pixel.
 
-When Bunsen starts, it will display a "Loading the application" message; the node express server is still launching.
-Wait abut ten seconds, and it will display a screen welcoming you to enter a dat url in order to load an application. 
+Many thanks to @mafintosh for leading the way with [node-on-android](https://github.com/node-on-mobile/node-on-android). This project depends on the node shared library his project provides.
+
+When Bunsen starts, it will display an loading dialog for about ten seconds while the node express server launches.
 
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
 It comes with a dat address pre-loaded, so give it a try!
@@ -30,12 +31,16 @@ You could say that dat is a distributed data sharing tool that uses p2p peers li
 
 Kudos to https://www.becompany.ch/en/blog/2016/10/19/creating-apache-cordova-app-with-angular2 for the primer on running an Angular app inside Cordova.
 
+To start, add the android platform:
+
+`cordova platform add android'
+
+Modify installapp.sh to suit your paths. Execute this script to deploy to a conected android device.
+
 If you are having issues building the app, fork or clone [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin) - more info below.
 The package.json file may be linking to the local version.
 
 Modify scripts/prepareAngular2App.js if path to your Angular app changes.
-
-To deploy to a connected android device, run installapp.sh.  Modify installapp.sh to suit your paths.
 
 Node scripts and node_modules are copied over to the root of the android device into the bunsen directory.
 These assets are located in this repo's bunsen-ang/src/assets directory. They are copied over to this repo's
@@ -52,9 +57,11 @@ If you wish to modify that plugin, fork/clone it and link to it:
 
 Run the `prep-plugin.sh` script whenever you make changes to the plugin; it removes and re-installs the plugin.
 
+
+
 ### Bunsen-ang
 
-The Angular webapp is inside bunsen-ang directory. To develop, cd to that dir and `ng serve`
+The Angular4 webapp is inside bunsen-ang directory. To develop, cd to that dir and `npm start`.
 
 The cordova plugin are bootstraps when the Angular app receives the 'deviceready' event in appcomponent.ts:
 
@@ -70,6 +77,17 @@ The cordova plugin are bootstraps when the Angular app receives the 'deviceready
     }, false);
   }
 ```
+
+### Dat node app
+
+When the angular4 app starts it checks if the node app server has booted up by pinging localhost:8080 until it gets an answer.
+The node app answers to requests for dats at /dat/datID and saves dats to a .www directory.
+
+To develop this node app alongside angular development, cd to bunsen-ang/src/assets/node and 'node server.js' to start the server.
+
+When the Cordova app is built, it copies the assets dir to its www directory. The cordova-node-plugin expects this directory to be populated with the node and node_modules dir.
+
+The node_modules packages have been compiled in termux on a Nexus 5X.
 
 ### The "offline web" is a dark place, Bunsen shines a light
 > In the following explanation we talk about Bunsen Browser. Bunsen Browser runs on Android and Beaker Browser runs on Linux and macOS. They both use the same underlying technology known as Dat which makes this all possible.
