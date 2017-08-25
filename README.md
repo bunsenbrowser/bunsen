@@ -2,7 +2,7 @@
 
 ![bunsen logo](bunsen-logo.png)
 
-Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an Angular 4 app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support IOS someday. 
+Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an Angular 4 app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support iOS someday.
 
 [![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
 
@@ -10,9 +10,9 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 Bunsen is currently very alpha-quality software. It runs only on mobile devices runnning ARM64 processors such as Nexus 5X and Pixel.
 
-Many thanks to @mafintosh for leading the way with [node-on-android](https://github.com/node-on-mobile/node-on-android). This project depends on the node shared library his project provides.
+To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://github.com/bunsenbrowser/bunsen/blob/master/apk/bunsen.apk) to your Android device, open it from the menu tray, and then give it permission to install.
 
-When Bunsen starts, it will display an loading dialog for about ten seconds while the node express server launches.
+When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches.
 
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
 It comes with a dat address pre-loaded, so give it a try!
@@ -23,78 +23,79 @@ In the background, Bunsen will share the dat you have loaded.
 
 For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with screenshots.
 
-## What is dat?
 
+## What is dat?
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
+
 
 ## Development
 
-Kudos to https://www.becompany.ch/en/blog/2016/10/19/creating-apache-cordova-app-with-angular2 for the primer on running an Angular app inside Cordova.
+### Develop on your local machine
+Requirements:
+- Node.js and npm
+  - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
 
-To start, add the android platform:
+```
+git clone git@github.com:bunsenbrowser/bunsen
+cd bunsen
+npm install
+```
 
-`cordova platform add android'
+You will need to start two services, the UI and the Server in two different terminals.
 
-Modify installapp.sh to suit your paths. Execute this script to deploy to a conected android device.
+In the first terminal:
+```
+cd bunsen-ang/src/node
+node server.js
+```
 
-If you are having issues building the app, fork or clone [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin) - more info below.
-The package.json file may be linking to the local version.
+In the second terminal:
+```
+cd bunsen-ang
+npm start
+```
 
-Modify scripts/prepareAngular2App.js if path to your Angular app changes.
+### Test on Device
+Requirements:
+- Node.js and npm
+  - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
+- `adb` which is included as a binary in android-platform-tools.
+  - On Mac, easiest way to install is using brew package manager `brew cask install android-platform-tools`
+  - On Ubuntu, easiest way is `sudo apt install android-tools-adb android-tools-fastboot`
+- Enable USB debugging on your Android device. https://www.howtogeek.com/129728/how-to-access-the-developer-options-menu-and-enable-usb-debugging-on-android-4.2/
 
-Node scripts and node_modules are copied over to the root of the android device into the bunsen directory.
-These assets are located in this repo's bunsen-ang/src/assets directory. They are copied over to this repo's
-www/assets when cordova build runs.
+Run the following to build and install on an Android device.
+```
+npm install -g cordova
+git clone git@github.com:bunsenbrowser/bunsen
+cd bunsen
+npm install
+./install.sh
+```
 
-### cordova-node-plugin
+## Architecture
+Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
 
-This Cordova application depends on the [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin)
-to provide the node instance.
+The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./bunsen-ang/assets/node/`.
 
-If you wish to modify that plugin, fork/clone it and link to it:
+The Cordova application depends on the [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin)
+to provide the node instance. If you wish to modify that plugin, fork/clone it and link to it:
 
- `cordova plugin add --link ../cordova-plugin-node`
+`cordova plugin add --link ../cordova-plugin-node`
 
 Run the `prep-plugin.sh` script whenever you make changes to the plugin; it removes and re-installs the plugin.
 
-
-
-### Bunsen-ang
-
-The Angular4 webapp is inside bunsen-ang directory. To develop, cd to that dir and `npm start`.
-
-The cordova plugin are bootstraps when the Angular app receives the 'deviceready' event in appcomponent.ts:
-
-```
-  ngOnInit() {
-    document.addEventListener('deviceready', () => {
-      console.log("deviceready");
-      CordovaNodePlugin.startServer(function (result) {
-        console.log('Result of starting Node: ' + result);
-      }, function (err) {
-        console.log(err);
-      });
-    }, false);
-  }
-```
-
-### Dat node app
-
-When the angular4 app starts it checks if the node app server has booted up by pinging localhost:8080 until it gets an answer.
-The node app answers to requests for dats at /dat/datID and saves dats to a .www directory.
-
-To develop this node app alongside angular development, cd to bunsen-ang/src/assets/node and 'node server.js' to start the server.
-
-When the Cordova app is built, it copies the assets dir to its www directory. The cordova-node-plugin expects this directory to be populated with the node and node_modules dir.
-
 The node_modules packages have been compiled in termux on a Nexus 5X.
 
-### The "offline web" is a dark place, Bunsen shines a light
-> In the following explanation we talk about Bunsen Browser. Bunsen Browser runs on Android and Beaker Browser runs on Linux and macOS. They both use the same underlying technology known as Dat which makes this all possible.
+## Why do we need Bunsen Browser?
 
+### Websites that scale with the demand
+When you view a Dat site, you help host it. This democratizes the Internet so as demand increases, so does your hosting. You do not need expensive hosting or advertising to support your voice.
+
+### Millions of people use the "offline web" but cannot trust its content, Bunsen and Dat solve this
 Millions of people living under repressive regimes are blocked from the Internet and depend on outside access to digital content by way of smuggled USB Flash Drives. There are 6 billion people offline who have are offline and not able to verify content they receive while offline causing issues around misinformation, land rights, forged medical data, and many others.
 
-Bunsen shines a light on the offline web by solving two problems.
+Bunsen uses Dat to shine a light on the offline web by solving two problems.
 
 1. How to easily update and merge content between two devices while offline.
 2. How to verify content came from the source it claims to come from.
@@ -120,5 +121,6 @@ In that example, perhaps Jane and Sally don't even know each other. They can sti
 - Chris Kelley https://github.com/chrisekelley
 - R.J. Steinert https://github.com/rjsteinert
 - Thanks to Ben Davis for providing the original Bunsen image for the logo. https://thenounproject.com/search/?q=bunsen&i=490710
-- And thank you to all the wonderful people who have worked so hard to make Dat (https://datproject.org/) and Beaker Browser (beakerbrowser.com) what is today! 
-
+- Kudos to https://www.becompany.ch/en/blog/2016/10/19/creating-apache-cordova-app-with-angular2 for the primer on running an Angular app inside Cordova.
+- Many thanks to @mafintosh for leading the way with [node-on-android](https://github.com/node-on-mobile/node-on-android). This project depends on the node shared library his project provides.
+- And thank you to all the wonderful people who have worked so hard to make Dat (https://datproject.org/) and Beaker Browser (beakerbrowser.com) what is today!
