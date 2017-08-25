@@ -1,0 +1,42 @@
+{
+    "cordova-node-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "https://github.com/bunsenbrowser/cordova-node-plugin"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-permissions": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-permissions@^1.0.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-file": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file@^4.3.3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-compat@^1.0.0"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@^1.3.2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}
