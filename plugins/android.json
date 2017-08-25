@@ -7,16 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "com.borismus.webintent": {
-            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
-        },
         "cordova-node-plugin": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         },
         "cordova-plugin-android-permissions": {
-            "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
-        },
-        "cordova-plugin-device": {
             "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
         },
         "cordova-plugin-file": {

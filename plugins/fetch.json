@@ -1,8 +1,16 @@
 {
-    "cordova-plugin-device": {
+    "cordova-node-plugin": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-device"
+            "id": "https://github.com/bunsenbrowser/cordova-node-plugin"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-permissions": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-permissions@^1.0.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -10,7 +18,7 @@
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-file"
+            "id": "cordova-plugin-file@^4.3.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -23,34 +31,10 @@
         "is_top_level": false,
         "variables": {}
     },
-    "cordova-plugin-android-permissions": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-android-permissions"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-node-plugin": {
-        "source": {
-            "type": "local",
-            "path": "/Users/chrisk/source/bunsenbrowser/bunsen/node_modules/cordova-node-plugin"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-whitelist": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-whitelist@1.3.2"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "com.borismus.webintent": {
-        "source": {
-            "type": "local",
-            "path": "/Users/chrisk/source/bunsenbrowser/bunsen/node_modules/cordova-webintent"
+            "id": "cordova-plugin-whitelist@^1.3.2"
         },
         "is_top_level": true,
         "variables": {}

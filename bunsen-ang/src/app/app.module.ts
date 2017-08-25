@@ -2,9 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {DiscoveryModule} from './discovery/discovery.module';
 import {AppRoutingModule} from './app-routing.module';
-import { BunsenServerService } from './services/bunsen-server.service';
 import {HttpClientModule} from '@angular/common/http';
 import {
   MdButtonModule,
@@ -26,9 +24,7 @@ import {LoadingComponent} from './dialog/loading.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    DiscoveryModule,
     AppRoutingModule,
-    // // HttpModule,
     HttpClientModule,
     MdButtonModule,
     MdButtonToggleModule,
@@ -39,7 +35,7 @@ import {LoadingComponent} from './dialog/loading.component';
     MdProgressSpinnerModule,
     MdDialogModule
   ],
-  providers: [BunsenServerService],
+  providers: [],
   bootstrap: [AppComponent, DialogComponent, LoadingComponent]
 })
 export class AppModule { }

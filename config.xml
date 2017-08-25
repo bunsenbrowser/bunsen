@@ -27,8 +27,7 @@
     </platform>
     <hook src="scripts/prepareAngular2App.js" type="before_prepare" />
     <engine name="android" spec="^6.2.3" />
-    <plugin name="com.borismus.webintent" spec="https://github.com/cordova-misc/cordova-webintent" />
-    <plugin name="cordova-node-plugin" spec="https://github.com/bunsenbrowser/cordova-node-plugin" />
+    <plugin name="cordova-node-plugin" spec="git+https://github.com/bunsenbrowser/cordova-node-plugin.git" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
