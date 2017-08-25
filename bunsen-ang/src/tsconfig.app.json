@@ -6,7 +6,6 @@
     "module": "es2015",
     "types": [
       "cordova",
-      "cordova-plugin-device",
       "cordova-plugin-file"
     ]
   },

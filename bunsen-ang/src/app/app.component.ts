@@ -1,6 +1,5 @@
 ///<reference path="../typings.d.ts"/>
 ///<reference path="../../node_modules/cordova-node-plugin/index.d.ts"/>
-///<reference path="../../node_modules/cordova-webintent/index.d.ts"/>
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
@@ -54,13 +53,13 @@ export class AppComponent {
         });
       }
 
-      WebIntentPlugin.getUri(function (uri) {
-        if (uri !== '') {
-          console.log("uri: " + uri);
-          var datUri = uri.replace('dat://', '')
-          this.update(datUri);
-        }
-      });
+      // WebIntentPlugin.getUri(function (uri) {
+      //   if (uri !== '') {
+      //     console.log("uri: " + uri);
+      //     var datUri = uri.replace('dat://', '')
+      //     this.update(datUri);
+      //   }
+      // });
 
     }, false);
 

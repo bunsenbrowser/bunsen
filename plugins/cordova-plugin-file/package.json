@@ -1,19 +1,19 @@
 {
-  "_from": "cordova-plugin-file",
+  "_from": "cordova-plugin-file@^4.3.3",
   "_id": "cordova-plugin-file@4.3.3",
   "_inBundle": false,
   "_integrity": "sha1-AS6Xqhr7kfhJFuY0G1SDZtI96bk=",
   "_location": "/cordova-plugin-file",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-file",
+    "raw": "cordova-plugin-file@^4.3.3",
     "name": "cordova-plugin-file",
     "escapedName": "cordova-plugin-file",
-    "rawSpec": "",
+    "rawSpec": "^4.3.3",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^4.3.3"
   },
   "_requiredBy": [
     "#USER",
@@ -21,7 +21,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-4.3.3.tgz",
   "_shasum": "012e97aa1afb91f84916e6341b548366d23de9b9",
-  "_spec": "cordova-plugin-file",
+  "_spec": "cordova-plugin-file@^4.3.3",
   "_where": "/Users/chrisk/source/bunsenbrowser/bunsen/node_modules",
   "author": {
     "name": "Apache Software Foundation"

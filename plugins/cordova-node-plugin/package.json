@@ -1,0 +1,34 @@
+{
+  "_from": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
+  "_id": "cordova-node-plugin@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha1-0Y92mW1kwg077F1WkYYR7USw8FM=",
+  "_location": "/cordova-node-plugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/bunsenbrowser/cordova-node-plugin",
+    "rawSpec": "https://github.com/bunsenbrowser/cordova-node-plugin",
+    "saveSpec": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
+    "fetchSpec": "https://github.com/bunsenbrowser/cordova-node-plugin.git",
+    "gitCommittish": "master"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git#86c93fd15f40b1bd28186e3f2d4d3aab805d2da3",
+  "_spec": "https://github.com/bunsenbrowser/cordova-node-plugin",
+  "_where": "/Users/chrisk/source/bunsenbrowser/bunsen/node_modules",
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-node-plugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "Node.js in Cordova",
+  "name": "cordova-node-plugin",
+  "version": "1.0.0"
+}
