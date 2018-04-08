@@ -1,40 +1,38 @@
 {
-    "name": "org.rti.sses.rcd.bunsen",
-    "displayName": "Bunsen",
-    "version": "1.0.0",
-    "description": "A sample Apache Cordova application that responds to the deviceready event.",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "scripts/postinstall.sh"
+  "name": "org.rti.sses.rcd.bunsen",
+  "displayName": "Bunsen",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "scripts/postinstall.sh"
+  },
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cordova-android": "^6.3.0",
+    "cordova-plugin-android-permissions": "^1.0.0",
+    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-webintent": "git+https://github.com/cordova-misc/cordova-webintent.git",
+    "nodejs-mobile-cordova": "^0.1.4",
+    "com.borismus.webintent": "https://github.com/cordova-misc/cordova-webintent.git"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-whitelist": {},
+      "nodejs-mobile-cordova": {},
+      "com.borismus.webintent": {}
     },
-    "author": "Apache Cordova Team",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "cordova-android": "^6.2.3",
-        "cordova-node-plugin": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git",
-        "cordova-plugin-android-permissions": "^1.0.0",
-        "cordova-plugin-compat": "^1.1.0",
-        "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-file": "^4.3.3",
-        "cordova-plugin-whitelist": "^1.3.2"
-    },
-    "cordova": {
-        "plugins": {
-            "cordova-plugin-file": {},
-            "cordova-plugin-android-permissions": {},
-            "cordova-node-plugin": {},
-            "cordova-plugin-whitelist": {}
-        },
-        "platforms": [
-            "android"
-        ]
-    },
-    "devDependencies": {
-        "@angular/cli": "^1.2.3"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/bunsenbrowser/bunsen.git"
-    }
+    "platforms": []
+  },
+  "devDependencies": {
+    "@angular/cli": "^1.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bunsenbrowser/bunsen.git"
+  }
 }

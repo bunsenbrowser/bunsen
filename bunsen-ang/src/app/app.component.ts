@@ -1,5 +1,4 @@
 ///<reference path="../typings.d.ts"/>
-///<reference path="../../node_modules/cordova-node-plugin/index.d.ts"/>
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
@@ -43,25 +42,75 @@ export class AppComponent {
       console.log('deviceready');
       // console.log(cordova.file);
 
-      startNodeServer();
+      // startNodeServer();
+      startNodeProject();
 
-      function startNodeServer() {
-        CordovaNodePlugin.startServer(function (result) {
-          console.log('Result of starting Node: ' + result);
-        }, function (err) {
+      // function startNodeServer() {
+      //   CordovaNodePlugin.startServer(function (result) {
+      //     console.log('Result of starting Node: ' + result);
+      //   }, function (err) {
+      //     console.log(err);
+      //   });
+      // }
+
+      function channelListener(msg) {
+        console.log('[cordova] received: ' + msg);
+      };
+
+      function startupCallback(err) {
+        if (err) {
           console.log(err);
-        });
-      }
+        } else {
+          console.log ('Node.js Mobile Engine Started');
+          nodejs.channel.send('Hello from Cordova!');
+        }
+      };
 
-      // WebIntentPlugin.getUri(function (uri) {
-      //   if (uri !== '') {
-      //     console.log("uri: " + uri);
-      //     var datUri = uri.replace('dat://', '')
-      //     this.update(datUri);
-      //   }
-      // });
+      function startNodeProject() {
+        console.log ('Starting nodejs listener');
+        nodejs.channel.setListener(channelListener);
+        // console.log ('Starting node project test app');
+        // nodejs.start('main.js', startupCallback);
+        console.log ('Starting Angular 2 app');
+        nodejs.start('index.js', startupCallback);
+        // To disable the stdout/stderr redirection to the Android logcat:
+        // nodejs.start('main.js', startupCallback, { redirectOutputToLogcat: false });
+      };
 
     }, false);
+
+    document.addEventListener('resume', () => {
+      console.log('resume');
+      var that = this;
+
+      webintent.getExtra(webintent.EXTRA_TEXT,
+        function (url) {
+          console.log("getExtra uri: " + url);
+          var datUri = url.replace('dat://', '')
+          that.update(datUri);
+        }, function () {
+          // There was no extra supplied.
+        }
+      );
+
+      webintent.getUri(function (uri) {
+        console.log("webintent getUri triggered: " + uri);
+        if (uri !== null) {
+          console.log("uri: " + uri);
+          var datUri = uri.replace('dat://', '')
+          that.update(datUri);
+        }
+      });
+
+      webintent.onNewIntent(function(url) {
+        console.log("INTENT onNewIntent: " + url);
+        var datUri = url.replace('dat://', '')
+        that.update(datUri);
+      });
+
+    }, false);
+
+
 
     // var url = this.serverUrl + "index.html"
     // this.http.get(url, {observe: 'response'}).subscribe(data => {
@@ -162,6 +211,7 @@ export class AppComponent {
     const body = {uri: this.datUri};
     var url = this.serverDatUrl + this.datUri;
     this.fetchedHtml = "";
+    let that = this;
     // Make the HTTP request:
     this.http.get(url, {observe: 'response'}).subscribe(data => {
       // Read the result field from the JSON response.
@@ -174,6 +224,7 @@ export class AppComponent {
       // (document.querySelector('#progressSpinner') as HTMLElement).style.display = 'none';
       dialogRef.close();
       (document.querySelector('#box') as HTMLElement).style.display = "none";
+      that.refreshIframe();
       // this.toggleSpinner()
       // window.location.href=this.serverUrl;
     });

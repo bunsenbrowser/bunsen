@@ -45,7 +45,7 @@ You will need to start two services, the UI and the Server in two different term
 
 In the first terminal:
 ```
-cd bunsen-ang/src/node
+cd www/nodejs-project
 node server.js
 ```
 
@@ -64,26 +64,26 @@ Requirements:
   - On Ubuntu, easiest way is `sudo apt install android-tools-adb android-tools-fastboot`
 - Enable USB debugging on your Android device. https://www.howtogeek.com/129728/how-to-access-the-developer-options-menu-and-enable-usb-debugging-on-android-4.2/
 
-Run the following to build and install on an Android device.
+Run the following to build the app.
 ```
-npm install -g cordova
+npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
 npm install
-./install.sh
+cordova build android
 ```
+
+To install on an Android device, you may use the `./installapp.sh` script
 
 ## Architecture
 Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
 
-The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./bunsen-ang/assets/node/`.
+The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./www/nodejs-project/`.
 
-The Cordova application depends on the [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin)
-to provide the node instance. If you wish to modify that plugin, fork/clone it and link to it:
+The Cordova application depends on the [nodejs-mobile-cordova](https://github.com/janeasystems/nodejs-mobile-cordova)
+to provide the node instance. nodejs-mobile-cordova supports ARMv7a and x86 CPU architectures on Android and also supports IOS as well. 
 
-`cordova plugin add --link ../cordova-plugin-node`
-
-Run the `prep-plugin.sh` script whenever you make changes to the plugin; it removes and re-installs the plugin.
+Thanks a lot, [Janea Systems](http://www.janeasystems.com/)!
 
 The node_modules packages have been compiled in termux on a Nexus 5X.
 

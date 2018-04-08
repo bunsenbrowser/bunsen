@@ -1,0 +1,48 @@
+{
+  "_from": "git+https://github.com/cordova-misc/cordova-webintent.git",
+  "_id": "cordova-webintent@1.1.0",
+  "_inBundle": false,
+  "_location": "/cordova-webintent",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/cordova-misc/cordova-webintent.git",
+    "rawSpec": "https://github.com/cordova-misc/cordova-webintent.git",
+    "saveSpec": "git+https://github.com/cordova-misc/cordova-webintent.git",
+    "fetchSpec": "https://github.com/cordova-misc/cordova-webintent.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/cordova-misc/cordova-webintent.git#560ac4fa1392849f80e1a89b25d0e48a591b5b02",
+  "_spec": "https://github.com/cordova-misc/cordova-webintent.git",
+  "_where": "/Users/chrisk/source/bunsenbrowser/bunsen",
+  "author": {
+    "name": "borismus"
+  },
+  "bugs": {
+    "url": "https://github.com/cordova-misc/cordova-webintent/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "WebIntent Android Plugin for Cordova 3.X",
+  "homepage": "https://github.com/cordova-misc/cordova-webintent#readme",
+  "keywords": [
+    "cordova",
+    "webintent",
+    "intent"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "cordova-webintent",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cordova-misc/cordova-webintent.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.1.0"
+}
