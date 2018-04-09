@@ -1,5 +1,6 @@
 .wider {
   width: 400px;
+  height:60%;
 }
 /*.opaque{*/
   /*opacity :0;*/
@@ -16,7 +17,6 @@
 
 .menu-button-spacer {
   margin-left: 20px;
-  margin-left: 40px;
   float: right;
 }
 .example-icon {
@@ -25,6 +25,21 @@
 
 .toolbar-spacer {
   flex-shrink: 1;
-  flex-grow: 5;
+  flex-grow: 2;
   flex-basis: auto;
+}
+
+#progressMessage {
+  background-color: #ffe57f;
+  color: #f44336;
+  margin-left: 20px;
+}
+
+/*iframe{*/
+  /*width: 1px;min-width: 100%;*/
+/*}*/
+
+iframe {
+  height: calc(100vh - 20px);
+  width: calc(100vw - 40px);
 }

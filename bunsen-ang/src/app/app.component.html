@@ -1,25 +1,35 @@
 <md-toolbar color="primary">
-    <button md-icon-button [mdMenuTriggerFor]="menu">
-    <md-icon>more_vert</md-icon>
-    </button>
-    <md-menu #menu="mdMenu">
-      <button md-menu-item (click)="deleteAction()">
-        <md-icon>settings_remote</md-icon>
-        <span>Delete Installed Application</span>
-      </button>
-    </md-menu>
+    <!--<button md-icon-button [mdMenuTriggerFor]="menu">-->
+    <!--<md-icon>more_vert</md-icon>-->
+    <!--</button>-->
+    <!--<md-menu #menu="mdMenu">-->
+      <!--<button md-menu-item (click)="deleteAction()">-->
+        <!--<md-icon>settings_remote</md-icon>-->
+        <!--<span>Delete Installed Application</span>-->
+      <!--</button>-->
+    <!--</md-menu>-->
     <span>Bunsen</span>
+    <span id="progressMessage"></span>
     <span class="toolbar-spacer"></span>
-    <md-icon (click)="update(box.value)"class="menu-button-spacer">arrow_forward</md-icon>
+    <md-icon (click)="deleteAction()"class="menu-button-spacer deleteIcon">delete</md-icon>
     <md-icon (click)="refreshIframe()"class="menu-button-spacer">refresh</md-icon>
 </md-toolbar>
+<md-toolbar id="urlBar" color="primary">
+  <input #box id="box" class="wider"
+         value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
+         placeholder="Enter a dat hash" >
+    <md-icon (click)="update(box.value)"class="menu-button-spacer arrowFwd">arrow_forward</md-icon>
+</md-toolbar>
 
-<input #box id="box" class="wider"
-       value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
-        placeholder="Enter a dat hash" >
+
 <div [innerHTML]="fetchedHtml"></div>
-<iframe class="e2e-iframe-trusted-src" #iframe  id="iframe" width="100%" height="480px." [src]="datUrl" frameBorder="0" (load)="onLoadIframe()">
-  Hope we can use iframe here.
-</iframe>
+<!--<iframe class="e2e-iframe-trusted-src" #iframe  id="iframe" [src]="datUrl" frameBorder="0">-->
+
+
+<iframe appIframeResizer
+    #iframe
+     id="iframe" [src]="datUrl"
+     class="dat-content"
+     title="DAT Content" frameborder="0"></iframe>
 
 

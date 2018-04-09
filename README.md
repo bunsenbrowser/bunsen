@@ -46,7 +46,7 @@ You will need to start two services, the UI and the Server in two different term
 In the first terminal:
 ```
 cd www/nodejs-project
-node server.js
+node index.js
 ```
 
 In the second terminal:

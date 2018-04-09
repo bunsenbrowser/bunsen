@@ -4,7 +4,7 @@ import {MdDialogRef} from '@angular/material';
 @Component({
   selector: 'loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./dialog.component.css']
+  styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent implements OnInit {
 

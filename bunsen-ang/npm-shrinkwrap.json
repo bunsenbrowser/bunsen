@@ -228,6 +228,12 @@
       "resolved": "https://registry.npmjs.org/@types/cordova-plugin-file/-/cordova-plugin-file-0.0.3.tgz",
       "integrity": "sha1-HogEIYKUSk4zfbjQ5stA7FeFDKo="
     },
+    "@types/iframe-resizer": {
+      "version": "3.5.4",
+      "resolved": "https://registry.npmjs.org/@types/iframe-resizer/-/iframe-resizer-3.5.4.tgz",
+      "integrity": "sha512-VUqapFmCY6xLO/CUTNRZ7Z047pzLnbGHvhDE4qeOzQd1Reb9R5Gv4HgNXaGGhZyCvIHXnLS5BJu5fjHJiVTyXQ==",
+      "dev": true
+    },
     "@types/jasmine": {
       "version": "2.5.53",
       "resolved": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.53.tgz",
@@ -1482,9 +1488,6 @@
       "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz",
       "integrity": "sha1-4wOogrNCzD7oylE6eZmXNNqzriw=",
       "dev": true
-    },
-    "cordova-node-plugin": {
-      "version": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git#f5faf14d3b45b4f28fb720ae8f1b7848b7fc5836"
     },
     "core-js": {
       "version": "2.4.1",
@@ -4298,6 +4301,11 @@
       "resolved": "https://registry.npmjs.org/ieee754/-/ieee754-1.1.8.tgz",
       "integrity": "sha1-vjPUCsEO8ZJnAfbwii2G+/0a0+Q=",
       "dev": true
+    },
+    "iframe-resizer": {
+      "version": "3.6.0",
+      "resolved": "https://registry.npmjs.org/iframe-resizer/-/iframe-resizer-3.6.0.tgz",
+      "integrity": "sha512-6MOdtPE6tG0RPtNwUjKUFS09Gn/ltf2rBDrDNW8oSUKyi9LmeVd0I8Mlss4wxqyptUJrkTTxIOPSovjCyzy4hw=="
     },
     "image-size": {
       "version": "0.5.5",

@@ -3,8 +3,9 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {MdDialog, MdDialogRef} from '@angular/material';
-import {DialogComponent} from './dialog/dialog.component';
+// import {DialogComponent} from './dialog/dialog.component';
 import {LoadingComponent} from './dialog/loading.component';
+
 
 @Component({
   selector: 'app-root',
@@ -79,33 +80,35 @@ export class AppComponent {
 
     }, false);
 
-    document.addEventListener('resume', () => {
+     document.addEventListener('resume', () => {
       console.log('resume');
       var that = this;
 
       webintent.getExtra(webintent.EXTRA_TEXT,
-        function (url) {
+        async function loadDat(url) {
           console.log("getExtra uri: " + url);
           var datUri = url.replace('dat://', '')
-          that.update(datUri);
+          await that.update(datUri);
+          // await that.refreshIframe();
         }, function () {
           // There was no extra supplied.
         }
       );
 
-      webintent.getUri(function (uri) {
-        console.log("webintent getUri triggered: " + uri);
-        if (uri !== null) {
-          console.log("uri: " + uri);
-          var datUri = uri.replace('dat://', '')
-          that.update(datUri);
-        }
-      });
+      // webintent.getUri(function (uri) {
+      //   console.log("webintent getUri triggered: " + uri);
+      //   if (uri !== null) {
+      //     console.log("uri: " + uri);
+      //     var datUri = uri.replace('dat://', '')
+      //     that.update(datUri);
+      //   }
+      // });
 
-      webintent.onNewIntent(function(url) {
+      webintent.onNewIntent(async function (url) {
         console.log("INTENT onNewIntent: " + url);
         var datUri = url.replace('dat://', '')
-        that.update(datUri);
+        await that.update(datUri);
+        // await that.refreshIframe();
       });
 
     }, false);
@@ -120,8 +123,17 @@ export class AppComponent {
 
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
+
+    // function resizeIFrameToFitContent( iFrame ) {
+    //
+    //   iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+    //   iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+    // }
+    // var iFrame = document.getElementById( 'iframe' );
+    // resizeIFrameToFitContent( iFrame );
+
     (document.querySelector('#iframe') as HTMLElement).style.display = "none";
-    this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
+    // this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
 
     var TIME_PERIOD = 1000; // 1000 ms between each ping
 
@@ -189,7 +201,7 @@ export class AppComponent {
         console.log("error: " + JSON.stringify(error))
         if (error.status == '404') {
           console.log("gurl, you best get you sum dat!");
-          (document.querySelector('#box') as HTMLElement).style.display = "block";
+          (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
           this.fetchedHtml = this.noDat;
           this.dialog.closeAll();
         }
@@ -202,10 +214,12 @@ export class AppComponent {
   }
 
 
-  update(datUri: string) {
+  async update(datUri: string) {
     // this.toggleSpinner();
     // (document.querySelector('#progressSpinner') as HTMLElement).style.display = "block";
-    let dialogRef = this.dialog.open(DialogComponent);
+    // let dialogRef = this.dialog.open(DialogComponent);
+    let progressMessage = document.querySelector('#progressMessage');
+    progressMessage.innerHTML = "Downloading...";
     this.datUri = datUri;
     console.log('dat datUri: ' + this.datUri);
     const body = {uri: this.datUri};
@@ -219,32 +233,51 @@ export class AppComponent {
       // console.log("results: " + this.results)
       console.log('url: ' + url + ' data: ' + JSON.stringify(data));
       this.responseData = JSON.stringify(data);
+      // dialogRef.close();
       this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
       // this.fetchedHtml = this.responseData;
       // (document.querySelector('#progressSpinner') as HTMLElement).style.display = 'none';
-      dialogRef.close();
-      (document.querySelector('#box') as HTMLElement).style.display = "none";
-      that.refreshIframe();
+      (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
+      // (document.querySelector('.arrowFwd') as HTMLElement).style.display = "none";
+      // this.checkDatSite()
+      // that.refreshIframe();
       // this.toggleSpinner()
       // window.location.href=this.serverUrl;
-    });
+    },error => {
+        console.log("error: " + JSON.stringify(error))
+        if (error.status == '404') {
+          console.log("gurl, we had trouble.");
+          progressMessage.innerHTML = "404: not the drones...";
+          // this.dialog.closeAll();
+        } else {
+          progressMessage.innerHTML = "There was an error. Sorry.";
+        }
+        (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
+        this.fetchedHtml = this.noDat;
+      },
+      () => {
+        console.log("Update complete.")
+        // this.dialog.closeAll();
+        progressMessage.innerHTML = "Refresh!.";
+      }
+    );
   }
 
   deleteAction() {
     console.log('deletin\'')
-    let dialogRef = this.dialog.open(DialogComponent);
+    // let dialogRef = this.dialog.open(DialogComponent);
     var url = this.serverUrl + 'deleteDat';
     this.http.get(url, {observe: 'response'}).subscribe(data => {
       console.log('url: ' + url + ' data: ' + JSON.stringify(data));
       this.responseData = JSON.stringify(data);
-      dialogRef.close();
+      // dialogRef.close();
       this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
       this.fetchedHtml =  this.noDat;
       // (document.querySelector('#iframe_a') as HTMLElement).location.href.reload()
       // var myFrame=document.querySelector('#iframe_a');
       // myFrame.contentWindow.location.reload(true);
       // let doc =  this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-      (document.querySelector('#box') as HTMLElement).style.display = "block";
+      (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
       // var iframe = document.getElementById('iframe');
       // var iWindow = (<HTMLIFrameElement> iframe).contentWindow;
       // (<HTMLIFrameElement> iframe).src = "<p>Hey, download a dat already!";
@@ -253,32 +286,26 @@ export class AppComponent {
       console.log("error: " + JSON.stringify(error))
       if (error.status == '404') {
         console.log("gurl, you best get you sum dat!");
-        (document.querySelector('#box') as HTMLElement).style.display = "block";
+        (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
         // this.fetchedHtml = this.noDat;
       }
     });
   }
 
-  refreshIframe() {
+  async refreshIframe() {
+    let progressMessage = document.querySelector('#progressMessage');
+    progressMessage.innerHTML = "";
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
   }
 
-
-
-  onLoadIframe() {
-    console.log("iframe onload");
-    // var iWindow = (<HTMLIFrameElement>this.iframe).contentWindow;
-    // var iWindow = this.iframe.contentWindow;
-    // var doc = iWindow.document;
-    // console.debug(doc);
-    // console.log(doc.getElementById('foo').innerText);
-    // (document.querySelector('#box') as HTMLElement).style.display = "none";
-  }
-
-
-
-
-
-
+  // onLoadIframe() {
+  //   console.log("iframe onload");
+  //   // var iWindow = (<HTMLIFrameElement>this.iframe).contentWindow;
+  //   // var iWindow = this.iframe.contentWindow;
+  //   // var doc = iWindow.document;
+  //   // console.debug(doc);
+  //   // console.log(doc.getElementById('foo').innerText);
+  //   // (document.querySelector('#box') as HTMLElement).style.display = "none";
+  // }
 
 }
