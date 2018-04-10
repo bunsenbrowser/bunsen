@@ -1,25 +1,26 @@
-<md-toolbar color="primary">
-    <!--<button md-icon-button [mdMenuTriggerFor]="menu">-->
-    <!--<md-icon>more_vert</md-icon>-->
+<mat-toolbar color="primary">
+    <!--<button mat-icon-button [mdMenuTriggerFor]="menu">-->
+    <!--<mat-icon>more_vert</mat-icon>-->
     <!--</button>-->
-    <!--<md-menu #menu="mdMenu">-->
-      <!--<button md-menu-item (click)="deleteAction()">-->
-        <!--<md-icon>settings_remote</md-icon>-->
+    <!--<mat-menu #menu="mdMenu">-->
+      <!--<button mat-menu-item (click)="deleteAction()">-->
+        <!--<mat-icon>settings_remote</mat-icon>-->
         <!--<span>Delete Installed Application</span>-->
       <!--</button>-->
-    <!--</md-menu>-->
+    <!--</mat-menu>-->
     <span>Bunsen</span>
     <span id="progressMessage"></span>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <span class="toolbar-spacer"></span>
-    <md-icon (click)="deleteAction()"class="menu-button-spacer deleteIcon">delete</md-icon>
-    <md-icon (click)="refreshIframe()"class="menu-button-spacer">refresh</md-icon>
-</md-toolbar>
-<md-toolbar id="urlBar" color="primary">
+    <mat-icon (click)="deleteAction()"class="menu-button-spacer deleteIcon">delete</mat-icon>
+    <mat-icon (click)="refreshIframe()"class="menu-button-spacer">refresh</mat-icon>
+</mat-toolbar>
+<mat-toolbar id="urlBar" color="primary">
   <input #box id="box" class="wider"
          value = "664c8006f31dab7ec092d3394ec52bb617f942e446b7f6aa74fea1afa91632a5"
          placeholder="Enter a dat hash" >
-    <md-icon (click)="update(box.value)"class="menu-button-spacer arrowFwd">arrow_forward</md-icon>
-</md-toolbar>
+    <mat-icon (click)="update(box.value)"class="menu-button-spacer arrowFwd">arrow_forward</mat-icon>
+</mat-toolbar>
 
 
 <div [innerHTML]="fetchedHtml"></div>

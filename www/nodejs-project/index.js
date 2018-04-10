@@ -24,12 +24,13 @@ var fs = require('fs');
 var path = require('path')
 var Dat = require('dat-node')
 var mirror = require('mirror-folder')
-const cordova = require('cordova-bridge');
-
-cordova.channel.on('message', function (msg) {
-    console.log('[node] received:', msg);
-    cordova.channel.send('Replying to this message: ' + msg);
-});
+var cors = require('cors')
+// const cordova = require('cordova-bridge');
+//
+// cordova.channel.on('message', function (msg) {
+//     console.log('[node] received:', msg);
+//     cordova.channel.send('Replying to this message: ' + msg);
+// });
 
 console.log("hello new world again")
 console.log('argv', process.argv)
@@ -72,6 +73,7 @@ if (!fs.existsSync(bunsenDir)){
   console.log("Need to create " + bunsenDir)
   fs.mkdirSync(bunsenDir)
 }
+app.use(cors())
 app.use(express.static(dest))
 app.get('/dat/:dat', function(req, res) {
   // var name = decodeURI(req.url.split('/')[0])

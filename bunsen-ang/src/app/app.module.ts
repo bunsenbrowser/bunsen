@@ -4,14 +4,16 @@ import { NgModule } from '@angular/core';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
+
 import {
-  MdButtonModule,
-  MdButtonToggleModule,
-  MdDialogModule,
-  MdIconModule,
-  MdMenuModule, MdProgressSpinnerModule,
-  MdToolbarModule,
-  MdTooltipModule
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatDialogModule,
+  MatIconModule,
+  MatMenuModule, MatProgressSpinnerModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatProgressBarModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // import { DialogComponent } from './dialog/dialog.component';
@@ -26,14 +28,15 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    MdButtonModule,
-    MdButtonToggleModule,
-    MdIconModule,
-    MdMenuModule,
-    MdToolbarModule,
-    MdTooltipModule,
-    MdProgressSpinnerModule,
-    MdDialogModule
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

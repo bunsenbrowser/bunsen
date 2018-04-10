@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><title>TangerineForm</title><base href="/"><link rel="manifest" href="/manifest.json"><script>if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    if (registration.installing) {
+      console.log('registration.installing is available on service worker registration.')
+    }
+    
+        // updatefound is fired if service-worker.js changes.
+        registration.onupdatefound = function() {
+          console.log('This app is installing.')
+          alert('This app is installing.')
+          // The updatefound event implies that registration.installing is set; see
+          // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-container-updatefound-event
+          var installingWorker = registration.installing;
+
+          installingWorker.onstatechange = function() {
+            switch (installingWorker.state) {
+              case 'installed':
+                if (navigator.serviceWorker.controller) {
+                  // At this point, the old content will have been purged and the fresh content will
+                  // have been added to the cache.
+                  // It's the perfect time to display a "New content is available; please refresh."
+                  // message in the page's interface.
+                  console.log('Your app has been updated. Reloading now.');
+                  alert('Your app has been updated. Reloading now.');
+                  // If URL has a hash, we have to carve it out less there will be no reload.
+                  window.location = window.location.href.replace('\/\#', '');
+                  /* TODO: Support for reloading when app is not in the TLDR's root.
+                     TODO: Prompt user wether or not they wanted to update the cache in the first place.. 
+                     TODO: Prompt user wether or not they want to reload. 
+                  if (window.location.href.indexOf('\/\#') !== -1) {
+                    window.location = window.location.href;
+                  } else {
+                    window.location = window.location.href.substr(0, window.location.href.indexOf('\/\#'))
+                  }
+                  */
+                } else {
+                  // At this point, everything has been precached, but the service worker is not
+                  // controlling the page. The service worker will not take control until the next
+                  // reload or navigation to a page under the registered scope.
+                  // It's the perfect time to display a "Content is cached for offline use." message.
+                  console.log('This App has been installed and is now ready for offline use.');
+                  alert('This App has been installed and is now ready for offline use.');
+                }
+              break;
+
+              case 'redundant':
+                console.error('The installing service worker became redundant.');
+              break;
+            }
+          };
+        };
+      }).catch(function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    }</script><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="60x60" href="/assets/logos/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/logos/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/logos/favicon-16x16.png"><link rel="icon" type="image/png" sizes="512x512" href="/assets/logos/tangerine--512-512.png"><link rel="mask-icon" href="/assets/logos/safari-pinned-tab.svg" color="#5bbad5"><meta name="theme-color" content="#ffffff"><link href="styles.b456e05426a51337da8f.bundle.css" rel="stylesheet"/></head><body><app-root>Loading...</app-root><script type="text/javascript" src="inline.abf489ad2d1568ede04a.bundle.js"></script><script type="text/javascript" src="polyfills.748870f8a7b58ee6854c.bundle.js"></script><script type="text/javascript" src="vendor.576a4be4084c67afa31f.bundle.js"></script><script type="text/javascript" src="main.5aa78003e60a854ce194.bundle.js"></script></body></html>
