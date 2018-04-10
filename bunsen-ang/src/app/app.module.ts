@@ -15,12 +15,11 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // import { DialogComponent } from './dialog/dialog.component';
-import {LoadingComponent} from './dialog/loading.component';
-import { IFrameResizerDirective } from './iframe-resizer.directive';
+// import {LoadingComponent} from './dialog/loading.component';
 
 @NgModule({
   declarations: [
-    AppComponent, LoadingComponent, IFrameResizerDirective
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -37,6 +36,6 @@ import { IFrameResizerDirective } from './iframe-resizer.directive';
     MdDialogModule
   ],
   providers: [],
-  bootstrap: [AppComponent, LoadingComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

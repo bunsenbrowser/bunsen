@@ -13,10 +13,14 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "nodejs-mobile-cordova": {
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "dat",
+      "ANDROID_SCHEME": " ",
+      "ANDROID_HOST": " ",
+      "ANDROID_PATHPREFIX": "/",
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "com.borismus.webintent": {
+    "nodejs-mobile-cordova": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     }
   },

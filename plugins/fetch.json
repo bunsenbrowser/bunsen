@@ -23,18 +23,20 @@
     "is_top_level": true,
     "variables": {}
   },
+  "cordova-plugin-customurlscheme": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-customurlscheme"
+    },
+    "is_top_level": true,
+    "variables": {
+      "URL_SCHEME": "dat"
+    }
+  },
   "nodejs-mobile-cordova": {
     "source": {
       "type": "registry",
       "id": "nodejs-mobile-cordova"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "com.borismus.webintent": {
-    "source": {
-      "type": "registry",
-      "id": "https://github.com/cordova-misc/cordova-webintent.git"
     },
     "is_top_level": true,
     "variables": {}

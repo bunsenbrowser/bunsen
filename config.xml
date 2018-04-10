@@ -25,9 +25,15 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <preference name="AndroidLaunchMode" value="singleTask" />
     <hook src="scripts/prepareAngular2App.js" type="before_prepare" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
+        <variable name="URL_SCHEME" value="dat" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
     <plugin name="nodejs-mobile-cordova" spec="^0.1.4" />
-    <plugin name="com.borismus.webintent" spec="https://github.com/cordova-misc/cordova-webintent.git" />
 </widget>

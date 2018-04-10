@@ -1,11 +1,14 @@
 ///<reference path="../typings.d.ts"/>
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {MdDialog, MdDialogRef} from '@angular/material';
 // import {DialogComponent} from './dialog/dialog.component';
-import {LoadingComponent} from './dialog/loading.component';
+// import {LoadingComponent} from './dialog/loading.component';
 
+(window as any).handleOpenURL = (url: string) => {
+  (window as any).handleOpenURL_LastURL = url;
+};
 
 @Component({
   selector: 'app-root',
@@ -26,8 +29,28 @@ export class AppComponent {
   hasDatLoaded: any
 
   // Inject HttpClient into your component or service.
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer, public dialog: MdDialog) {
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer, public dialog: MdDialog, private ngZone: NgZone) {
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
+
+    // kudos: https://github.com/EddyVerbruggen/Custom-URL-scheme/issues/227#issuecomment-318810896
+    // override open handler to navigate on further custom url scheme actions
+    (window as any).handleOpenURL = (url: string) => {
+      // this context is called outside of angular zone!
+      setTimeout(() => {
+        // so we need to get back into the zone..
+        this.ngZone.run(() => {
+          // this is in the zone again..
+          this.handleOpenUrl(url);
+        });
+      }, 0);
+    };
+
+    // check if app was opened by custom url scheme
+    const lastUrl: string = (window as any).handleOpenURL_LastURL || "";
+    if (lastUrl && lastUrl !== "") {
+      delete (window as any).handleOpenURL_LastURL;
+      this.handleOpenUrl(lastUrl);
+    }
   }
 
   @Input('mdMenuTriggerFor')
@@ -37,6 +60,14 @@ export class AppComponent {
   @ViewChild('iframe') iframe: any;
 
 
+  private handleOpenUrl(url) {
+    console.log("received url: " + url);
+    var datUri = url.replace('dat://', '')
+    let progressMessage = document.querySelector('#progressMessage');
+    progressMessage.innerHTML = "Downloading...";
+     this.update(datUri);
+     this.refreshIframe();
+  }
 
   ngOnInit() {
     document.addEventListener('deviceready', () => {
@@ -84,32 +115,42 @@ export class AppComponent {
       console.log('resume');
       var that = this;
 
-      webintent.getExtra(webintent.EXTRA_TEXT,
-        async function loadDat(url) {
-          console.log("getExtra uri: " + url);
-          var datUri = url.replace('dat://', '')
-          await that.update(datUri);
-          // await that.refreshIframe();
-        }, function () {
-          // There was no extra supplied.
-        }
-      );
-
-      // webintent.getUri(function (uri) {
-      //   console.log("webintent getUri triggered: " + uri);
-      //   if (uri !== null) {
-      //     console.log("uri: " + uri);
-      //     var datUri = uri.replace('dat://', '')
-      //     that.update(datUri);
+      // webintent.getExtra(webintent.EXTRA_TEXT,
+      //   async function loadDat(url) {
+      //     console.log("getExtra uri: " + url);
+      //     var datUri = url.replace('dat://', '')
+      //     await that.update(datUri);
+      //     // await that.refreshIframe();
+      //   }, function () {
+      //     // There was no extra supplied.
       //   }
+      // );
+      //
+      // // webintent.getUri(function (uri) {
+      // //   console.log("webintent getUri triggered: " + uri);
+      // //   if (uri !== null) {
+      // //     console.log("uri: " + uri);
+      // //     var datUri = uri.replace('dat://', '')
+      // //     that.update(datUri);
+      // //   }
+      // // });
+      //
+      // webintent.onNewIntent(async function (url) {
+      //   console.log("INTENT onNewIntent: " + url);
+      //   var datUri = url.replace('dat://', '')
+      //   await that.update(datUri);
+      //   // await that.refreshIframe();
       // });
+      //
+      //
+      // webintent.unknown(async function (url) {
+      //    console.log("unknown intent: " + url);
+      //    var datUri = url.replace('dat://', '')
+      //    await that.update(datUri);
+      //    // await that.refreshIframe();
+      //  });
 
-      webintent.onNewIntent(async function (url) {
-        console.log("INTENT onNewIntent: " + url);
-        var datUri = url.replace('dat://', '')
-        await that.update(datUri);
-        // await that.refreshIframe();
-      });
+
 
     }, false);
 
@@ -162,7 +203,10 @@ export class AppComponent {
       }
     }
 
-    this.dialog.open(LoadingComponent);
+    // this.dialog.open(LoadingComponent);
+    let progressMessage = document.querySelector('#progressMessage');
+    progressMessage.innerHTML = "Loading..."
+
 
     var ping_loop = setInterval(() => {
 
@@ -195,7 +239,6 @@ export class AppComponent {
     headers.append('x-forwarded-host', 'foo');
     this.http.get(url ).subscribe(response => {
         // console.log("response: " + response);
-        (document.querySelector('#box') as HTMLElement).style.display = "none";
         // this.fetchedHtml = response.json();
       },error => {
         console.log("error: " + JSON.stringify(error))
@@ -203,12 +246,16 @@ export class AppComponent {
           console.log("gurl, you best get you sum dat!");
           (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
           this.fetchedHtml = this.noDat;
-          this.dialog.closeAll();
+          // this.dialog.closeAll();
+          let progressMessage = document.querySelector('#progressMessage');
+          progressMessage.innerHTML = ""
         }
       },
       () => {
         console.log("complete: ")
-        this.dialog.closeAll();
+        // this.dialog.closeAll();
+        let progressMessage = document.querySelector('#progressMessage');
+        progressMessage.innerHTML = ""
       }
     )
   }
@@ -258,7 +305,8 @@ export class AppComponent {
       () => {
         console.log("Update complete.")
         // this.dialog.closeAll();
-        progressMessage.innerHTML = "Refresh!.";
+        // progressMessage.innerHTML = "Hit Refresh!.";
+        progressMessage.innerHTML = "";
       }
     );
   }
