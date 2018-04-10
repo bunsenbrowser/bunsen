@@ -8,7 +8,9 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## How to use Bunsen
 
-Bunsen is currently very alpha-quality software. It runs only on mobile devices runnning ARM64 processors such as Nexus 5X and Pixel.
+Bunsen is currently very alpha-quality software. It runs on mobile devices runnning ARMv7a and x86 processors such as Nexus 5X and Pixel 2. The wiki has more info on [Device Testing](https://github.com/bunsenbrowser/bunsen/wiki/Device-testing).
+
+Update 04-10-2018: Bunsen source code is undergoing major development. We're now refactoring the application to use nodejs-mobile-cordova and intents, so you can open dats in browser urls. Use the [nodejs-mobile-cordova-refactor branch](https://github.com/bunsenbrowser/bunsen/tree/nodejs-mobile-cordova-refactor).
 
 To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) to your Android device, open it from the menu tray, and then give it permission to install.
 
