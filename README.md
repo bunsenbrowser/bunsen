@@ -6,6 +6,10 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 [![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
 
+## Download
+
+[Download](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) 
+
 ## How to use Bunsen
 
 Bunsen is currently very alpha-quality software. It runs on mobile devices runnning ARMv7a and x86 processors such as Nexus 5X and Pixel 2. The wiki has more info on [Device Testing](https://github.com/bunsenbrowser/bunsen/wiki/Device-testing).
