@@ -10,7 +10,14 @@ var app = express();
 var map = {}
 
 app.get('/open/:uuid', async function (req, res) {
-  console.log('hi')
+  // @TODO This will be as simple as `cd archives && dat pull ${req.params.uuid}` but dat pull
+  // does not currently exit after completing which results in users getting stuck.  
+  // See issue: https://github.com/datproject/dat/issues/892
+  try {
+    await exec(`cd archives && rm -r ${req.params.uuid}`)
+  } catch (e) {
+    // Do nothing. It's ok if this errors because the dir does not exist.
+  }
   try {
     await exec(`cd archives && dat clone ${req.params.uuid}`)
   } catch (e) {
