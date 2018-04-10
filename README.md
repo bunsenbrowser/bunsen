@@ -10,14 +10,16 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 Bunsen is currently very alpha-quality software. It runs only on mobile devices runnning ARM64 processors such as Nexus 5X and Pixel.
 
-To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://github.com/bunsenbrowser/bunsen/blob/master/apk/bunsen.apk) to your Android device, open it from the menu tray, and then give it permission to install.
+To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) to your Android device, open it from the menu tray, and then give it permission to install.
 
 When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches.
 
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
-It comes with a dat address pre-loaded, so give it a try!
+It comes with a dat address pre-loaded, so press the -> arrow and give it a try!
 
 To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+
+Bunsen willl open sites with links to dats (`a href=dat://`) too. Check out [hashbase.io](http://hashbase.io) for a list of sites.
 
 In the background, Bunsen will share the dat you have loaded.
 
@@ -27,21 +29,37 @@ For more information, there is a [walkthrough](https://github.com/bunsenbrowser/
 ## What is dat?
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
 
-
 ## Development
 
 ### Develop on your local machine
+
+  Update 04-10-2018: Bunsen source code is undergoing major development. We're now refactoring the application to use nodejs-mobile-cordova and webintents. Use the [nodejs-mobile-cordova-refactor branch](https://github.com/bunsenbrowser/bunsen/tree/nodejs-mobile-cordova-refactor).
+
+#### Compilation and Installation on Device
+
 Requirements:
 - Node.js and npm
   - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
+- `adb` which is included as a binary in android-platform-tools.
+  - On Mac, easiest way to install is using brew package manager `brew cask install android-platform-tools`
+  - On Ubuntu, easiest way is `sudo apt install android-tools-adb android-tools-fastboot`
+- Enable USB debugging on your Android device. https://www.howtogeek.com/129728/how-to-access-the-developer-options-menu-and-enable-usb-debugging-on-android-4.2/
 
+Run the following to build the app.
 ```
+npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
+git checkout nodejs-mobile-cordova-refactor
 npm install
+cordova build android
 ```
 
-You will need to start two services, the UI and the Server in two different terminals.
+To install on an Android device, you may use the `./installapp.sh` script
+
+#### Web UI and node app development
+
+If you need to develop the web UI, you will need to start two services, the UI and the Server in two different terminals.
 
 In the first terminal:
 ```
@@ -55,35 +73,15 @@ cd bunsen-ang
 npm start
 ```
 
-### Test on Device
-Requirements:
-- Node.js and npm
-  - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
-- `adb` which is included as a binary in android-platform-tools.
-  - On Mac, easiest way to install is using brew package manager `brew cask install android-platform-tools`
-  - On Ubuntu, easiest way is `sudo apt install android-tools-adb android-tools-fastboot`
-- Enable USB debugging on your Android device. https://www.howtogeek.com/129728/how-to-access-the-developer-options-menu-and-enable-usb-debugging-on-android-4.2/
-
-Run the following to build and install on an Android device.
-```
-npm install -g cordova
-git clone git@github.com:bunsenbrowser/bunsen
-cd bunsen
-npm install
-./install.sh
-```
-
 ## Architecture
 Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
 
 The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./bunsen-ang/assets/node/`.
 
-The Cordova application depends on the [cordova-node-plugin](https://github.com/bunsenbrowser/cordova-node-plugin)
-to provide the node instance. If you wish to modify that plugin, fork/clone it and link to it:
+The Cordova application depends on the [nodejs-mobile-cordova](https://github.com/janeasystems/nodejs-mobile-cordova)
+to provide the node instance. nodejs-mobile-cordova supports ARMv7a and x86 CPU architectures on Android and also supports IOS as well. 
 
-`cordova plugin add --link ../cordova-plugin-node`
-
-Run the `prep-plugin.sh` script whenever you make changes to the plugin; it removes and re-installs the plugin.
+Thanks a lot, [Janea Systems](http://www.janeasystems.com/)!
 
 The node_modules packages have been compiled in termux on a Nexus 5X.
 
