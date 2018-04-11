@@ -1,19 +1,7 @@
 .wider {
-  width: 400px;
-  height:60%;
+  width: 80%;
+  height:50%;
 }
-/*.opaque{*/
-  /*opacity :0;*/
-/*}*/
-/*.fa-spinner{*/
-  /*opacity :0.2;*/
-/*}*/
-/*.ops{*/
-  /*opacity :0;*/
-/*}*/
-/*#progressSpinner {*/
-  /*display: none;*/
-/*}*/
 
 .menu-button-spacer {
   margin-left: 40px;
@@ -35,11 +23,11 @@
   margin-left: 20px;
 }
 
-/*iframe{*/
-  /*width: 1px;min-width: 100%;*/
-/*}*/
-
 iframe {
   height: calc(100vh - 20px);
   width: calc(100vw - 40px);
+}
+
+.arrowFwd {
+  margin-top: 5px;
 }

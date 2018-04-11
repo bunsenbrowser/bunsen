@@ -16,6 +16,7 @@ import {
   MatProgressBarModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ImageService } from './image.service';
 // import { DialogComponent } from './dialog/dialog.component';
 // import {LoadingComponent} from './dialog/loading.component';
 
@@ -38,7 +39,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatDialogModule,
     MatProgressBarModule
   ],
-  providers: [],
+  providers: [ImageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
