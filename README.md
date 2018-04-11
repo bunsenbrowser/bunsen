@@ -6,56 +6,38 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 [![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
 
+## Download
+
+[Download here!](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) 
+
 ## How to use Bunsen
 
-Bunsen is currently very alpha-quality software. It runs only on mobile devices runnning ARM64 processors such as Nexus 5X and Pixel.
+Bunsen is currently very alpha-quality software. It runs on mobile devices runnning ARMv7a and x86 processors such as Nexus 5X and Pixel 2. The wiki has more info on [Device Testing](https://github.com/bunsenbrowser/bunsen/wiki/Device-testing).
 
-To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://github.com/bunsenbrowser/bunsen/blob/master/apk/bunsen.apk) to your Android device, open it from the menu tray, and then give it permission to install.
+To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) to your Android device, open it from the menu tray, and then give it permission to install.
 
 When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches.
 
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
-It comes with a dat address pre-loaded, so give it a try!
+It comes with a dat address pre-loaded, so press the -> arrow and give it a try!
 
-To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+To load another dat, use the trashcan icon to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+
+Bunsen will open sites with links to dats (`a href=dat://`) too. Check out [hashbase.io](http://hashbase.io) for a list of sites.
 
 In the background, Bunsen will share the dat you have loaded.
 
-For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with screenshots.
-
+For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with (outdated) screenshots.
 
 ## What is dat?
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
 
-
 ## Development
 
 ### Develop on your local machine
-Requirements:
-- Node.js and npm
-  - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
 
-```
-git clone git@github.com:bunsenbrowser/bunsen
-cd bunsen
-npm install
-```
+#### Compilation and Installation on Device
 
-You will need to start two services, the UI and the Server in two different terminals.
-
-In the first terminal:
-```
-cd www/nodejs-project
-node index.js
-```
-
-In the second terminal:
-```
-cd bunsen-ang
-npm start
-```
-
-### Test on Device
 Requirements:
 - Node.js and npm
   - On Mac and Windows, go to http://nodejs.org and download the LATEST installer version listed on the homepage of http://nodejs.org
@@ -69,11 +51,28 @@ Run the following to build the app.
 npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
+git checkout nodejs-mobile-cordova-refactor
 npm install
 cordova build android
 ```
 
 To install on an Android device, you may use the `./installapp.sh` script
+
+#### Web UI and node app development
+
+If you need to develop the web UI, you will need to start two services, the UI and the Server in two different terminals.
+
+In the first terminal:
+```
+cd www/nodejs-project
+node index.js
+```
+
+In the second terminal:
+```
+cd bunsen-ang
+npm start
+```
 
 ## Architecture
 Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
