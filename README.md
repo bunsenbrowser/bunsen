@@ -14,8 +14,6 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 Bunsen is currently very alpha-quality software. It runs on mobile devices runnning ARMv7a and x86 processors such as Nexus 5X and Pixel 2. The wiki has more info on [Device Testing](https://github.com/bunsenbrowser/bunsen/wiki/Device-testing).
 
-Update 04-10-2018: Bunsen source code is undergoing major development. We're now refactoring the application to use nodejs-mobile-cordova and intents, so you can open dats in browser urls. Use the [nodejs-mobile-cordova-refactor branch](https://github.com/bunsenbrowser/bunsen/tree/nodejs-mobile-cordova-refactor).
-
 To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) to your Android device, open it from the menu tray, and then give it permission to install.
 
 When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches.
@@ -23,14 +21,13 @@ When Bunsen starts, it will display a loading dialog for about ten seconds while
 Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
 It comes with a dat address pre-loaded, so press the -> arrow and give it a try!
 
-To load another dat, use the option menu to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+To load another dat, use the trashcan icon to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
 
-Bunsen willl open sites with links to dats (`a href=dat://`) too. Check out [hashbase.io](http://hashbase.io) for a list of sites.
+Bunsen will open sites with links to dats (`a href=dat://`) too. Check out [hashbase.io](http://hashbase.io) for a list of sites.
 
 In the background, Bunsen will share the dat you have loaded.
 
-For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with screenshots.
-
+For more information, there is a [walkthrough](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Walkthrough) with (outdated) screenshots.
 
 ## What is dat?
 You could say that dat is a distributed data sharing tool that uses p2p peers like bittorrent, except it's live, so you can update the content easily. Kudos to aldebrn and mafintosh for that description.
@@ -38,8 +35,6 @@ You could say that dat is a distributed data sharing tool that uses p2p peers li
 ## Development
 
 ### Develop on your local machine
-
-  Update 04-10-2018: Bunsen source code is undergoing major development. We're now refactoring the application to use nodejs-mobile-cordova and webintents. Use the [nodejs-mobile-cordova-refactor branch](https://github.com/bunsenbrowser/bunsen/tree/nodejs-mobile-cordova-refactor).
 
 #### Compilation and Installation on Device
 
@@ -69,8 +64,8 @@ If you need to develop the web UI, you will need to start two services, the UI a
 
 In the first terminal:
 ```
-cd bunsen-ang/src/node
-node server.js
+cd www/nodejs-project
+node index.js
 ```
 
 In the second terminal:
@@ -82,7 +77,7 @@ npm start
 ## Architecture
 Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
 
-The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./bunsen-ang/assets/node/`.
+The location of the UI is at `./bunsen-ang/` while the location of the Dat Server is at `./www/nodejs-project/`.
 
 The Cordova application depends on the [nodejs-mobile-cordova](https://github.com/janeasystems/nodejs-mobile-cordova)
 to provide the node instance. nodejs-mobile-cordova supports ARMv7a and x86 CPU architectures on Android and also supports IOS as well. 

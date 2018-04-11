@@ -1,0 +1,73 @@
+{
+  "_from": "cordova-plugin-customurlscheme",
+  "_id": "cordova-plugin-customurlscheme@4.3.0",
+  "_inBundle": false,
+  "_integrity": "sha1-Avlod4tAk5kOsEB/P6GxRY1wX5Q=",
+  "_location": "/cordova-plugin-customurlscheme",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-customurlscheme",
+    "name": "cordova-plugin-customurlscheme",
+    "escapedName": "cordova-plugin-customurlscheme",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-customurlscheme/-/cordova-plugin-customurlscheme-4.3.0.tgz",
+  "_shasum": "02f968778b4093990eb0407f3fa1b1458d705f94",
+  "_spec": "cordova-plugin-customurlscheme",
+  "_where": "/Users/chrisk/source/bunsenbrowser/bunsen",
+  "author": {
+    "name": "Eddy Verbruggen",
+    "email": "eddyverbruggen@gmail.com",
+    "url": "https://github.com/EddyVerbruggen"
+  },
+  "bugs": {
+    "url": "https://github.com/EddyVerbruggen/Custom-URL-scheme/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-customurlscheme",
+    "platforms": [
+      "ios",
+      "android",
+      "windows8",
+      "windows"
+    ]
+  },
+  "deprecated": false,
+  "description": "Launch your app by using this URL:  mycoolapp://, you can add a path and even pass params like this: mycoolerapp://somepath?foo=bar",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "homepage": "https://github.com/EddyVerbruggen/Custom-URL-scheme#readme",
+  "keywords": [
+    "Custom URL Scheme",
+    "URLscheme",
+    "URL scheme",
+    "Custom URL",
+    "Launch My App",
+    "Launch App",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android",
+    "cordova-windows",
+    "cordova-windows8"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-customurlscheme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EddyVerbruggen/Custom-URL-scheme.git"
+  },
+  "version": "4.3.0"
+}

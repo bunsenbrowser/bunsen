@@ -1,0 +1,63 @@
+Node version: v9.5.0
+
+Cordova version: 7.0.0
+
+Config.xml file: 
+
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="org.rti.sses.rcd.bunsen" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Bunsen</name>
+    <description>
+        p2p4u&amp;me
+    </description>
+    <author email="dev@cordova.apache.org" href="http://cordova.io">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="*" />
+    <allow-navigation href="*" />
+    <access origin="*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <hook src="hooks/after_prepare/android/020_add_dat_intent.js" type="after_prepare" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+    <hook src="scripts/prepareAngular2App.js" type="before_prepare" />
+    <engine name="android" spec="^6.4.0" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <plugin name="cordova-plugin-file" spec="^4.3.3" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
+    <plugin name="nodejs-mobile-cordova" spec="^0.1.4" />
+</widget>
+
+
+Plugins: 
+
+cordova-plugin-android-permissions,cordova-plugin-compat,cordova-plugin-file,cordova-plugin-whitelist,nodejs-mobile-cordova
+
+Android platform:
+
+*************************************************************************
+The "android" command is deprecated.
+For manual SDK, AVD, and project management, please use Android Studio.
+For command-line tools, use tools/bin/sdkmanager and tools/bin/avdmanager
+*************************************************************************
+Running /Users/chrisk/Library/Android/sdk/tools/bin/avdmanager list target
+
+Loading local repository...                                                     [=========                              ] 25% Loading local repository...       [=========                              ] 25% Fetch remote repository...        [=========                              ] 25% Fetch remote repository...        [=========                              ] 25% Fetch remote repository...        [=======================================] 100% Fetch remote repository...       Available Android targets:
+----------
+id: 1 or "android-27"
+     Name: Android API 27
+     Type: Platform
+     API level: 27
+     Revision: 1
+

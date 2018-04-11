@@ -8,4 +8,7 @@ bunsen-ang/src/assets/node/.bunsen/*
 www/assets/node_modules/
 !bunsen-ang/src/assets/node_modules/
 node_modules/*
+.idea
 
+
+.DS_Store

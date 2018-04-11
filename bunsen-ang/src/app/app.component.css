@@ -1,21 +1,9 @@
 .wider {
-  width: 400px;
+  width: 80%;
+  height:50%;
 }
-/*.opaque{*/
-  /*opacity :0;*/
-/*}*/
-/*.fa-spinner{*/
-  /*opacity :0.2;*/
-/*}*/
-/*.ops{*/
-  /*opacity :0;*/
-/*}*/
-/*#progressSpinner {*/
-  /*display: none;*/
-/*}*/
 
 .menu-button-spacer {
-  margin-left: 20px;
   margin-left: 40px;
   float: right;
 }
@@ -25,6 +13,21 @@
 
 .toolbar-spacer {
   flex-shrink: 1;
-  flex-grow: 5;
+  flex-grow: 2;
   flex-basis: auto;
+}
+
+#progressMessage {
+  background-color: #ffe57f;
+  color: #f44336;
+  margin-left: 20px;
+}
+
+iframe {
+  height: calc(100vh - 20px);
+  width: calc(100vw - 40px);
+}
+
+.arrowFwd {
+  margin-top: 5px;
 }
