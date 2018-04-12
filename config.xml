@@ -26,7 +26,6 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <preference name="AndroidLaunchMode" value="singleTask" />
-    <hook src="scripts/prepareAngular2App.js" type="before_prepare" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">

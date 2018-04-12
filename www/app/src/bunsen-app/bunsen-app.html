@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="bunsen-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      input {
+        width: 90%;
+      }
+      iframe {
+        width: 100%;
+        border: none;
+
+      }
+    </style>
+    <form>
+      <input name="address" placeholder="dat://"></input> 
+      <button type="submit">go</button>
+    </form>
+    <iframe></iframe>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BunsenApp extends Polymer.Element {
+      static get is() { return 'bunsen-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'bunsen-app'
+          }
+        };
+      }
+
+      async connectedCallback() {
+        super.connectedCallback()
+        this.shadowRoot.querySelector('iframe').style.height = `${window.innerHeight - 30}px`
+        this.shadowRoot.querySelector('form').addEventListener('submit', async (event) => {
+          event.preventDefault()
+          // Allow fallback to online gateway.
+          try {
+            // Make sure local dat gateway is available.
+            let response = await fetch('http://localhost:3000')
+            let body = await response.text()
+            if (body === 'dat-gateway') {
+              const datArchiveAddress = this.shadowRoot.querySelector('input[name="address"]').value.replace('dat://', '')
+              this.shadowRoot.querySelector('iframe').src = `http://localhost:3000/${datArchiveAddress}/`
+            } else {
+              throw Error('localhost:3000 is not a dat gateway')
+            }
+          } catch (e) {
+            const datArchiveAddress = this.shadowRoot.querySelector('input[name="address"]').value.replace('dat://', '')
+            this.shadowRoot.querySelector('iframe').src = `http://gateway.mauve.moe:3000/${datArchiveAddress}/`
+          }
+        })
+      }
+    }
+
+    window.customElements.define(BunsenApp.is, BunsenApp);
+  </script>
+</dom-module>

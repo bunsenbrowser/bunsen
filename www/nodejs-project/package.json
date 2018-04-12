@@ -6,6 +6,7 @@
   "dependencies": {
     "cors": "^2.8.4",
     "dat": "^13.7.0",
+    "dat-gateway": "git+https://github.com/chrisekelley/dat-gateway.git#websocket-replication",
     "datland-swarm-defaults": "^1.0.2",
     "directory-index-html": "^2.1.0",
     "discovery-swarm": "^4.4.2",
