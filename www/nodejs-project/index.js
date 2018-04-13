@@ -5,7 +5,7 @@ var DatGateway = require('dat-gateway')
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
 
-const datGatewayName = '.dat-gateway';
+const datGatewayName = 'dat-gateway';
 const max = 20;
 const period = 60 * 1000 // every minute
 const port = 3000

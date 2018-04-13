@@ -24,7 +24,7 @@ export class AppComponent {
   results: string[];
   serverUrl = 'http://localhost:3000/';
   port = 3000;
-  bunsenAddress = "bunsen.hashbase.io"
+  bunsenAddress = "bunsen.hashbase.io/"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
@@ -90,10 +90,10 @@ export class AppComponent {
   private handleOpenUrl(datUri) {
     console.log("received url: " + datUri);
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
-    // var datUri = url.replace('dat://', '')
+    var url = datUri.replace('dat://', '') + "/"
     let progressMessage = document.querySelector('#progressMessage');
     progressMessage.innerHTML = "Downloading...";
-     this.update(datUri);
+     this.update(url);
      this.refreshIframe();
   }
 
@@ -132,9 +132,10 @@ export class AppComponent {
 
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
+    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
 
     // (document.querySelector('#iframe') as HTMLElement).style.display = "none";
-    (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
     // this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
 
     var TIME_PERIOD = 1000; // 1000 ms between each ping
@@ -222,16 +223,19 @@ export class AppComponent {
     const body = {uri: this.datUri};
     var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
+    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
+    // (document.querySelector('#iframe') as HTMLIFrameElement).src=url;
 
     this.appService.getDatResponse(url)
       .subscribe(resp => {
           console.log('url: ' + url);
           this.responseData = JSON.stringify(resp);
-          this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
+          this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + datUri);
           // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
           progressMessage.innerHTML = "";
           (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-          location.href=url
+          (document.querySelector('#loading') as HTMLElement).style.display = "none";
+          (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
         },
         error => {
           this.error = error // error path
