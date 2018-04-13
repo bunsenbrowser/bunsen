@@ -16,12 +16,11 @@ Bunsen is currently very alpha-quality software. It runs on mobile devices runnn
 
 To install Bunsen, start by going to your Android Device's Settings App. Then open "Security" and then enable "Unknown Sources". Then download [this link](https://drive.google.com/file/d/1JXT6xSV2r6OXi-A_0PXvh0IX8ks_dv9O/view?usp=sharing) to your Android device, open it from the menu tray, and then give it permission to install.
 
-When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches.
+When Bunsen starts, it will display a loading dialog for about ten seconds while the node express server launches and it fetches the Bunsen Ui, which itself is a dat!
 
-Bunsen will load and display a single dat when you enter the dat address (without dat://) and press the forward button.
-It comes with a dat address pre-loaded, so press the -> arrow and give it a try!
+Bunsen will load and display a single dat when you enter the dat address (with dat://) and press the enter button.
 
-To load another dat, use the trashcan icon to delete the current dat, then  enter the dat address (without dat://) and press the forward button.
+To load another dat, enter a new address or select a dat from the history, which is listed below the input box when you are typing in it.
 
 Bunsen will open sites with links to dats (`a href=dat://`) too. Check out [hashbase.io](http://hashbase.io) for a list of sites.
 
