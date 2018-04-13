@@ -31,3 +31,9 @@ iframe {
 .arrowFwd {
   margin-top: 5px;
 }
+
+#loading {
+  padding-top: 100px;
+  text-align: center;
+  color: white;
+}

@@ -22,6 +22,9 @@
     },
     "nodejs-mobile-cordova": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     }
   },
   "dependent_plugins": {}

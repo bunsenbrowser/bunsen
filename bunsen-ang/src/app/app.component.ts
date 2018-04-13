@@ -22,8 +22,9 @@ export class AppComponent {
   title = 'Bunsen';
   datUri = '';
   results: string[];
-  serverUrl = 'http://localhost:8080/';
-  serverDatUrl = this.serverUrl + 'dat/';
+  serverUrl = 'http://localhost:3000/';
+  port = 3000;
+  bunsenAddress = "bunsen.hashbase.io/"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
@@ -86,14 +87,14 @@ export class AppComponent {
   @ViewChild('iframe') iframe: any;
 
 
-  private handleOpenUrl(url) {
-    console.log("received url: " + url);
+  private handleOpenUrl(datUri) {
+    console.log("received url: " + datUri);
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
-    var datUri = url.replace('dat://', '')
+    // var url = datUri.replace('dat://', '') + "/"
     let progressMessage = document.querySelector('#progressMessage');
     progressMessage.innerHTML = "Downloading...";
      this.update(datUri);
-     this.refreshIframe();
+     // this.refreshIframe();
   }
 
   ngOnInit() {
@@ -117,7 +118,7 @@ export class AppComponent {
       function startNodeProject() {
         console.log ('Starting nodejs listener');
         nodejs.channel.setListener(channelListener);
-        console.log ('Starting Angular 2 app');
+        console.log ('Starting dat-gateway');
         nodejs.start('index.js', startupCallback);
         // To disable the stdout/stderr redirection to the Android logcat:
         // nodejs.start('index.js', startupCallback, { redirectOutputToLogcat: false });
@@ -131,10 +132,11 @@ export class AppComponent {
 
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
+    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
 
-    (document.querySelector('#iframe') as HTMLElement).style.display = "none";
-    (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-    // this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
+    // (document.querySelector('#iframe') as HTMLElement).style.display = "none";
+    (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
+    this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
 
     var TIME_PERIOD = 1000; // 1000 ms between each ping
 
@@ -167,7 +169,7 @@ export class AppComponent {
 
     var ping_loop = setInterval(() => {
 
-      ping("localhost", "8080", function(msg){
+      ping("localhost", this.port, function(msg){
         // console.log("It took "+m+" miliseconds.");
         pingstatus = msg;
         console.log("pingstatus: " + pingstatus)
@@ -175,75 +177,80 @@ export class AppComponent {
       // let dialogRef = this.dialog.open(DialogComponent);
 
       if (pingstatus == "connected") { // all requests are passed and have returned
-        this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8080");
+        this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
         // var iframe = document.querySelector('#iframe') as HTMLElement
-        (document.querySelector('#iframe') as HTMLElement).style.display = "block";
-        this.checkDatSite()
+        // (document.querySelector('#iframe') as HTMLElement).style.display = "block";
+        // this.checkDatSite()
+        this.loadBunsen(this.bunsenAddress);
         clearInterval(ping_loop);
-      } else {
-        // this.fetchedHtml = this.noDat;
-        // (document.querySelector('#box') as HTMLElement).style.display = "block";
       }
       }, TIME_PERIOD)
   }
 
-  checkDatSite() {
-    var url = this.serverUrl + "index.html"
-    this.appService.getDatResponse(url)
-      .subscribe(resp => {
-          // display its headers
-          const keys = resp.headers.keys();
-          this.headers = keys.map(key =>
-            `${key}: ${resp.headers.get(key)}`);
-
-          // access the body directly
-          this.datResponse = { ... resp.body };
-          console.log("headers: " + JSON.stringify(this.headers));
-          // console.log("datResponse: " + JSON.stringify(this.datResponse));
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        },
-        error => {
-          this.error = error // error path
-          console.log("err:" + error)
-          this.fetchedHtml = this.noDat;
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        }
-      )
-  }
+  // checkDatSite() {
+  //   var url = this.serverUrl + "index.html"
+  //   this.appService.getDatResponse(url)
+  //     .subscribe(resp => {
+  //         // display its headers
+  //         const keys = resp.headers.keys();
+  //         this.headers = keys.map(key =>
+  //           `${key}: ${resp.headers.get(key)}`);
+  //
+  //         // access the body directly
+  //         this.datResponse = { ... resp.body };
+  //         console.log("headers: " + JSON.stringify(this.headers));
+  //         // console.log("datResponse: " + JSON.stringify(this.datResponse));
+  //         let progressMessage = document.querySelector('#progressMessage');
+  //         progressMessage.innerHTML = ""
+  //       },
+  //       error => {
+  //         this.error = error // error path
+  //         console.log("err:" + error)
+  //         this.fetchedHtml = this.noDat;
+  //         let progressMessage = document.querySelector('#progressMessage');
+  //         progressMessage.innerHTML = ""
+  //       }
+  //     )
+  // }
 
 
   async update(datUri: string) {
-    // this.toggleSpinner();
-    // (document.querySelector('#progressSpinner') as HTMLElement).style.display = "block";
-    // let dialogRef = this.dialog.open(DialogComponent);
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
     this.datUri = datUri;
     console.log('dat datUri: ' + this.datUri);
     const body = {uri: this.datUri};
-    var url = this.serverDatUrl + this.datUri;
+    // var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
-
-    this.appService.getDatResponse(url)
-      .subscribe(resp => {
-          console.log('url: ' + url);
-          this.responseData = JSON.stringify(resp);
-          this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
-          (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
-          progressMessage.innerHTML = "";
-          (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-        },
-        error => {
-          this.error = error // error path
-          console.log("err:" + error)
-          this.fetchedHtml = this.noDat;
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        }
-      )
+    // (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
+    // (document.querySelector('#iframe') as HTMLIFrameElement).src=url;
+    this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress + "#" + datUri);
+    var iframe = document.querySelector('#iframe') as HTMLIFrameElement
+    iframe.src = this.serverUrl + this.bunsenAddress + "#" + datUri
+    // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
+    progressMessage.innerHTML = "";
+    (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+    (document.querySelector('#loading') as HTMLElement).style.display = "none";
+    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
+  }
+  async loadBunsen(datUri: string) {
+    let progressMessage = document.querySelector('#progressMessage');
+    // progressMessage.innerHTML = "Downloading...";
+    (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
+    this.datUri = datUri;
+    console.log('dat datUri: ' + this.datUri);
+    const body = {uri: this.datUri};
+    var url = this.serverUrl + this.datUri;
+    this.fetchedHtml = "";
+    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
+    // (document.querySelector('#iframe') as HTMLIFrameElement).src=url;
+    this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
+    // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
+    progressMessage.innerHTML = "";
+    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+    // (document.querySelector('#loading') as HTMLElement).style.display = "none";
+    // (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
   }
 
   deleteAction() {
@@ -275,14 +282,23 @@ export class AppComponent {
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
   }
 
-  // onLoadIframe() {
-  //   console.log("iframe onload");
-  //   // var iWindow = (<HTMLIFrameElement>this.iframe).contentWindow;
-  //   // var iWindow = this.iframe.contentWindow;
-  //   // var doc = iWindow.document;
-  //   // console.debug(doc);
-  //   // console.log(doc.getElementById('foo').innerText);
-  //   // (document.querySelector('#box') as HTMLElement).style.display = "none";
-  // }
+  onLoadIframe() {
+    console.log("iframe onload");
+    let iframe = document.querySelector('#iframe') as HTMLIFrameElement
+    if (iframe.src == 'http://localhost:3000/') {
+      iframe.style.display = "none";
+    } else {
+      iframe.style.display = "block";
+      (document.querySelector('#loading') as HTMLElement).style.display = "none";
+      (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+    }
+
+    // var iWindow = (<HTMLIFrameElement>this.iframe).contentWindow;
+    // var iWindow = this.iframe.contentWindow;
+    // var doc = iWindow.document;
+    // console.debug(doc);
+    // console.log(doc.getElementById('foo').innerText);
+    // (document.querySelector('#box') as HTMLElement).style.display = "none";
+  }
 
 }
