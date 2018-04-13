@@ -22,8 +22,9 @@ export class AppComponent {
   title = 'Bunsen';
   datUri = '';
   results: string[];
-  serverUrl = 'http://localhost:8080/';
-  serverDatUrl = this.serverUrl + 'dat/';
+  serverUrl = 'http://localhost:3000/';
+  port = 3000;
+  bunsenAddress = "bunsen.hashbase.io"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
@@ -86,10 +87,10 @@ export class AppComponent {
   @ViewChild('iframe') iframe: any;
 
 
-  private handleOpenUrl(url) {
-    console.log("received url: " + url);
+  private handleOpenUrl(datUri) {
+    console.log("received url: " + datUri);
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
-    var datUri = url.replace('dat://', '')
+    // var datUri = url.replace('dat://', '')
     let progressMessage = document.querySelector('#progressMessage');
     progressMessage.innerHTML = "Downloading...";
      this.update(datUri);
@@ -117,7 +118,7 @@ export class AppComponent {
       function startNodeProject() {
         console.log ('Starting nodejs listener');
         nodejs.channel.setListener(channelListener);
-        console.log ('Starting Angular 2 app');
+        console.log ('Starting dat-gateway');
         nodejs.start('index.js', startupCallback);
         // To disable the stdout/stderr redirection to the Android logcat:
         // nodejs.start('index.js', startupCallback, { redirectOutputToLogcat: false });
@@ -132,7 +133,7 @@ export class AppComponent {
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
 
-    (document.querySelector('#iframe') as HTMLElement).style.display = "none";
+    // (document.querySelector('#iframe') as HTMLElement).style.display = "none";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
     // this.iframe.nativeElement.addEventListener('load', this.onLoadIframe.bind(this));
 
@@ -167,7 +168,7 @@ export class AppComponent {
 
     var ping_loop = setInterval(() => {
 
-      ping("localhost", "8080", function(msg){
+      ping("localhost", this.port, function(msg){
         // console.log("It took "+m+" miliseconds.");
         pingstatus = msg;
         console.log("pingstatus: " + pingstatus)
@@ -175,56 +176,51 @@ export class AppComponent {
       // let dialogRef = this.dialog.open(DialogComponent);
 
       if (pingstatus == "connected") { // all requests are passed and have returned
-        this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl("http://localhost:8080");
+        this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
         // var iframe = document.querySelector('#iframe') as HTMLElement
-        (document.querySelector('#iframe') as HTMLElement).style.display = "block";
-        this.checkDatSite()
+        // (document.querySelector('#iframe') as HTMLElement).style.display = "block";
+        // this.checkDatSite()
+        this.update(this.bunsenAddress);
         clearInterval(ping_loop);
-      } else {
-        // this.fetchedHtml = this.noDat;
-        // (document.querySelector('#box') as HTMLElement).style.display = "block";
       }
       }, TIME_PERIOD)
   }
 
-  checkDatSite() {
-    var url = this.serverUrl + "index.html"
-    this.appService.getDatResponse(url)
-      .subscribe(resp => {
-          // display its headers
-          const keys = resp.headers.keys();
-          this.headers = keys.map(key =>
-            `${key}: ${resp.headers.get(key)}`);
-
-          // access the body directly
-          this.datResponse = { ... resp.body };
-          console.log("headers: " + JSON.stringify(this.headers));
-          // console.log("datResponse: " + JSON.stringify(this.datResponse));
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        },
-        error => {
-          this.error = error // error path
-          console.log("err:" + error)
-          this.fetchedHtml = this.noDat;
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        }
-      )
-  }
+  // checkDatSite() {
+  //   var url = this.serverUrl + "index.html"
+  //   this.appService.getDatResponse(url)
+  //     .subscribe(resp => {
+  //         // display its headers
+  //         const keys = resp.headers.keys();
+  //         this.headers = keys.map(key =>
+  //           `${key}: ${resp.headers.get(key)}`);
+  //
+  //         // access the body directly
+  //         this.datResponse = { ... resp.body };
+  //         console.log("headers: " + JSON.stringify(this.headers));
+  //         // console.log("datResponse: " + JSON.stringify(this.datResponse));
+  //         let progressMessage = document.querySelector('#progressMessage');
+  //         progressMessage.innerHTML = ""
+  //       },
+  //       error => {
+  //         this.error = error // error path
+  //         console.log("err:" + error)
+  //         this.fetchedHtml = this.noDat;
+  //         let progressMessage = document.querySelector('#progressMessage');
+  //         progressMessage.innerHTML = ""
+  //       }
+  //     )
+  // }
 
 
   async update(datUri: string) {
-    // this.toggleSpinner();
-    // (document.querySelector('#progressSpinner') as HTMLElement).style.display = "block";
-    // let dialogRef = this.dialog.open(DialogComponent);
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
     this.datUri = datUri;
     console.log('dat datUri: ' + this.datUri);
     const body = {uri: this.datUri};
-    var url = this.serverDatUrl + this.datUri;
+    var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
 
     this.appService.getDatResponse(url)
@@ -232,9 +228,10 @@ export class AppComponent {
           console.log('url: ' + url);
           this.responseData = JSON.stringify(resp);
           this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
-          (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
+          // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
           progressMessage.innerHTML = "";
           (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+          location.href=url
         },
         error => {
           this.error = error // error path

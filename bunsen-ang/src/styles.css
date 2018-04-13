@@ -41,3 +41,7 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+
+body {
+  background: #673ab7;
+}
