@@ -2,10 +2,8 @@
 import {Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {AppService} from "./app.service";
-import {Observable} from "rxjs/Observable";
-// import {ImageService} from "./image.service";
+import * as websocket from 'websocket-stream';
 
 (window as any).handleOpenURL = (url: string) => {
   (window as any).handleOpenURL_LastURL = url;
@@ -33,28 +31,7 @@ export class AppComponent {
   error: any;
   headers: string[];
   datResponse:any;
-  datLinks =     '<div id="links">' +
-  '<a href="dat://pfrazee.hashbase.io">dat://pfrazee.hashbase.io</a><br/>' +
-  '<a href="dat://Don-Marti-dmarti.hashbase.io">dat://Don-Marti-dmarti.hashbase.io</a><br/>' +
-  '<a href="dat://protozoa-mixmix.hashbase.io">dat://protozoa-mixmix.hashbase.io</a><br/>' +
-  '<a href="dat://conquest-creationix.hashbase.io">dat://conquest-creationix.hashbase.io</a><br/>' +
-  '<a href="dat://sasha-taravancil.hashbase.io">dat://sasha-taravancil.hashbase.io</a>' +
-  '</div>'
-  noDat = '<div style="text-align: center; margin-top: 50px;">' +
-    '<p>This is an empty Bunsen application. ' +
-    'Enter a dat hash (without dat://) in the box above or switch to your browser and click a link to a dat url. ' +
-    '<br/><br/>' +
-    'There is a dat hash preloaded in the input box: click the -> to load it.' +
-    '<br/><br/>' +
-    'Tip: Open hashbase.io in your mobile browser and click one of the dat sites in their listing. ' +
-    'This should download the site into Bunsen.' +
-    '<br/><br/>' +
-    'Bunsen currently holds only one dat at a time. Use the trash icon or load a new dat to delete the current dat.' +
-    '<br/><br/>' +
-    'Sharing is caring: When you load a dat into Bunsen, it automatically shares the dat on the network.</p>' +
-    '</div></body></html>';
-
-  hasDatLoaded: any
+  private stompClient;
 
   // Inject HttpClient into your component or service.
   constructor(private http: HttpClient, private sanitizer: DomSanitizer, private ngZone: NgZone, private appService: AppService) {
@@ -124,6 +101,8 @@ export class AppComponent {
         // To disable the stdout/stderr redirection to the Android logcat:
         // nodejs.start('index.js', startupCallback, { redirectOutputToLogcat: false });
       };
+
+
     }, false);
 
      document.addEventListener('resume', () => {
@@ -188,33 +167,6 @@ export class AppComponent {
       }, TIME_PERIOD)
   }
 
-  // checkDatSite() {
-  //   var url = this.serverUrl + "index.html"
-  //   this.appService.getDatResponse(url)
-  //     .subscribe(resp => {
-  //         // display its headers
-  //         const keys = resp.headers.keys();
-  //         this.headers = keys.map(key =>
-  //           `${key}: ${resp.headers.get(key)}`);
-  //
-  //         // access the body directly
-  //         this.datResponse = { ... resp.body };
-  //         console.log("headers: " + JSON.stringify(this.headers));
-  //         // console.log("datResponse: " + JSON.stringify(this.datResponse));
-  //         let progressMessage = document.querySelector('#progressMessage');
-  //         progressMessage.innerHTML = ""
-  //       },
-  //       error => {
-  //         this.error = error // error path
-  //         console.log("err:" + error)
-  //         this.fetchedHtml = this.noDat;
-  //         let progressMessage = document.querySelector('#progressMessage');
-  //         progressMessage.innerHTML = ""
-  //       }
-  //     )
-  // }
-
-
   async update(datUri: string) {
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
@@ -234,6 +186,9 @@ export class AppComponent {
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
     (document.querySelector('#loading') as HTMLElement).style.display = "none";
     (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
+
+    this.socket2me();
+
   }
   async loadBunsen(datUri: string) {
     let progressMessage = document.querySelector('#progressMessage');
@@ -249,32 +204,24 @@ export class AppComponent {
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
     // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
     progressMessage.innerHTML = "";
-    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-    // (document.querySelector('#loading') as HTMLElement).style.display = "none";
-    // (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
+    this.socket2me();
   }
 
-  deleteAction() {
-    console.log('deletin\'')
-    // let dialogRef = this.dialog.open(DialogComponent);
-    var url = this.serverUrl + 'deleteDat';
-
-    this.appService.getDatResponse(url)
-      .subscribe(resp => {
-          console.log('url: ' + url + ' data: ' + JSON.stringify(resp));
-          this.responseData = JSON.stringify(resp);
-          this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl);
-          this.fetchedHtml =  this.noDat;
-          (document.querySelector('#urlBar') as HTMLElement).style.display = "block";
-        },
-        error => {
-          this.error = error // error path
-          console.log("err:" + error)
-          this.fetchedHtml = this.noDat;
-          let progressMessage = document.querySelector('#progressMessage');
-          progressMessage.innerHTML = ""
-        }
-      );
+  private socket2me() {
+    const wsUrl = `ws://localhost:3000/peers`
+    const socket = websocket(wsUrl, null, null)
+    // var stream = ws('ws://localhost:8343')
+    socket.on('data', function (rawMsg) {
+      console.log("got message: " + rawMsg);
+      var str = String.fromCharCode.apply(null, rawMsg);
+      let msgArray = str.split(":");
+      let uuid = msgArray[0].substring(0, 6);
+      let count = msgArray[1];
+      let formattedMsg = uuid + ": " + count + " peers";
+      (document.querySelector('#ws') as HTMLElement).innerHTML = formattedMsg;
+      socket.destroy()
+    })
+    socket.write('hello');
   }
 
   async refreshIframe() {
