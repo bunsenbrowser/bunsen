@@ -24,7 +24,8 @@ export class AppComponent {
   results: string[];
   serverUrl = 'http://localhost:3000/';
   port = 3000;
-  bunsenAddress = "bunsen.hashbase.io/"
+  // bunsenAddress = "bunsen.hashbase.io/"
+  bunsenAddress = "6bc354adc80174d62f492fcec2d44a34fe81c882b90bc2daf82e7dec1a98aa7fo/"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
