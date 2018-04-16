@@ -20,10 +20,10 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "nodejs-mobile-cordova": {
+    "cordova-plugin-file": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "cordova-plugin-file": {
+    "nodejs-mobile-cordova": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     }
   },

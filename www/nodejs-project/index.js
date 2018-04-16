@@ -25,10 +25,10 @@ gateway
         console.log('[dat-gateway] Now listening on port ' + port)
     })
     .catch(console.error)
-gateway.on('join', (dat) => {
-    // let dar = dat.archive.
-    let connections = dat.network.connections.length
-    let key = dat.options.key
-    console.log(key + " has " + connections + " peers.")
-})
+// gateway.on('join', (dat) => {
+//     // let dar = dat.archive.
+//     let connections = dat.network.connections.length
+//     let key = dat.options.key
+//     console.log(key + " has " + connections + " peers.")
+// })
 

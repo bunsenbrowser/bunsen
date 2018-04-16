@@ -30,8 +30,8 @@
         "ANDROID_HOST": " ",
         "ANDROID_PATHPREFIX": "/"
       },
-      "nodejs-mobile-cordova": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "nodejs-mobile-cordova": {}
     },
     "platforms": []
   },

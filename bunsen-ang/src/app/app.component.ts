@@ -23,7 +23,7 @@ export class AppComponent {
   serverUrl = 'http://localhost:3000/';
   port = 3000;
   // bunsenAddress = "bunsen.hashbase.io/"
-  bunsenAddress = "6bc354adc80174d62f492fcec2d44a34fe81c882b90bc2daf82e7dec1a98aa7fo/"
+  bunsenAddress = "936880275413e8e9b7d54307f6cc9d4a215994f11f6ee5488f7bad34a76a41c6/"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
@@ -187,7 +187,7 @@ export class AppComponent {
     (document.querySelector('#loading') as HTMLElement).style.display = "none";
     (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
 
-    this.socket2me();
+    // this.socket2me();
 
   }
   async loadBunsen(datUri: string) {
@@ -204,25 +204,25 @@ export class AppComponent {
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
     // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
     progressMessage.innerHTML = "";
-    this.socket2me();
+    // this.socket2me();
   }
 
-  private socket2me() {
-    const wsUrl = `ws://localhost:3000/peers`
-    const socket = websocket(wsUrl, null, null)
-    // var stream = ws('ws://localhost:8343')
-    socket.on('data', function (rawMsg) {
-      console.log("got message: " + rawMsg);
-      var str = String.fromCharCode.apply(null, rawMsg);
-      let msgArray = str.split(":");
-      let uuid = msgArray[0].substring(0, 6);
-      let count = msgArray[1];
-      let formattedMsg = uuid + ": " + count + " peers";
-      (document.querySelector('#ws') as HTMLElement).innerHTML = formattedMsg;
-      socket.destroy()
-    })
-    socket.write('hello');
-  }
+  // private socket2me() {
+  //   const wsUrl = `ws://localhost:3000/peers`
+  //   const socket = websocket(wsUrl, null, null)
+  //   // var stream = ws('ws://localhost:8343')
+  //   socket.on('data', function (rawMsg) {
+  //     console.log("got message: " + rawMsg);
+  //     var str = String.fromCharCode.apply(null, rawMsg);
+  //     let msgArray = str.split(":");
+  //     let uuid = msgArray[0].substring(0, 6);
+  //     let count = msgArray[1];
+  //     let formattedMsg = uuid + ": " + count + " peers";
+  //     (document.querySelector('#ws') as HTMLElement).innerHTML = formattedMsg;
+  //     socket.destroy()
+  //   })
+  //   socket.write('hello');
+  // }
 
   async refreshIframe() {
     let progressMessage = document.querySelector('#progressMessage');

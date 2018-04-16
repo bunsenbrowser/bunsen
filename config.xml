@@ -36,6 +36,6 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
-    <plugin name="nodejs-mobile-cordova" spec="^0.1.4" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <plugin name="nodejs-mobile-cordova" spec="^0.1.4" />
 </widget>
