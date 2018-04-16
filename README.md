@@ -52,7 +52,6 @@ Run the following to build the app.
 npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
-git checkout nodejs-mobile-cordova-refactor
 npm install
 cordova build android
 ```
