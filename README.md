@@ -8,7 +8,10 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
-[Download here!](https://drive.google.com/file/d/1GRlzMzjitL27tyahs2qfkm8QvZneWS_z/view?usp=sharing) 
+Bunsen is very much on training wheels. We're saying this is our beta 2 release, which offers compatibility with more
+Android devices and the beginnings of a listing of the number of peers that have connected to the dats you are sharing.
+
+[Download beta2 here!](https://drive.google.com/file/d/1GRlzMzjitL27tyahs2qfkm8QvZneWS_z/view?usp=sharing)
 
 ## How to use Bunsen
 
