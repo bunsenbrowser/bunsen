@@ -25,7 +25,7 @@
 
 iframe {
   height: calc(100vh - 20px);
-  width: calc(100vw - 40px);
+  width: 100%;
 }
 
 .arrowFwd {
