@@ -17,10 +17,10 @@
       "ANDROID_PATHPREFIX": "/",
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-file": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
-    "cordova-plugin-file": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "org.rti.sses.rcd.bunsen"
     },
     "nodejs-mobile-cordova": {

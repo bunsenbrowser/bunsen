@@ -2002,7 +2002,7 @@
       }
     },
     "cordova-node-plugin": {
-      "version": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git#f5faf14d3b45b4f28fb720ae8f1b7848b7fc5836"
+      "version": "git+https://github.com/bunsenbrowser/cordova-node-plugin.git#27b9171bf1f6f9d0d80620a5be72b3ef56e901dd"
     },
     "core-js": {
       "version": "2.4.1",
