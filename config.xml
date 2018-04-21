@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.rti.sses.rcd.bunsen" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.bunsenbrowser" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Bunsen</name>
     <description>
         p2p4u&amp;me
@@ -20,6 +20,12 @@
     <platform name="android">
         <allow-intent href="market:*" />
         <hook src="hooks/after_prepare/android/020_add_dat_intent.js" type="after_prepare" />
+        <icon density="mdpi" src="res/icon/android/mipmap-ldpi/ic_launcher.png" />
+        <icon density="mdpi" src="res/icon/android/mipmap-mdpi/ic_launcher.png" />
+        <icon density="hdpi" src="res/icon/android/mipmap-hdpi/ic_launcher.png" />
+        <icon density="xhdpi" src="res/icon/android/mipmap-xhdpi/ic_launcher.png" />
+        <icon density="xxhdpi" src="res/icon/android/mipmap-xxhdpi/ic_launcher.png" />
+        <icon density="xxxhdpi" src="res/icon/android/mipmap-xxxhdpi/ic_launcher.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

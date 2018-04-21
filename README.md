@@ -77,6 +77,17 @@ cd bunsen-ang
 npm start
 ```
 
+#### Releasing APK's
+
+Cordova is built on the Cordova platform, which can be a difficult friend sometimes. Sometimes the nodejs-mobile-cordova plugin doesn't want to load properly. Run the `refresh.sh` script to fix things. It removes/installs the android platform and the nodejs-mobile-cordova plugin.
+
+Before generating a release APK, copy build-template.json to build.json and fill out the necessary information. Useful information in the Cordova docs on [signing an App](https://cordova.apache.org/docs/en/latest/guide/platforms/android/#signing-an-app). If you need to setup your key and keystore, the Android Studio docs have the steps in [sign an APK](https://developer.android.com/studio/publish/app-signing.html#sign-apk)
+
+- To release a debug apk, run `debug_generate_apk.sh`
+- To release a release apk, run `release_generate_apk.sh`
+
+
+
 ## Architecture
 Bunsen consists of a UI App that is the chrome of the browser and an iframe that points at a Dat Server to display the requested Dat. When a user enters a Dat into the bar, it contacts the Dat Server by sending a GET request to `https://localhost:8080/dat/<dat UUID>`, waits until it is ready, and then displays an iframe that points to `https://localhost:8080/` where the backend Dat server that is serving the downloaded Dat.
 

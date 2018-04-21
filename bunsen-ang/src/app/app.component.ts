@@ -22,8 +22,8 @@ export class AppComponent {
   results: string[];
   serverUrl = 'http://localhost:3000/';
   port = 3000;
-  // bunsenAddress = "bunsen.hashbase.io/"
-  bunsenAddress = "936880275413e8e9b7d54307f6cc9d4a215994f11f6ee5488f7bad34a76a41c6/"
+  bunsenAddress = "bunsen.hashbase.io/"
+  // bunsenAddress = "936880275413e8e9b7d54307f6cc9d4a215994f11f6ee5488f7bad34a76a41c6/"
   responseData = '';
   datUrl: SafeResourceUrl;
   hashbaseUrl: "http://localhost:8080";
@@ -31,7 +31,6 @@ export class AppComponent {
   error: any;
   headers: string[];
   datResponse:any;
-  private stompClient;
 
   // Inject HttpClient into your component or service.
   constructor(private http: HttpClient, private sanitizer: DomSanitizer, private ngZone: NgZone, private appService: AppService) {
@@ -63,7 +62,6 @@ export class AppComponent {
   @Input() show: boolean;
   // @ViewChild('iframe') iframe: ElementRef;
   @ViewChild('iframe') iframe: any;
-
 
   private handleOpenUrl(datUri) {
     console.log("received url: " + datUri);
@@ -176,8 +174,6 @@ export class AppComponent {
     const body = {uri: this.datUri};
     // var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
-    // (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
-    // (document.querySelector('#iframe') as HTMLIFrameElement).src=url;
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress + "#" + datUri);
     var iframe = document.querySelector('#iframe') as HTMLIFrameElement
     iframe.src = this.serverUrl + this.bunsenAddress + "#" + datUri
@@ -186,9 +182,6 @@ export class AppComponent {
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
     (document.querySelector('#loading') as HTMLElement).style.display = "none";
     (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
-
-    // this.socket2me();
-
   }
   async loadBunsen(datUri: string) {
     let progressMessage = document.querySelector('#progressMessage');
@@ -204,25 +197,8 @@ export class AppComponent {
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
     // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
     progressMessage.innerHTML = "";
-    // this.socket2me();
   }
 
-  // private socket2me() {
-  //   const wsUrl = `ws://localhost:3000/peers`
-  //   const socket = websocket(wsUrl, null, null)
-  //   // var stream = ws('ws://localhost:8343')
-  //   socket.on('data', function (rawMsg) {
-  //     console.log("got message: " + rawMsg);
-  //     var str = String.fromCharCode.apply(null, rawMsg);
-  //     let msgArray = str.split(":");
-  //     let uuid = msgArray[0].substring(0, 6);
-  //     let count = msgArray[1];
-  //     let formattedMsg = uuid + ": " + count + " peers";
-  //     (document.querySelector('#ws') as HTMLElement).innerHTML = formattedMsg;
-  //     socket.destroy()
-  //   })
-  //   socket.write('hello');
-  // }
 
   async refreshIframe() {
     let progressMessage = document.querySelector('#progressMessage');
@@ -241,12 +217,6 @@ export class AppComponent {
       (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
     }
 
-    // var iWindow = (<HTMLIFrameElement>this.iframe).contentWindow;
-    // var iWindow = this.iframe.contentWindow;
-    // var doc = iWindow.document;
-    // console.debug(doc);
-    // console.log(doc.getElementById('foo').innerText);
-    // (document.querySelector('#box') as HTMLElement).style.display = "none";
   }
 
 }

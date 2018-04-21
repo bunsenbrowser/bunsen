@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-adb uninstall org.rti.sses.rcd.bunsen
-adb install ./bunsen/platforms/android/build/outputs/apk/android-debug.apk
-adb shell am start -n org.rti.sses.rcd.bunsen/org.rti.sses.rcd.bunsen.MainActivity
+adb uninstall org.bunsenbrowser
+adb install ./platforms/android/build/outputs/apk/android-release.apk
+adb shell am start -n org.bunsenbrowser/org.bunsenbrowser.MainActivity
