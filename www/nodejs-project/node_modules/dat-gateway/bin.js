@@ -41,13 +41,18 @@ require('yargs')
           alias: 't',
           description: 'Number of milliseconds before archives expire.',
           default: 10 * 60 * 1000 // ten minutes
+        },
+        redirect: {
+          alias: 'r',
+          description: 'Whether to use subdomain redirects',
+          default: false
         }
       })
     },
     handler: function (argv) {
-      const { dir, max, period, port, ttl } = argv
+      const { dir, max, period, port, ttl, redirect } = argv
       mkdirp.sync(dir) // make sure it exists
-      const gateway = new DatGateway({ dir, max, period, ttl })
+      const gateway = new DatGateway({ dir, max, period, ttl, redirect })
       gateway
         .load()
         .then(() => {

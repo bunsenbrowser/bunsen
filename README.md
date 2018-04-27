@@ -8,10 +8,11 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
-Bunsen is very much on training wheels. We're saying this is our beta 2 release, which offers compatibility with more
-Android devices and the beginnings of a listing of the number of peers that have connected to the dats you are sharing.
 
-[Download beta2 here!](https://drive.google.com/file/d/1GRlzMzjitL27tyahs2qfkm8QvZneWS_z/view?usp=sharing)
+Current version: [beta 3](https://goo.gl/w3PYdd): Thanks to incredible support from @RangerMauve we were able to update [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen. Resolves issue [Security issue: Cookies, local database, etc. on a Dat available to every Dat](https://github.com/bunsenbrowser/bunsen/issues/30). 
+
+[Download beta 3 here!](https://goo.gl/w3PYdd) | [Release History](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Releases)
+
 
 ## How to use Bunsen
 
@@ -83,9 +84,10 @@ Cordova is built on the Cordova platform, which can be a difficult friend someti
 
 Before generating a release APK, copy build-template.json to build.json and fill out the necessary information. Useful information in the Cordova docs on [signing an App](https://cordova.apache.org/docs/en/latest/guide/platforms/android/#signing-an-app). If you need to setup your key and keystore, the Android Studio docs have the steps in [sign an APK](https://developer.android.com/studio/publish/app-signing.html#sign-apk)
 
+I usually run `cordova build` and then `./refresh.sh` before generating an APK.
+
 - To release a debug apk, run `debug_generate_apk.sh`
 - To release a release apk, run `release_generate_apk.sh`
-
 
 
 ## Architecture

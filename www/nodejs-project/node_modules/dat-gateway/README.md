@@ -27,15 +27,18 @@ $ dat-gateway -h
 dat-gateway
 
 Options:
-  --version   Show version number                                      [boolean]
-  --config    Path to JSON config file
-  --port, -p  Port for the gateway to listen on.                 [default: 3000]
-  --dir, -d   Directory to use as a cache.  [string] [default: "~/.dat-gateway"]
-  --max, -m   Maximum number of archives allowed in the cache.     [default: 20]
-  --period    Number of milliseconds between cleaning the cache of expired
-              archives.                                         [default: 10000]
-  --ttl, -t   Number of milliseconds before archives expire.   [default: 600000]
-  -h, --help  Show help                                                [boolean]
+  --version       Show version number                                  [boolean]
+  --config        Path to JSON config file
+  --port, -p      Port for the gateway to listen on.             [default: 3000]
+  --dir, -d       Directory to use as a cache.
+                                            [string] [default: "~/.dat-gateway"]
+  --max, -m       Maximum number of archives allowed in the cache. [default: 20]
+  --period        Number of milliseconds between cleaning the cache of expired
+                  archives.                                     [default: 60000]
+  --ttl, -t       Number of milliseconds before archives expire.
+                                                               [default: 600000]
+  --redirect, -r  Whether to use subdomain redirects            [default: false]
+  -h, --help      Show help                                            [boolean]
 ```
 
 You can visit Dat archives through the gateway using a route like this:
@@ -76,6 +79,17 @@ archive.once('ready', () => {
   socket.pipe(archive.replicate()).pipe(socket)
 })
 ```
+
+## Subdomain redirection
+
+By default dat-gateway will serve all dats from the same origin. This means that dats using absolute URLs (starting with `/`) will be broken.
+This also means that all dats will share the same localStorage and indexedDB instances which can cause security issues.
+
+In order to resolve these issues, you can use the `--redirect` flag in conjunction with the `lvh.me` domain to have each dat served on a subdomain.
+
+For example, `http://lvh.me:3000/{datkey}/index.html` will be redirected to `http://{datkey32}.lvh.me/index.html` which will serve the file from localhost, but at a different domain, ensuring the browser isolates all the contents from each other.
+
+Please note that due to limitations in how URLs work, the dat key will be converted to it's base32 representation instead of hexadecimal using [this library](https://github.com/RangerMauve/hex-to-32)
 
 ## Contributions
 

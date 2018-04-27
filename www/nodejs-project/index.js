@@ -11,11 +11,12 @@ const period = 60 * 1000 // every minute
 const port = 3000
 const ttl = 43200 * 60 * 1000 // 30 days
 const dat = {temp:false}
+const redirect = true
 
 var dir = path.join(__dirname, datGatewayName)
-
+console.log("redirect: " + redirect)
 mkdirp.sync(dir) // make sure it exists
-const gateway = new DatGateway({ dir, dat, max, period, ttl })
+const gateway = new DatGateway({ dir, dat, max, period, ttl, redirect })
 gateway
     .load()
     .then(() => {
@@ -25,10 +26,4 @@ gateway
         console.log('[dat-gateway] Now listening on port ' + port)
     })
     .catch(console.error)
-// gateway.on('join', (dat) => {
-//     // let dar = dat.archive.
-//     let connections = dat.network.connections.length
-//     let key = dat.options.key
-//     console.log(key + " has " + connections + " peers.")
-// })
 
