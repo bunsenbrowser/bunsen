@@ -6,7 +6,7 @@ console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
 
 const datGatewayName = 'dat-gateway';
-const max = 20;
+const max = 50;
 const period = 60 * 1000 // every minute
 const port = 3000
 const ttl = 43200 * 60 * 1000 // 30 days
