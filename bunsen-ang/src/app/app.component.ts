@@ -20,13 +20,14 @@ export class AppComponent {
   title = 'Bunsen';
   datUri = '';
   results: string[];
-  serverUrl = 'http://localhost:3000/';
+  // serverUrl = 'http://localhost:3000/';
+  serverUrl = 'http://gateway.mauve.moe:3000/';
   port = 3000;
   // bunsenAddress = "bunsen.hashbase.io/"
-  bunsenAddress = "fork-ui-bunsen.hashbase.io/"
+  bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
   responseData = '';
   datUrl: SafeResourceUrl;
-  hashbaseUrl: "http://localhost:8080";
+  // hashbaseUrl: "http://localhost:8080";
   fetchedHtml = '';
   error: any;
   headers: string[];
@@ -76,7 +77,7 @@ export class AppComponent {
   ngOnInit() {
     document.addEventListener('deviceready', () => {
       console.log('deviceready');
-      startNodeProject();
+      // startNodeProject();
 
       function channelListener(msg) {
         console.log('[cordova] received: ' + msg);
@@ -147,7 +148,8 @@ export class AppComponent {
 
     var ping_loop = setInterval(() => {
 
-      ping("localhost", this.port, function(msg){
+      // ping("localhost", this.port, function(msg){
+      ping("gateway.mauve.moe", this.port, function(msg){
         // console.log("It took "+m+" miliseconds.");
         pingstatus = msg;
         console.log("pingstatus: " + pingstatus)
@@ -184,6 +186,7 @@ export class AppComponent {
     (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
   }
   async loadBunsen(datUri: string) {
+    console.log('Loading ' + this.datUri);
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
@@ -209,13 +212,14 @@ export class AppComponent {
   onLoadIframe() {
     console.log("iframe onload");
     let iframe = document.querySelector('#iframe') as HTMLIFrameElement
-    if (iframe.src == 'http://localhost:3000/') {
-      iframe.style.display = "none";
-    } else {
+    // if (iframe.src == 'http://localhost:3000/') {
+    // if (iframe.src == 'http://gateway.mauve.moe:3000/') {
+    //   iframe.style.display = "none";
+    // } else {
       iframe.style.display = "block";
       (document.querySelector('#loading') as HTMLElement).style.display = "none";
       (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-    }
+    // }
 
   }
 
