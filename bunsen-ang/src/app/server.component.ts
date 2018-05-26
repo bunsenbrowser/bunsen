@@ -37,6 +37,7 @@ export class ServerComponent {
   _methods () {
     return {
       selectArchive: (options, callback) => {
+        console.log("You got the power.")
         this.selectArchive(options, callback)
       },
       addArchive: (key, secretKey, options, callback) => {

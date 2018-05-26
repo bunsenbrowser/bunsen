@@ -208,7 +208,6 @@ export class AppComponent {
 
   selectArchive(options, callback) {
     console.log("Why was selectArchive called?")
-
   }
 
   setArchives(newList) {
@@ -224,7 +223,7 @@ export class AppComponent {
   }
 
   async loadBunsen(datUri: string) {
-    console.log('Loading ' + this.datUri);
+    console.log('Loading ' + datUri);
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
@@ -247,8 +246,9 @@ export class AppComponent {
       storage,
       addArchive,
       selectArchive
-    })
-
+    });
+    window['gatewayServer'] = server;
+    window['gatewayStorage'] = storage;
   }
 
 
@@ -261,16 +261,14 @@ export class AppComponent {
   onLoadIframe() {
     console.log("iframe onload");
     let iframe = document.querySelector('#iframe') as HTMLIFrameElement
-    // if (iframe.src == 'http://localhost:3000/') {
+    if (iframe.src == 'http://localhost:3000/') {
     // if (iframe.src == 'http://gateway.mauve.moe:3000/') {
-    //   iframe.style.display = "none";
-    // } else {
+      iframe.style.display = "none";
+    } else {
       iframe.style.display = "block";
       (document.querySelector('#loading') as HTMLElement).style.display = "none";
       (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
-
-
-    // }
+    }
 
   }
 
