@@ -1,6 +1,8 @@
 var RPC = require('frame-rpc');
 
-const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
+const bunsenAddress = "dat://fork-ui2-bunsen.hashbase.io/"
+// const wikiAddress = "dat://wysiwywiki-bunsen.hashbase.io/"
+const wikiAddress = "dat://528691905866112c90eea949bcc0712c208f0ac0803d38312dc18cfa7fda82d1/"
 
 
 async function receiveMessage (event) {
@@ -31,10 +33,12 @@ async function receiveMessage (event) {
 document.addEventListener('DOMContentLoaded', async (event) => {
   console.log('DOMContentLoaded in client')
     const searchBox = document.getElementById('search')
-    searchBox.value = bunsenAddress
-    const goButton = document.getElementById('go')
-     goButton.addEventListener('click', forkDat)
-    const wikiButton = document.getElementById('go')
+    searchBox.value = wikiAddress
+    const openButton = document.getElementById('open')
+     openButton.addEventListener('click', openDat)
+    const forkButton = document.getElementById('fork')
+     forkButton.addEventListener('click', forkDat)
+    const wikiButton = document.getElementById('wiki')
     wikiButton.addEventListener('click', launchWiki)
     // Fit iframe to window.
     const frame = document.getElementById('view')
@@ -74,6 +78,23 @@ document.addEventListener('DOMContentLoaded', async (event) => {
   // }
 })
 
+async function openDat () {
+    const searchBox = document.getElementById('search')
+    const datAddress = searchBox.value
+    console.log('opening ' + datAddress)
+    // frame.parent.contentWindow.postMessage(datAddress, '*')
+    // try {
+    //     let forkedArchive = await DatArchive.fork(datAddress)
+    //     console.log('we forked to', forkedArchive.url)
+    //     // let theArchive = await DatArchive.selectArchive({})
+    //     console.log('hey!')
+    //     parent.location.reload()
+    // } catch (e) {
+    //     console.log('Error: ' + e)
+    // }
+    iframe.src = this.serverUrl + this.bunsenAddress + "#" + datUri
+}
+
 async function forkDat () {
     const searchBox = document.getElementById('search')
     const datAddress = searchBox.value
@@ -99,16 +120,44 @@ async function launchWiki() {
     // now pop it into our archive
     // let secretKey = Buffer.from(archiveKVP.secretKey, 'hex')
     // await archive._archive.metadata._storage.secretKey.write(0, secretKey)
-
+    const now = new Date();
     const contents = `
         <title>Gateway Test</title>
         <p>Hello World!</p>
+        <p>${now}</p>
         `
     try {
         await archive.writeFile('sayHello.html', contents)
         console.log('Wrote sayHello.html to ' + url)
-        alert('Wrote sayHello.html to ' + url)
+
+        // alert('Wrote sayHello.html to ' + url)
+        let targetUrl = ''
+        if (url.substr(0, 4) === 'dat:') {
+            // Remove protocol and all slashes to be used in gateway address.
+            let gatewayTarget = url.replace('dat://', '').replace('/', '')
+            // Remove the base32 of bunsen.hashbase.io if the subdomain is base32 length, otherwise we're
+            // probbaly not running in a gateway with base32 subdomain support.
+            let gatewayParts = window.location.host.split('.')
+            if (gatewayParts[0].length === 52) {
+                gatewayParts.shift()
+            }
+            let gatewayRoot = gatewayParts.join('.')
+            // targetUrl = `${window.location.protocol}//${gatewayRoot}/${gatewayTarget}/`
+            targetUrl = `${window.location.protocol}//localhost:3000/${gatewayTarget}/`
+        } else {
+            targetUrl = url
+        }
         // change the iframe src to this url
+        // this.$.view.src = targetUrl
+        console.log("targetUrl: " + targetUrl)
+        const frame = document.getElementById('view')
+        window.Bunsen = {}
+        console.log("tell shell to open the frame via rpc.")
+        // frame.parent.contentWindow.postMessage('OPEN' + targetUrl, '*')
+
+        // window.Bunsen.archive = archive
+        // frame.src = targetUrl;
+        // frame.contentWindow.Bunsen = archive
     } catch (e) {
         alert('Error: ' + e)
         console.log('Error: ' + e)

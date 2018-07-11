@@ -5,7 +5,10 @@ const port = 3000;
 const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
 let datUrl;
 const selectQueue = []
-
+let currentSelection = null
+const form = document.getElementById('selection-form')
+const selectionItems = document.getElementById('selection-items')
+const DEFAULT_SELECT_MESSAGE = 'Select an archive'
 
 // Cordova init code
 document.addEventListener('deviceready', () => {
@@ -113,7 +116,45 @@ function selectArchive (options, callback) {
         callback: callback
     })
 
-    // showNext()
+    showNext()
+}
+
+function showNext () {
+    if (!currentSelection) {
+        showSelection(selectQueue.shift())
+    }
+}
+
+function showSelection (selectionItem) {
+    currentSelection = selectionItem
+    const archiveList = getArchives()
+    if (archiveList.length !== 0) {
+        const renderedItems = archiveList.map((archive) => {
+            return `
+    <label class="select-item">
+      <input type="checkbox" value="${archive.key}">
+      ${archive.details.title || archive.key}
+    </label><br/>
+`
+        })
+        let toRender = `
+    <div class="select-message">
+      ${DEFAULT_SELECT_MESSAGE}
+    </div>
+    ${renderedItems.join('\n')}
+`
+        if (typeof selectionItem.options !== 'undefined') {
+            toRender = `
+    <div class="select-message">
+      ${selectionItem.options.title || DEFAULT_SELECT_MESSAGE}
+    </div>
+    ${renderedItems.join('\n')}
+`
+        }
+
+        selectionItems.innerHTML = toRender
+        form.classList.remove('hidden')
+    }
 }
 
 function setArchives (newList) {
@@ -128,19 +169,40 @@ function getArchives () {
     return JSON.parse(window.localStorage.archives || '[]')
 }
 
+function handleSelected (e) {
+    e.preventDefault()
 
-async function loadBunsen(datUri) {
-    console.log('Loading ' + datUri);
+    if (currentSelection) {
+        const input = form.querySelector('input:checked')
+        const url = `dat://${input.value}`
+        currentSelection.callback(false, url)
+        currentSelection = null
+    }
+
+    if (selectQueue.length === 0) {
+        hideForm()
+    } else {
+        showNext()
+    }
+}
+
+
+function hideForm () {
+    form.classList.add('hidden')
+}
+
+async function loadBunsen() {
+    datUrl = './client/index.html?DAT_GATEWAY=http%3A//localhost%3A3000';
+    console.log('Loading Bunsen UI from datUri:' + datUrl);
     let progressMessage = document.querySelector('#progressMessage');
-    this.datUri = datUri;
-    console.log('dat datUri: ' + this.datUri);
-    const body = {uri: this.datUri};
-    var url = this.serverUrl + this.datUri;
+    this.datUri = datUrl;
+    // console.log('dat datUri: ' + this.datUri);
+    // const body = {uri: this.datUri};
+    // var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
     let iframe = document.querySelector('#client-frame')
     iframe.style.display = "none";
     // datUrl = serverUrl + bunsenAddress;
-    datUrl = './client/index.html?DAT_GATEWAY=http%3A//localhost%3A3000';
     iframe.src = datUrl;
     progressMessage.innerHTML = "";
     const storage = idb('dat://storage')
@@ -151,6 +213,9 @@ async function loadBunsen(datUri) {
     });
     window.gatewayServer = server
     window.gatewayStorage = storage
+
+    form.addEventListener('submit', handleSelected)
+
 
 }
 
@@ -163,5 +228,16 @@ function onLoadIframe() {
         iframe.style.display = "block";
         document.querySelector('#loading').style.display = "none";
     }
+}
 
+async function receiveMessage (event) {
+// console.log(event.data)
+    let data = event.data
+    if (typeof data.arguments !== 'undefined' && data.arguments.length > 1) {
+        let url = data.arguments[1]
+        if (typeof url === 'string' && url.startsWith('OPEN')) {
+            console.log('opening: ' + url)
+            // let archive = await new DatArchive(url)
+        }
+    }
 }
