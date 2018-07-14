@@ -1,4 +1,5 @@
 var RPC = require('frame-rpc');
+const serverUrl = 'http://localhost:3000/';
 
 const bunsenAddress = "dat://fork-ui2-bunsen.hashbase.io/"
 // const wikiAddress = "dat://wysiwywiki-bunsen.hashbase.io/"
@@ -80,19 +81,24 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
 async function openDat () {
     const searchBox = document.getElementById('search')
-    const datAddress = searchBox.value
-    console.log('opening ' + datAddress)
+    const url = searchBox.value
+    console.log('opening ' + url)
+    const frame = document.getElementById('view')
     // frame.parent.contentWindow.postMessage(datAddress, '*')
-    // try {
-    //     let forkedArchive = await DatArchive.fork(datAddress)
-    //     console.log('we forked to', forkedArchive.url)
-    //     // let theArchive = await DatArchive.selectArchive({})
-    //     console.log('hey!')
-    //     parent.location.reload()
-    // } catch (e) {
-    //     console.log('Error: ' + e)
-    // }
-    iframe.src = this.serverUrl + this.bunsenAddress + "#" + datUri
+    // iframe.src = this.serverUrl + this.bunsenAddress + "#" + datUri
+    let gatewayTarget = url.replace('dat://', '').replace('/', '')
+    // Remove the base32 of bunsen.hashbase.io if the subdomain is base32 length, otherwise we're
+    // probbaly not running in a gateway with base32 subdomain support.
+    let gatewayParts = window.location.host.split('.')
+    if (gatewayParts[0].length === 52) {
+        gatewayParts.shift()
+    }
+    let gatewayRoot = gatewayParts.join('.')
+    // targetUrl = `${window.location.protocol}//${gatewayRoot}/${gatewayTarget}/`
+    targetUrl = `${window.location.protocol}//localhost:3000/${gatewayTarget}/`
+    // frame.src = targetUrl
+    // frame.src = "http://localhost:3000/5f1a97ffd5081b151cd85940e3797cdec82700f724fda981c4e9c7a5b29c335a/"
+    frame.src = "http://bwd9fzyn10dha76rb50e6ybwvv42e07q4kyuk0e4x73ubcmw6dd0.localhost:3000/"
 }
 
 async function forkDat () {
@@ -156,7 +162,7 @@ async function launchWiki() {
         // frame.parent.contentWindow.postMessage('OPEN' + targetUrl, '*')
 
         // window.Bunsen.archive = archive
-        // frame.src = targetUrl;
+        frame.src = targetUrl;
         // frame.contentWindow.Bunsen = archive
     } catch (e) {
         alert('Error: ' + e)
