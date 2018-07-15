@@ -11,4 +11,12 @@ declare var webintent;
 interface webintent {
   id: string;
 }
+declare var gatewayServer;
+interface gatewayServer {
+  id: string;
+}
+declare var gatewayStorage;
+interface gatewayStorage {
+  id: string;
+}
 

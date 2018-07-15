@@ -8,7 +8,7 @@ module.exports = function(context) {
     const baseWWW = basePath;
 
     console.log(execSync(
-      "./node_modules/@angular/cli/bin/ng build -v --target=production --environment=prod --output-path ../www/app/ --base-href .",
+      "./node_modules/@angular/cli/bin/ng build -v --target=production --sourcemaps=true --environment=prod --output-path ../www/app/ --base-href .",
       {
         maxBuffer: 1024*1024,
         cwd: basePath + '/'

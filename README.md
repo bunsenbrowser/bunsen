@@ -70,16 +70,32 @@ To install on an Android device, you may use the `./installapp.sh` script
 
 If you need to develop the web UI, you will need to start two services, the UI and the Server in two different terminals.
 
-In the first terminal:
+In the first terminal, run the local gateway.
 ```
 cd www/nodejs-project
-node index.js
+npm start
 ```
 
-In the second terminal:
+In the second terminal, start the process to watch for changes in the shell code.
 ```
-cd bunsen-ang
-npm start
+cd www/shell
+npm run watch
+```
+
+In the third terminal, start the process to serve the shell html:
+
+```
+cd www/shell
+simplehttpserver
+```
+
+Access the app at http://localhost:8000
+
+If you are working on enabling any of the dependent dat app, share those as well
+
+```
+cd dat-wysiwywiki-app
+dat share
 ```
 
 #### Releasing APK's
