@@ -1,4 +1,4 @@
-var RPC = require('frame-rpc');
+// var RPC = require('frame-rpc');
 const serverUrl = 'http://localhost:3000/';
 
 const bunsenAddress = "dat://home-bunsen.hashbase.io/"
@@ -154,7 +154,7 @@ async function openAddress(address) {
         }
         let gatewayRoot = gatewayParts.join('.')
         // targetUrl = `${window.location.protocol}//${gatewayRoot}/${gatewayTarget}/`
-        targetUrl = `${window.location.protocol}//localhost:3000/${gatewayTarget}/`
+        targetUrl = `http://localhost:3000/${gatewayTarget}/`
     } else {
         targetUrl = address
     }

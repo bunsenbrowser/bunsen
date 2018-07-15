@@ -4,11 +4,62 @@ const port = 3000;
 const bunsenAddress = "bunsen.hashbase.io/"
 // const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
 let datUrl;
+let datUri;
 const selectQueue = []
 let currentSelection = null
 const form = document.getElementById('selection-form')
 const selectionItems = document.getElementById('selection-items')
 const DEFAULT_SELECT_MESSAGE = 'Select an archive'
+
+window.handleOpenURL = (url) => {
+    window.handleOpenURL_LastURL = url;
+};
+
+// kudos: https://github.com/EddyVerbruggen/Custom-URL-scheme/issues/227#issuecomment-318810896
+// override open handler to navigate on further custom url scheme actions
+window.handleOpenURL = (url) => {
+    // this context is called outside of angular zone!
+    setTimeout(() => {
+            handleOpenUrl(url);
+    }, 0);
+};
+
+// check if app was opened by custom url scheme
+const lastUrl = window.handleOpenURL_LastURL || "";
+if (lastUrl && lastUrl !== "") {
+    delete window.handleOpenURL_LastURL;
+    handleOpenUrl(lastUrl);
+}
+
+function handleOpenUrl(datUri) {
+    console.log("received url: " + datUri);
+    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
+    // var url = datUri.replace('dat://', '') + "/"
+    let progressMessage = document.querySelector('#progressMessage');
+    progressMessage.innerHTML = "Downloading...";
+    update(datUri);
+    // this.refreshIframe();
+}
+
+async function update(datUri) {
+
+    let progressMessage = document.querySelector('#progressMessage');
+    // progressMessage.innerHTML = "Downloading...";
+    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
+    datUri = datUri;
+    console.log('dat datUri: ' + datUri);
+    const body = {uri: datUri};
+    // var url = this.serverUrl + this.datUri;
+    // this.fetchedHtml = "";
+    datUrl = serverUrl + bunsenAddress + "#" + datUri;
+    var iframe = document.querySelector('#client-frame')
+    iframe.src = datUrl
+    // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
+    progressMessage.innerHTML = "";
+    // (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "none";
+    // (document.querySelector('#loading') as HTMLElement).style.display = "none";
+    document.querySelector('#client-frame').style.display = "block";
+}
 
 // Cordova init code
 document.addEventListener('deviceready', () => {
@@ -90,9 +141,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 })
 
-document.addEventListener('resume', () => {
-    console.log('resume');
-}, false);
+// document.addEventListener('resume', () => {
+//     console.log('resume');
+// }, false);
 
 function addArchive (key, secretKey, options, callback) {
     const archiveList = getArchives()

@@ -64,7 +64,7 @@ To install on an Android device, you may use the `./installapp.sh` script
 
 #### Web UI and node app development
 
-If you need to develop the web UI, you will need to start two services, the UI and the Server in two different terminals.
+If you need to develop the web UI, you will need to start two services, the Server and the shell UI in two different terminals.
 
 In the first terminal, run the local gateway.
 ```
@@ -72,13 +72,7 @@ cd www/nodejs-project
 npm start
 ```
 
-In the second terminal, start the process to watch for changes in the shell code.
-```
-cd www/shell
-npm run watch
-```
-
-In the third terminal, start the process to serve the shell html:
+In the second terminal, start the process to serve the shell html:
 
 ```
 cd www/shell
