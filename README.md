@@ -2,7 +2,7 @@
 
 ![bunsen logo](bunsen-logo.png)
 
-Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an Angular 4 app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support iOS someday.
+Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support iOS someday.
 
 [![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
 
