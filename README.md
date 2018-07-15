@@ -8,11 +8,15 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
+Current version: [beta 4](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
 
-Current version: [beta 3](https://goo.gl/w3PYdd): Thanks to incredible support from @RangerMauve we were able to update [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen. Resolves issue [Security issue: Cookies, local database, etc. on a Dat available to every Dat](https://github.com/bunsenbrowser/bunsen/issues/30). 
+This beta 4 is a transitional release for us - we're moving away form the Angular code to a less-opinionated js codebase that will hopefully make it easier for other devs to work w/ Bunsen. 
 
-[Download beta 3 here!](https://goo.gl/w3PYdd) | [Release History](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Releases)
+Here is [beta 3](https://goo.gl/w3PYdd) in case you hit some blockers with beta 4.
 
+Thanks to incredible support from @RangerMauve we were able to update [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen. Resolves issue [Security issue: Cookies, local database, etc. on a Dat available to every Dat](https://github.com/bunsenbrowser/bunsen/issues/30). 
+
+[Download beta 4 here!](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0) | [Release History](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Releases)
 
 ## How to use Bunsen
 
