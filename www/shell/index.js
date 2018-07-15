@@ -1,8 +1,8 @@
 const serverUrl = 'http://localhost:3000/';
 // serverUrl = 'http://gateway.mauve.moe:3000/';
 const port = 3000;
-// bunsenAddress = "bunsen.hashbase.io/"
-const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
+const bunsenAddress = "bunsen.hashbase.io/"
+// const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
 let datUrl;
 const selectQueue = []
 let currentSelection = null
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         if (pingstatus == "connected") { // all requests are passed and have returned
             datUrl = serverUrl + bunsenAddress;
-            this.loadBunsen();
+            loadBunsen(bunsenAddress);
             clearInterval(ping_loop);
         }
     }, TIME_PERIOD)
@@ -191,32 +191,30 @@ function hideForm () {
     form.classList.add('hidden')
 }
 
-async function loadBunsen() {
+async function loadBunsen(datUri) {
     datUrl = './client/index.html?DAT_GATEWAY=http%3A//localhost%3A3000';
     console.log('Loading Bunsen UI from datUri:' + datUrl);
     let progressMessage = document.querySelector('#progressMessage');
-    this.datUri = datUrl;
+    // this.datUri = datUrl;
     // console.log('dat datUri: ' + this.datUri);
     // const body = {uri: this.datUri};
     // var url = this.serverUrl + this.datUri;
-    this.fetchedHtml = "";
+    // this.fetchedHtml = "";
     let iframe = document.querySelector('#client-frame')
     iframe.style.display = "none";
-    // datUrl = serverUrl + bunsenAddress;
+    // datUrl = serverUrl + datUri;
     iframe.src = datUrl;
     progressMessage.innerHTML = "";
-    const storage = idb('dat://storage')
-    const server = new RPC.Server(window, iframe.contentWindow, {
-        storage,
-        addArchive,
-        selectArchive
-    });
-    window.gatewayServer = server
-    window.gatewayStorage = storage
-
-    form.addEventListener('submit', handleSelected)
-
-
+    // const storage = idb('dat://storage')
+    // const server = new RPC.Server(window, iframe.contentWindow, {
+    //     storage,
+    //     addArchive,
+    //     selectArchive
+    // });
+    // window.gatewayServer = server
+    // window.gatewayStorage = storage
+    //
+    // form.addEventListener('submit', handleSelected)
 }
 
 function onLoadIframe() {
