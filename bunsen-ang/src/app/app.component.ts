@@ -1,9 +1,13 @@
 ///<reference path="../typings.d.ts"/>
+///<reference path="../../node_modules/@types/node/index.d.ts"/>
 import {Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {AppService} from "./app.service";
 import * as websocket from 'websocket-stream';
+import * as RPC from "./server.component";
+// import * as idb from 'random-access-idb'
+var idb = require('random-access-idb');
 
 (window as any).handleOpenURL = (url: string) => {
   (window as any).handleOpenURL_LastURL = url;
@@ -21,12 +25,13 @@ export class AppComponent {
   datUri = '';
   results: string[];
   serverUrl = 'http://localhost:3000/';
+  // serverUrl = 'http://gateway.mauve.moe:3000/';
   port = 3000;
-  bunsenAddress = "bunsen.hashbase.io/"
-  // bunsenAddress = "936880275413e8e9b7d54307f6cc9d4a215994f11f6ee5488f7bad34a76a41c6/"
+  // bunsenAddress = "bunsen.hashbase.io/"
+  bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
   responseData = '';
   datUrl: SafeResourceUrl;
-  hashbaseUrl: "http://localhost:8080";
+  // hashbaseUrl: "http://localhost:8080";
   fetchedHtml = '';
   error: any;
   headers: string[];
@@ -148,6 +153,7 @@ export class AppComponent {
     var ping_loop = setInterval(() => {
 
       ping("localhost", this.port, function(msg){
+      // ping("gateway.mauve.moe", this.port, function(msg){
         // console.log("It took "+m+" miliseconds.");
         pingstatus = msg;
         console.log("pingstatus: " + pingstatus)
@@ -183,7 +189,41 @@ export class AppComponent {
     (document.querySelector('#loading') as HTMLElement).style.display = "none";
     (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "block";
   }
+
+  addArchive(key, secretKey, options, callback) {
+    const archiveList = this.getArchives()
+    try {
+      archiveList.push({
+        key,
+        secretKey,
+        details: options
+      })
+    } catch (e) {
+      console.log('error: ' + e)
+    }
+    console.log('setting Archives for key: ' + key)
+    this.setArchives(archiveList)
+    callback()
+  }
+
+  selectArchive(options, callback) {
+    console.log("Why was selectArchive called?")
+  }
+
+  setArchives(newList) {
+    try {
+      window.localStorage.archives = JSON.stringify(newList)
+    } catch (e) {
+      console.log('Error: ' + e)
+    }
+  }
+
+  getArchives() {
+    return JSON.parse(window.localStorage.archives || '[]')
+  }
+
   async loadBunsen(datUri: string) {
+    console.log('Loading ' + datUri);
     let progressMessage = document.querySelector('#progressMessage');
     // progressMessage.innerHTML = "Downloading...";
     (document.querySelector('mat-progress-bar') as HTMLElement).style.display = "block";
@@ -192,11 +232,23 @@ export class AppComponent {
     const body = {uri: this.datUri};
     var url = this.serverUrl + this.datUri;
     this.fetchedHtml = "";
-    (document.querySelector('#iframe') as HTMLIFrameElement).style.display = "none";
+    let iframe = document.querySelector('#iframe') as HTMLIFrameElement
+    iframe.style.display = "none";
     // (document.querySelector('#iframe') as HTMLIFrameElement).src=url;
     this.datUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.serverUrl + this.bunsenAddress);
     // (document.querySelector('#urlBar') as HTMLElement).style.display = "none";
     progressMessage.innerHTML = "";
+    const addArchive = this.addArchive
+    const selectArchive = this.selectArchive
+    const storage = idb('dat://storage')
+    // const server = new RPC.ServerComponent(window, iframe.contentWindow, {
+    const server = new RPC.ServerComponent(window, this.iframe.nativeElement.contentWindow, {
+      storage,
+      addArchive,
+      selectArchive
+    });
+    window['gatewayServer'] = server;
+    window['gatewayStorage'] = storage;
   }
 
 
@@ -210,6 +262,7 @@ export class AppComponent {
     console.log("iframe onload");
     let iframe = document.querySelector('#iframe') as HTMLIFrameElement
     if (iframe.src == 'http://localhost:3000/') {
+    // if (iframe.src == 'http://gateway.mauve.moe:3000/') {
       iframe.style.display = "none";
     } else {
       iframe.style.display = "block";

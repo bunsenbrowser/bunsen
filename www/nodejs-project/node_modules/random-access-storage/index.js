@@ -109,6 +109,7 @@ function Request (self, type, offset, size, data, cb) {
   this.size = size
   this.storage = self
 
+  this._sync = false
   this._callback = cb
 }
 
@@ -146,6 +147,7 @@ Request.prototype._unqueue = function (err) {
 }
 
 Request.prototype.callback = function (err, val) {
+  if (this._sync) return nextTick(this, err, val)
   this._unqueue(err)
   this._callback(err, val)
 }
@@ -173,6 +175,8 @@ Request.prototype._run = function () {
   var ra = this.storage
   ra._pending++
 
+  this._sync = true
+
   switch (this.type) {
     case 0:
       this._open()
@@ -195,15 +199,17 @@ Request.prototype._run = function () {
       break
 
     case 5:
-      if (ra.closed || !ra.opened) return nextTick(this, null)
-      ra._close(this)
+      if (ra.closed || !ra.opened) nextTick(this, null)
+      else ra._close(this)
       break
 
     case 6:
-      if (ra.destroyed) return nextTick(this, null)
-      ra._destroy(this)
+      if (ra.destroyed) nextTick(this, null)
+      else ra._destroy(this)
       break
   }
+
+  this._sync = false
 }
 
 function queueAndRun (self, req) {
@@ -226,10 +232,10 @@ function defaultImpl (err) {
   }
 }
 
-function nextTick (req, err) {
-  process.nextTick(nextTickCallback, req, err)
+function nextTick (req, err, val) {
+  process.nextTick(nextTickCallback, req, err, val)
 }
 
-function nextTickCallback (req, err) {
-  req.callback(err, null)
+function nextTickCallback (req, err, val) {
+  req.callback(err, val)
 }

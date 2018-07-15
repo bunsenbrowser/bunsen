@@ -1,0 +1,20 @@
+{
+  "name": "shell",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify --debug -r fs:graceful-fs -s RCPme -e ./client/index.js > ./client/client-bundle.js",
+    "watch": "watchify -v --debug -r fs:graceful-fs -s RCPme -e ./client/index.js -o ./client/client-bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "watchify": "^3.11.0"
+  },
+  "dependencies": {
+    "frame-rpc": "^1.4.0"
+  }
+}

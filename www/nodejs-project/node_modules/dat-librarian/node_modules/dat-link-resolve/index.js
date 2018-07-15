@@ -16,10 +16,11 @@ function resolve (link, cb) {
     // validates + removes dat://
     // also works for http urls with keys in them
     key = stringKey(link)
-    cb(null, key)
   } catch (e) {
     lookup()
+    return
   }
+  cb(null, key)
 
   function lookup () {
     // if it starts with http or dat: use as is, otherwise prepend http://

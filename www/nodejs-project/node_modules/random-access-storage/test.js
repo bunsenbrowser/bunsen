@@ -394,3 +394,22 @@ tape('open readonly ignored when first op is write', function (t) {
   s.write(0, Buffer.from('hi'), err => t.error(err, 'no error'))
   s.read(0, 2, err => t.error(err, 'no error'))
 })
+
+tape('always async', function (t) {
+  var s = ras({
+    read: req => req.callback(null, Buffer.from('hi'))
+  })
+
+  s.open(function () {
+    var sync = true
+
+    s.read(0, 2, function (err, buf) {
+      t.error(err, 'no error')
+      t.same(buf, Buffer.from('hi'))
+      t.notOk(sync)
+      t.end()
+    })
+
+    sync = false
+  })
+})

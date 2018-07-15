@@ -118,3 +118,13 @@ test('resolve beaker browser dat', function (t) {
     t.end()
   })
 })
+
+test('callbacks are called out of a try/catch block', function (t) {
+  process.once('uncaughtException', function (err) {
+    t.equals(err.message, 'test', 'Making sure that the right error occurs')
+    t.end()
+  })
+  datResolve('dat://beakerbrowser.com', function () {
+    throw new Error('test')
+  })
+})
