@@ -8,7 +8,8 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
-Current version: [beta 4](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
+Current version: [beta 4: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
+- Direct download from Github: [beta 4](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
 
 This beta 4 is a transitional release for us - we're moving away form the Angular code to a less-opinionated js codebase that will hopefully make it easier for other devs to work w/ Bunsen. 
 
