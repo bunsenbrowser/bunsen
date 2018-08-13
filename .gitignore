@@ -14,3 +14,4 @@ node_modules/*
 www/nodejs-project/dat-gateway
 build.json
 
+www/nodejs-project/node_modules
