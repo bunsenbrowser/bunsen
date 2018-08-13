@@ -57,6 +57,22 @@ if (shouldRebuildNativeModules==null) {
     }
 }
 
+if (shouldRebuildNativeModules==null) {
+// If build native modules preference is not set, try to find .gyp files to turn it on.
+    shouldRebuildNativeModules="0";
+    def gyp_files_tree = fileTree(
+        dir: "${project.projectDir}/assets/www/nodejs-project/",
+        include: "**/*.gyp"
+    );
+    gyp_files_tree.visit { gypFile ->
+        if (!gypFile.isDirectory()) {
+            // It's a .gyp file.
+            shouldRebuildNativeModules="1";
+            gypFile.stopVisiting();
+        }
+    }
+}
+
 if ("1".equals(shouldRebuildNativeModules)) {
 
     String npmCommandName = 'npm';
@@ -165,6 +181,9 @@ if ("1".equals(shouldRebuildNativeModules)) {
                 copy {
                     from "${project.projectDir}/assets/www/nodejs-project/"
                     into "${rootProject.buildDir}/nodejs-native-assets-temp-build/nodejs-native-assets-${abi_name}/nodejs-project/"
+                    // Symlinks to binaries are resolved by cordova prepare and Gradle during the copy, causing build time errors.
+                    // The original project's .bin folder will be added to the path while building in the BuildNpmModules tasks.
+                    exclude "**/.bin"
                 }
                 if (OperatingSystem.current().isMacOsX()) {
                     // Copy the helper script for calling npm when building in Android Studio on macOS.
@@ -195,10 +214,25 @@ if ("1".equals(shouldRebuildNativeModules)) {
             //environment ('PATH', "${npm_toolchain_add_to_path}" + System.getProperty("path.separator") + "${System.env.PATH}")
             environment ('npm_config_node_engine', 'v8' )
             environment ('npm_config_nodedir', "${project.projectDir}/src/com/janeasystems/cdvnodejsmobile/jni/libnode/" )
-            environment ('npm_config_node_gyp', "${rootProject.projectDir}/../../plugins/nodejs-mobile-cordova/node_modules/nodejs-mobile-gyp/bin/node-gyp.js" )
+            String npm_gyp_path_to_use;
+            if( file("${rootProject.projectDir}/../../plugins/nodejs-mobile-cordova/node_modules/nodejs-mobile-gyp/bin/node-gyp.js").exists() ) {
+                npm_gyp_path_to_use = "${rootProject.projectDir}/../../plugins/nodejs-mobile-cordova/node_modules/nodejs-mobile-gyp/bin/node-gyp.js";
+            } else {
+                npm_gyp_path_to_use = "${rootProject.projectDir}/../../node_modules/nodejs-mobile-gyp/bin/node-gyp.js";
+            }
+            environment ('npm_config_node_gyp', npm_gyp_path_to_use)
             environment ('npm_config_arch', temp_arch)
             environment ('npm_config_platform', 'android')
             environment ('npm_config_format', 'make-android')
+
+            // Adds the original project .bin to the path. It's a workaround
+            // to correctly build some modules that depend on symlinked modules,
+            // like node-pre-gyp.
+            String original_project_bin = "${rootProject.projectDir}/../../www/nodejs-project/node_modules/.bin";
+            if(file(original_project_bin).exists()) {
+                environment ('PATH', "${original_project_bin}" + System.getProperty("path.separator") + "${System.env.PATH}")
+            }
+
             environment ('TOOLCHAIN',"${standalone_toolchain}")
             environment ('AR',"${npm_toolchain_ar}")
             environment ('CC',"${npm_toolchain_cc}")
@@ -223,6 +257,10 @@ if ("1".equals(shouldRebuildNativeModules)) {
             outputs.file "${rootProject.buildDir}/nodejs-native-assets/nodejs-native-assets-${abi_name}/file.list"
             outputs.file "${rootProject.buildDir}/nodejs-native-assets/nodejs-native-assets-${abi_name}/dir.list"
             doLast{
+                if(!(new File("${rootProject.buildDir}/nodejs-native-assets/nodejs-native-assets-${abi_name}/")).exists()) {
+                    // If the native assets folder doesn't exist from the copy task, skip the creation of the file.list
+                    return;
+                }
                 delete "${rootProject.buildDir}/nodejs-native-assets/nodejs-native-assets-${abi_name}/file.list"
                 delete "${rootProject.buildDir}/nodejs-native-assets/nodejs-native-assets-${abi_name}/dir.list"
                 String file_list = "";

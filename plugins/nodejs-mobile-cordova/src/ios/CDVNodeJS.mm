@@ -19,19 +19,66 @@
 
 static CDVNodeJS* activeInstance = nil;
 
+const char* SYSTEM_CHANNEL = "_SYSTEM_";
+
+static BOOL engineAlreadyStarted = NO;
+
 @implementation CDVNodeJS
 
 /**
  * A method that can be called from the C++ Node native module (i.e. cordova-bridge.ccp).
  */
-void sendMessageToCordova(const char* msg) {
-  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithUTF8String:msg]];
+void sendMessageToApplication(const char* channelName, const char* msg) {
+
+  @autoreleasepool
+  {
+    NSString* channelNameNS = [NSString stringWithUTF8String:channelName];
+    NSString* msgNS = [NSString stringWithUTF8String:msg];
+
+    if ([channelNameNS isEqualToString:[NSString stringWithUTF8String:SYSTEM_CHANNEL]]) {
+      // If it's a system channel call, handle it in the plugin native side.
+      handleAppChannelMessage(msgNS);
+    } else {
+      // Otherwise, send it to Cordova.
+      sendMessageToCordova(channelNameNS,msgNS);
+    }
+  }
+
+}
+
+void sendMessageToCordova(NSString* channelName, NSString* msg) {
+  NSMutableArray* arguments = [NSMutableArray array];
+  [arguments addObject: channelName];
+  [arguments addObject: msg];
+
+  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:arguments];
   [pluginResult setKeepCallbackAsBool:TRUE];
-  [activeInstance.commandDelegate sendPluginResult:pluginResult callbackId:activeInstance.messageListenerCallbackId];
+  [activeInstance.commandDelegate sendPluginResult:pluginResult callbackId:activeInstance.allChannelsListenerCallbackId];
+}
+
+void handleAppChannelMessage(NSString* msg) {
+  if([msg hasPrefix:@"release-pause-event"]) {
+    // The nodejs runtime has signaled it has finished handling a pause event.
+    NSArray *eventArguments = [msg componentsSeparatedByString:@"|"];
+    // The expected format for this message is "release-pause-event|{eventId}"
+    if (eventArguments.count >=2) {
+      // Release the received eventId.
+      [activeInstance ReleasePauseEvent:eventArguments[1]];
+    }
+  } else if ([msg isEqualToString:@"ready-for-app-events"]) {
+    // The nodejs runtime is ready for APP events.
+    nodeIsReadyForAppEvents = true;
+  }
 }
 
 // The callback id of the Cordova channel listener
-NSString* messageListenerCallbackId = nil;
+NSString* allChannelsListenerCallbackId = nil;
+
+// script name to preload and override dlopen to open native modules from the Framework Path.
+NSString* const NODEJS_DLOPEN_OVERRIDE_FILENAME = @"override-dlopen-paths-preload.js";
+
+// path where the nodejs-project is contained inside the Application package.
+NSString* const NODE_ROOT = @"/www/nodejs-project/";
 
 + (CDVNodeJS*) activeInstance {
   return activeInstance;
@@ -42,7 +89,6 @@ NSString* messageListenerCallbackId = nil;
 
   NSString* const NODE_PATH = @"NODE_PATH";
   NSString* const BUILTIN_MODULES = @"/www/nodejs-mobile-cordova-assets/builtin_modules";
-  NSString* const NODE_ROOT = @"/www/nodejs-project/";
 
   // The 'onAppTerminate', 'onReset' and 'onMemoryWarning' events are already
   // registered in the super class while 'onPause' and 'onResume' are not.
@@ -53,8 +99,12 @@ NSString* messageListenerCallbackId = nil;
   [[NSNotificationCenter defaultCenter] addObserver:self
                                         selector:@selector(onResume)
                                         name:UIApplicationWillEnterForegroundNotification object:nil];
-  
-  RegisterBridgeCallback(sendMessageToCordova);
+
+  RegisterBridgeCallback(sendMessageToApplication);
+
+  // Register the Documents Directory as the node dataDir.
+  NSString* nodeDataDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+  RegisterNodeDataDirPath([nodeDataDir UTF8String]);
 
   NSString* nodePath = [[NSProcessInfo processInfo] environment][NODE_PATH];
   NSString* appPath = [[NSBundle mainBundle] bundlePath];
@@ -94,6 +144,18 @@ NSString* messageListenerCallbackId = nil;
   LOG_FN
 }
 
+// Flag to indicate if node is ready to receive app events.
+bool nodeIsReadyForAppEvents = false;
+
+// Condition to wait on pause event handling on the node side.
+NSCondition *appEventBeingProcessedCondition = [[NSCondition alloc] init];
+
+// Set to keep ids for called pause events, so they can be unlocked later.
+NSMutableSet* appPauseEventsManagerSet = [[NSMutableSet alloc] init];
+
+// Lock to manipulate the App Pause Events Manager Set.
+id appPauseEventsManagerSetLock = [[NSObject alloc] init];
+
 /**
  * Handlers for events registered by the plugin:
  * - onPause
@@ -102,27 +164,102 @@ NSString* messageListenerCallbackId = nil;
 
 - (void) onPause {
   LOG_FN
+  if(nodeIsReadyForAppEvents) {
+    UIApplication *application = [UIApplication sharedApplication];
+    // Inform the app intends do run something in the background.
+    // In this case we'll try to wait for the pause event to be properly taken care of by node.
+    __block UIBackgroundTaskIdentifier backgroundWaitForPauseHandlerTask =
+      [application beginBackgroundTaskWithExpirationHandler: ^ {
+        // Expiration handler to avoid app crashes if the task doesn't end in the iOS allowed background duration time.
+        [application endBackgroundTask: backgroundWaitForPauseHandlerTask];
+        backgroundWaitForPauseHandlerTask = UIBackgroundTaskInvalid;
+      }];
+
+    NSTimeInterval intendedMaxDuration = [application backgroundTimeRemaining]+1;
+    // Calls the event in a background thread, to let this UIApplicationDidEnterBackgroundNotification
+    // return as soon as possible.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      NSDate * targetMaximumFinishTime = [[NSDate date] dateByAddingTimeInterval:intendedMaxDuration];
+      // We should block the thread at most until a bit (1 second) after the maximum allowed background time.
+      // The background task will be ended by the expiration handler, anyway.
+      // SendPauseEventAndWaitForRelease won't return until the node runtime notifies it has finished its pause event (or the target time is reached).
+      [self SendPauseEventAndWaitForRelease:targetMaximumFinishTime];
+      // After SendPauseEventToNodeChannel returns, clean up the background task and let the Application enter the suspended state.
+      [application endBackgroundTask: backgroundWaitForPauseHandlerTask];
+      backgroundWaitForPauseHandlerTask = UIBackgroundTaskInvalid;
+    });
+  }
 }
 
 - (void) onResume {
   LOG_FN
+  if(nodeIsReadyForAppEvents) {
+    SendMessageToNodeChannel(SYSTEM_CHANNEL, "resume");
+  }
+}
+
+// Sends the pause event to the node runtime and returns only after node signals
+// the event has been handled explicitely or the background time is running out.
+- (void) SendPauseEventAndWaitForRelease:(NSDate*)expectedFinishTime {
+  // Get unique identifier for this pause event.
+  NSString * eventId = [[NSUUID UUID] UUIDString];
+  // Create the pause event message with the id.
+  NSString * event = [NSString stringWithFormat:@"pause|%@", eventId];
+
+  [appEventBeingProcessedCondition lock];
+
+  @synchronized(appPauseEventsManagerSetLock) {
+    [appPauseEventsManagerSet addObject:eventId];
+  }
+
+  SendMessageToNodeChannel(SYSTEM_CHANNEL, (const char*)[event UTF8String]);
+
+  while (YES) {
+    // Looping to avoid unintended spurious wake ups.
+    @synchronized(appPauseEventsManagerSetLock) {
+      if(![appPauseEventsManagerSet containsObject:eventId]) {
+        // The Id for this event has been released.
+        break;
+      }
+    }
+    if([expectedFinishTime timeIntervalSinceNow] <= 0) {
+      // We blocked the background thread long enough.
+      break;
+    }
+    [appEventBeingProcessedCondition waitUntilDate:expectedFinishTime];
+  }
+  [appEventBeingProcessedCondition unlock];
+
+  @synchronized(appPauseEventsManagerSetLock) {
+    [appPauseEventsManagerSet removeObject:eventId];
+  }
+}
+
+// Signals the pause event has been handled by the node side.
+- (void) ReleasePauseEvent:(NSString*)eventId {
+  [appEventBeingProcessedCondition lock];
+  @synchronized(appPauseEventsManagerSetLock) {
+    [appPauseEventsManagerSet removeObject:eventId];
+  }
+  [appEventBeingProcessedCondition broadcast];
+  [appEventBeingProcessedCondition unlock];
 }
 
 /**
- * Methods available to be called by the cordova layer using 'cordova.exec'.
+ * Methods available to be called by the Cordova layer using 'cordova.exec'.
  */
 
-- (void) setChannelListener:(CDVInvokedUrlCommand*)command
+- (void) setAllChannelsListener:(CDVInvokedUrlCommand*)command
 {
   LOG_FN
-
-  self.messageListenerCallbackId = command.callbackId;
+  self.allChannelsListenerCallbackId = command.callbackId;
 }
 
 - (void) sendMessageToNode:(CDVInvokedUrlCommand*)command {
-  NSString* msg = [command argumentAtIndex:0];
-  // Call the native module API
-  SendToNode((const char*)[msg UTF8String]);
+  NSString* channelName = [command argumentAtIndex:0];
+  NSString* msg = [command argumentAtIndex:1];
+  // Call the Node bridge API
+  SendMessageToNodeChannel((const char*)[channelName UTF8String], (const char*)[msg UTF8String]);
 }
 
 - (void) startEngine:(CDVInvokedUrlCommand*)command {
@@ -140,11 +277,13 @@ NSString* messageListenerCallbackId = nil;
   }
 #endif
 
-  if ([scriptFileName length] == 0) {
-    errorMsg = @"Arg was null";
+  if (engineAlreadyStarted) {
+    errorMsg = @"Engine already started";
+  } else if ([scriptFileName length] == 0) {
+    errorMsg = @"Invalid filename";
   } else {
     NSString* appPath = [[NSBundle mainBundle] bundlePath];
-    scriptPath = [appPath stringByAppendingString:@"/www/nodejs-project/"];
+    scriptPath = [appPath stringByAppendingString:NODE_ROOT];
     scriptPath = [scriptPath stringByAppendingString:scriptFileName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:scriptPath] == FALSE) {
       errorMsg = @"File not found";
@@ -153,11 +292,25 @@ NSString* messageListenerCallbackId = nil;
   }
 
   if (errorMsg == nil) {
-    NSArray* arguments = [NSArray arrayWithObjects:
-                          @"node",
-                          scriptPath,
-                          nil
-                        ];
+    NSArray* arguments = nil;
+    NSString* dlopenoverridePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODE_ROOT, NODEJS_DLOPEN_OVERRIDE_FILENAME] ofType:@""];
+    // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
+    if(!dlopenoverridePath) {
+      arguments = [NSArray arrayWithObjects:
+                    @"node",
+                    scriptPath,
+                    nil
+                  ];
+    } else {
+      arguments = [NSArray arrayWithObjects:
+                    @"node",
+                    @"-r",
+                    dlopenoverridePath,
+                    scriptPath,
+                    nil
+                  ];
+    }
+    engineAlreadyStarted = YES;
 
     [NodeJSRunner startEngineWithArguments:arguments];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
@@ -181,16 +334,33 @@ NSString* messageListenerCallbackId = nil;
   }
 #endif
 
-  if ([scriptBody length] == 0) {
+  if (engineAlreadyStarted) {
+    errorMsg = @"Engine already started";
+  } else if ([scriptBody length] == 0) {
     errorMsg = @"Script is empty";
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMsg];
   } else {
-    NSArray* arguments = [NSArray arrayWithObjects:
-                          @"node",
-                          @"-e",
-                          scriptBody,
-                          nil
-                        ];
+    NSArray* arguments = nil;
+    NSString* dlopenoverridePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODE_ROOT, NODEJS_DLOPEN_OVERRIDE_FILENAME] ofType:@""];
+    // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
+    if(!dlopenoverridePath) {
+      arguments = [NSArray arrayWithObjects:
+                    @"node",
+                    @"-r",
+                    dlopenoverridePath,
+                    @"-e",
+                    scriptBody,
+                    nil
+                  ];
+    } else {
+      arguments = [NSArray arrayWithObjects:
+                    @"node",
+                    @"-e",
+                    scriptBody,
+                    nil
+                  ];
+    }
+    engineAlreadyStarted = YES;
 
     [NodeJSRunner startEngineWithArguments:arguments];
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];

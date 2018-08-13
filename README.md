@@ -61,8 +61,18 @@ npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
 npm install
+cd ../www/nodejs-project
+npm install
+cd ../..
 cordova build android
 ```
+
+If you use cordova 8.x, note that you must add the android platform using
+`cordova platform add android@6.4.0`
+
+Although Android Studio includes Gradle, you still may also need to install gradle
+
+`brew install gradle`
 
 To install on an Android device, you may use the `./installapp.sh` script
 

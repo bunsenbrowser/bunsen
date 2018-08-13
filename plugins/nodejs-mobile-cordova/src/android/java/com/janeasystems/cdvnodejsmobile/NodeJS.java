@@ -19,6 +19,8 @@ import android.content.res.AssetManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
+import android.system.Os;
+import android.system.ErrnoException;
 
 import java.io.*;
 import java.lang.System;
@@ -51,12 +53,17 @@ public class NodeJS extends CordovaPlugin {
   private static boolean initCompleted = false;
   private static IOException ioe = null;
 
-  private static boolean appPaused = false;
   private static String LOGTAG = "NODEJS-CORDOVA";
+  private static String SYSTEM_CHANNEL = "_SYSTEM_";
 
   private static boolean engineAlreadyStarted = false;
 
-  private static CallbackContext channelListenerContext = null;
+  private static CallbackContext allChannelListenerContext = null;
+
+  private static final Object onlyOneEngineStartingAtATimeLock = new Object();
+
+  // Flag to indicate if node is ready to receive app events.
+  private static boolean nodeIsReadyForAppEvents = false;
 
   static {
     System.loadLibrary("nodejs-mobile-cordova-native-lib");
@@ -64,7 +71,8 @@ public class NodeJS extends CordovaPlugin {
   }
 
   public native Integer startNodeWithArguments(String[] arguments, String nodePath, boolean redirectOutputToLogcat);
-  public native void sendToNode(String msg);
+  public native void sendMessageToNodeChannel(String channelName, String msg);
+  public native void registerNodeDataDirPath(String dataDir);
   public native String getCurrentABIName();
 
   @Override
@@ -75,7 +83,17 @@ public class NodeJS extends CordovaPlugin {
     context = activity.getBaseContext();
     assetManager = activity.getBaseContext().getAssets();
 
+    // Sets the TMPDIR environment to the cacheDir, to be used in Node as os.tmpdir
+    try {
+      Os.setenv("TMPDIR", context.getCacheDir().getAbsolutePath(),true);
+    } catch (ErrnoException e) {
+      e.printStackTrace();
+    }
     filesDir = context.getFilesDir().getAbsolutePath();
+
+    // Register the filesDir as the Node data dir.
+    registerNodeDataDirPath(filesDir);
+
     nodeAppRootAbsolutePath = filesDir + "/" + PROJECT_ROOT;
     nodePath = nodeAppRootAbsolutePath + ":" + filesDir + "/" + BUILTIN_MODULES;
     trashDir = filesDir + "/" + TRASH_DIR;
@@ -116,10 +134,11 @@ public class NodeJS extends CordovaPlugin {
   @Override
   public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
     if (action.equals("sendMessageToNode")) {
-      String msg = data.getString(0);
-      this.sendMessageToNode(msg);
-    } else if (action.equals("setChannelListener")) {
-      this.setChannelListener(callbackContext);
+      String channelName = data.getString(0);
+      String msg = data.getString(1);
+      this.sendMessageToNode(channelName, msg);
+    } else if (action.equals("setAllChannelsListener")) {
+      this.setAllChannelsListener(callbackContext);
     } else if (action.equals("startEngine")) {
       String target = data.getString(0);
       JSONObject startOptions = data.getJSONObject(1);
@@ -140,38 +159,61 @@ public class NodeJS extends CordovaPlugin {
   public void onPause(boolean multitasking) {
     super.onPause(multitasking);
     Log.d(LOGTAG, "onPause");
-    // (todo) add call to node land through JNI method
-    appPaused = true;
+    if (nodeIsReadyForAppEvents) {
+      sendMessageToNodeChannel(SYSTEM_CHANNEL, "pause");
+    }
   }
 
   @Override
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     Log.d(LOGTAG, "onResume");
-    // (todo) add call to node land through JNI method
-    appPaused = false;
+    if (nodeIsReadyForAppEvents) {
+      sendMessageToNodeChannel(SYSTEM_CHANNEL, "resume");
+    }
   }
 
-  private void sendMessageToNode(String msg) {
-    Log.d(LOGTAG, "sendMessageToNode: " + msg);
-    sendToNode(msg);
+  private boolean sendMessageToNode(String channelName, String msg) {
+    sendMessageToNodeChannel(channelName, msg);
+    return true;
   }
 
-  public static void sendMessageToCordova(String msg) {
+  public static void sendMessageToApplication(String channelName, String msg) {
+    if (channelName.equals(SYSTEM_CHANNEL)) {
+      // If it's a system channel call, handle it in the plugin native side.
+      handleAppChannelMessage(msg);
+    } else {
+      // Otherwise, send it to Cordova.
+      sendMessageToCordova(channelName, msg);
+    }
+  }
+
+  public static void sendMessageToCordova(String channelName, String msg) {
+    final String channel = new String(channelName);
     final String message = new String(msg);
     NodeJS.activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+        JSONArray args = new JSONArray();
+        args.put(channel);
+        args.put(message);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, args);
         pluginResult.setKeepCallback(true);
-        NodeJS.channelListenerContext.sendPluginResult(pluginResult);
+        NodeJS.allChannelListenerContext.sendPluginResult(pluginResult);
       }
     });
   }
 
-  private void setChannelListener(final CallbackContext callbackContext) {
-    Log.d(LOGTAG, "setChannelListener");
-    NodeJS.channelListenerContext = callbackContext;
+  public static void handleAppChannelMessage(String msg) {
+    if (msg.equals("ready-for-app-events")) {
+      nodeIsReadyForAppEvents=true;
+    }
+  }
+
+  private boolean setAllChannelsListener(final CallbackContext callbackContext) {
+    Log.v(LOGTAG, "setAllChannelsListener");
+    NodeJS.allChannelListenerContext = callbackContext;
+    return true;
   }
 
   private void startEngine(final String scriptFileName, final JSONObject startOptions,
@@ -182,9 +224,8 @@ public class NodeJS extends CordovaPlugin {
       sendResult(false, "Engine already started", callbackContext);
       return;
     }
-    NodeJS.engineAlreadyStarted = true;
 
-    if (scriptFileName == null && scriptFileName.isEmpty()) {
+    if (scriptFileName == null || scriptFileName.isEmpty()) {
       sendResult(false, "Invalid filename", callbackContext);
       return;
     }
@@ -204,10 +245,17 @@ public class NodeJS extends CordovaPlugin {
           return;
         }
 
-        File fileObject = new File(scriptFileAbsolutePath);
-        if (!fileObject.exists()) {
-          sendResult(false, "File not found", callbackContext);
-          return;
+        synchronized(onlyOneEngineStartingAtATimeLock) {
+          if (NodeJS.engineAlreadyStarted == true) {
+            sendResult(false, "Engine already started", callbackContext);
+            return;
+          }
+          File fileObject = new File(scriptFileAbsolutePath);
+          if (!fileObject.exists()) {
+            sendResult(false, "File not found", callbackContext);
+            return;
+          }
+          NodeJS.engineAlreadyStarted = true;
         }
 
         sendResult(true, "", callbackContext);
@@ -228,10 +276,9 @@ public class NodeJS extends CordovaPlugin {
       sendResult(false, "Engine already started", callbackContext);
       return;
     }
-    NodeJS.engineAlreadyStarted = true;
 
     if (scriptBody == null || scriptBody.isEmpty()) {
-      sendResult(false, "Invalid script", callbackContext);
+      sendResult(false, "Script is empty", callbackContext);
       return;
     }
 
@@ -246,6 +293,14 @@ public class NodeJS extends CordovaPlugin {
         if (ioe != null) {
           sendResult(false, "Initialization failed: " + ioe.toString(), callbackContext);
           return;
+        }
+
+        synchronized(onlyOneEngineStartingAtATimeLock) {
+          if (NodeJS.engineAlreadyStarted == true) {
+            sendResult(false, "Engine already started", callbackContext);
+            return;
+          }
+          NodeJS.engineAlreadyStarted = true;
         }
 
         sendResult(true, "", callbackContext);

@@ -6,6 +6,9 @@
 </tr>
 <tr>
 <td>
+<a href="#0.2.1">0.2.1</a><br/>
+<a href="#0.2.0">0.2.0</a><br/>
+<a href="#0.1.5">0.1.5</a><br/>
 <a href="#0.1.4">0.1.4</a><br/>
 <a href="#0.1.3">0.1.3</a><br/>
 <a href="#0.1.2">0.1.2</a><br/>
@@ -13,6 +16,65 @@
 </td>
 </tr>
 </table>
+
+<a id="0.2.1"></a>
+## Version 0.2.1 - Jul 30 2018
+
+### Notable Changes
+ - Update `nodejs-mobile` binaries to `v0.1.7`, built with NDK r17b, to solve Android 7 C++ STL runtime issues.
+
+### Commits
+ - [[`86b4f24`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/86b4f245fcda8d6d7e38d1358d224805c010f409)] - core: update nodejs-mobile v0.1.7 (Jaime Bernardo)
+ - [[`2b14218`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/2b14218fbf616249a9d3a9749fa2c2c36a28b7c0)] - ios: create Frameworks path before copying (jonathanz)
+
+<a id="0.2.0"></a>
+## Version 0.2.0 - Jul 09 2018
+
+### Notable Changes
+ - Update `nodejs-mobile` binaries to `v0.1.6`, with concurrent GC for iOS.
+ - Improve native modules support.
+ - Automatically detect native modules.
+ - Remove simulator strip when building for iOS devices.
+
+### Commits
+ - [[`a1ab3b8`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/a1ab3b85aeeea49cd08b475f1c692d8d540a8c7e)] - core: update nodejs-mobile v0.1.6 (Jaime Bernardo)
+ - [[`df7df19`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/df7df19b5d5a86b554f4e878f8770d5b41439e17)] - plugin: use original .bin for native modules (Jaime Bernardo)
+ - [[`53a1aeb`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/53a1aebaf9f8e810e348bba31ed6ae96ee5acdd3)] - docs: describe native modules auto detection (Jaime Bernardo)
+ - [[`7dcbe77`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/7dcbe77543fa997b40fda8cac8086c937a6096fb)] - plugin: add automatic native modules detection (Jaime Bernardo)
+ - [[`fea9773`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/fea9773e8e907e9e0ca31b0d88d5a1be4d699ddd)] - docs: add native modules instructions to README (Jaime Bernardo)
+ - [[`29240cd`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/29240cda7913e1e6fa00267b3dd9ab2bae11beb6)] - ios: cache native modules override preference (Jaime Bernardo)
+ - [[`3d430ec`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/3d430eca8162e4f85cbaae446bb9f0a031de25a9)] - ios: building for device removes the x86_64 arch (Jaime Bernardo)
+ - [[`8b7e854`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/8b7e854386e4ce5d6d64fcee27013d7ed7417bcc)] - android: check if native modules assets exist (Jaime Bernardo)
+ - [[`6cd38b0`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/6cd38b0abc86f0acdbc3e899b36937abf906b119)] - ios: build native modules as frameworks (Jaime Bernardo)
+
+<a id="0.1.5"></a>
+## Version 0.1.5 - Jun 07 2018
+
+### Notable Changes
+ - Update `nodejs-mobile` binaries to `v0.1.5`.
+ - Add new channel APIs.
+ - Include memory optimizations.
+ - Add `cordova-plugin-test-framework` tests for the plugin.
+ - Add a test application to easily run the tests.
+
+### Commits
+ - [[`bdd9506`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/bdd95064bc5d40cb200f370f80387b6ab59dd53b)] - plugin: update sample project for new pause API (Jaime Bernardo)
+ - [[`3cf9b28`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/3cf9b28ce742f0dd701a473cafb189ca0cc79dd8)] - plugin: use alternative nodejs-mobile-gyp path (Jaime Bernardo)
+ - [[`e14bcc7`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/e14bcc728afc23d10c71d09122b8fc9fd85957ee)] - core: update nodejs-mobile v0.1.5 (Jaime Bernardo)
+ - [[`767d0c3`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/767d0c32d71b67628a8dbc5668fd51e7f9a8a2f9)] - test: add a test application to run the tests (Jaime Bernardo)
+ - [[`adfa52a`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/adfa52a3ed2a7065334cfe48a02589712d89c552)] - test: add cordova-plugin-test-framework tests (Jaime Bernardo)
+ - [[`8fb32db`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/8fb32dbc9feafe66465978f971a8c1a1cdc11eba)] - android: allow starting engine after failed start (Jaime Bernardo)
+ - [[`05eb3cf`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/05eb3cf75689dd223409691f281cd9f6ce8af102)] - android: release node-cordova JNI local references (Jaime Bernardo)
+ - [[`6a5b842`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/6a5b842ffbc07fd2ac7e4b795cdfb26cb9549e68)] - ios: release memory from node-cordova messages (Jaime Bernardo)
+ - [[`00b88ea`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/00b88ea78950be4f3ea750e3343804ec1a38baf3)] - ios: block starting engine more than once (Jaime Bernardo)
+ - [[`d71a51a`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/d71a51aae7ae5a01c4970147d67537320106145f)] - docs: add license (Alexis Campailla)
+ - [[`0eab389`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/0eab389a5d5ef2c9cacc246449a02e3cb8a6ed1a)] - ios: wait for pause event handler on background (Jaime Bernardo)
+ - [[`775839e`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/775839ec94a23d989415ad6d2122b99fa4004cca)] - plugin: send many arguments through the channel (Jaime Bernardo)
+ - [[`dfa18b4`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/dfa18b4743f5154543939e7498a553a8429a925d)] - plugin: fix falsy-valued messages sent to node (Jaime Bernardo)
+ - [[`9da75bf`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/9da75bfee287776a9fdd0e2e5c6264a4c4a414b2)] - doc: document the app channel (Jaime Bernardo)
+ - [[`2fec512`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/2fec512525d0145211a7e0be5edd59a2424306f5)] - plugin: add app.datadir API to get writable path (Jaime Bernardo)
+ - [[`aac179b`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/aac179b6ca29fde8cfb633d2c42fd495571c85d0)] - docs: update channel API in README.md (Enrico Giordani)
+ - [[`df75bb4`](https://github.com/janeasystems/nodejs-mobile-cordova/commit/df75bb4fcd2aed7a5a0f8e57fe13d7e01ef12750)] - plugin: improved events channel, app channel (Enrico Giordani)
 
 <a id="0.1.4"></a>
 ## Version 0.1.4 - Mar 07 2018

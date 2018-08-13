@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         if (pingstatus == "connected") { // all requests are passed and have returned
             datUrl = serverUrl + bunsenAddress;
-            loadBunsen(bunsenAddress);
+            loadBunsen(datUrl);
             clearInterval(ping_loop);
         }
     }, TIME_PERIOD)
@@ -243,7 +243,8 @@ function hideForm () {
 }
 
 async function loadBunsen(datUri) {
-    datUrl = './client/index.html?DAT_GATEWAY=http%3A//localhost%3A3000';
+    // datUrl = './client/index.html?DAT_GATEWAY=http%3A//localhost%3A3000';
+    this.datUri = datUri;
     console.log('Loading Bunsen UI from datUri:' + datUrl);
     let progressMessage = document.querySelector('#progressMessage');
     // this.datUri = datUrl;
@@ -254,7 +255,7 @@ async function loadBunsen(datUri) {
     let iframe = document.querySelector('#client-frame')
     iframe.style.display = "none";
     // datUrl = serverUrl + datUri;
-    iframe.src = datUrl;
+    iframe.src = this.datUri;
     progressMessage.innerHTML = "";
     // const storage = idb('dat://storage')
     // const server = new RPC.Server(window, iframe.contentWindow, {

@@ -1,8 +1,8 @@
 {
   "_from": "nodejs-mobile-cordova",
-  "_id": "nodejs-mobile-cordova@0.1.4",
+  "_id": "nodejs-mobile-cordova@0.2.1",
   "_inBundle": false,
-  "_integrity": "sha512-wgj0Ntm6C0xWoavhHZyJu75Dpog+HUaMAE+6f3xEl68zWCvhxj7pnEJtI4DRO1P/kqdK9+X0cva1A85T7OgFAg==",
+  "_integrity": "sha512-8exQcMG0/0taq2r9nbzBq7vfai6WDe9SVJDm7GkbsKWiKdeEYnlEIaf+mIQrNdYl1+S7lUQHVgUXUph+rIuTSQ==",
   "_location": "/nodejs-mobile-cordova",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/nodejs-mobile-cordova/-/nodejs-mobile-cordova-0.1.4.tgz",
-  "_shasum": "e4f232551938666535bbb0be2f649714c888b647",
+  "_resolved": "https://registry.npmjs.org/nodejs-mobile-cordova/-/nodejs-mobile-cordova-0.2.1.tgz",
+  "_shasum": "d85ff8ed3c9dd55bb4658fc74cb36d906b98d563",
   "_spec": "nodejs-mobile-cordova",
-  "_where": "/Users/chrisk/source/bunsenbrowser/bunsen",
+  "_where": "/Users/chrisk/Documents/source/bunsenbrowser/bunsen",
   "author": {
     "name": "janeasystems"
   },
@@ -38,7 +38,7 @@
     ]
   },
   "dependencies": {
-    "nodejs-mobile-gyp": "^0.1.0",
+    "nodejs-mobile-gyp": "^0.2.0",
     "tar.gz2": "^1.0.0"
   },
   "deprecated": false,
@@ -68,5 +68,5 @@
     "type": "git",
     "url": "git+https://github.com/janeasystems/nodejs-mobile-cordova.git"
   },
-  "version": "0.1.4"
+  "version": "0.2.1"
 }
