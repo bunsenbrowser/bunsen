@@ -69,7 +69,8 @@ cordova build android
 ```
 
 If you use cordova 8.x, note that you must add the android platform using
-`cordova platform add android@6.4.0`
+`cordova platform add android@6.4.0`. That's already taken care of in the postinstall.sh script when you do an `npm install` - 
+but just in case you need to do it manually.
 
 Although Android Studio includes Gradle, you still may also need to install gradle
 
