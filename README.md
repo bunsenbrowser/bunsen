@@ -8,12 +8,12 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
-Current version: [beta 4: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
-- Direct download from Github: [beta 4](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
+Current version: [beta 5: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
+- Direct download from Github: [beta 5](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
 
-This beta 4 is a transitional release for us - we're moving away form the Angular code to a less-opinionated js codebase that will hopefully make it easier for other devs to work w/ Bunsen. 
+Beta 5 limits the number of dats stored to 20. You can now enter a dat in the address box. 
 
-Here is [beta 3](https://goo.gl/w3PYdd) in case you hit some blockers with beta 4.
+Here is [beta 3](https://goo.gl/w3PYdd) in case you hit some blockers with recent betas.
 
 Thanks to incredible support from @RangerMauve we were able to update [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen. Resolves issue [Security issue: Cookies, local database, etc. on a Dat available to every Dat](https://github.com/bunsenbrowser/bunsen/issues/30). 
 

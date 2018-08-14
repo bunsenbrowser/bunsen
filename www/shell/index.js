@@ -4,7 +4,6 @@ const port = 3000;
 const bunsenAddress = "bunsen.hashbase.io/"
 // const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
 let datUrl;
-let datUri;
 const selectQueue = []
 let currentSelection = null
 const form = document.getElementById('selection-form')

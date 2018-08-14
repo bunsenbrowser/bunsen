@@ -1,2 +1,3 @@
 adb uninstall org.bunsenbrowser
-cordova run android --release -- --buildConfig build.json
+export ORG_GRADLE_PROJECT_cdvMinSdkVersion=26
+cordova build android --release -- --buildConfig build.json
