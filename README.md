@@ -8,10 +8,10 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 ## Download
 
-Current version: [beta 5: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
-- Direct download from Github: [beta 5](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0): 
+Current version: [1.1.1: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
+- Direct download from Github: [1.1.1](https://github.com/bunsenbrowser/bunsen/releases/tag/1.1.1): 
 
-Beta 5 limits the number of dats stored to 20. You can now enter a dat in the address box. 
+Version 1.1.1 limits the number of dats stored to 20. You can now enter a dat in the address box. 
 
 Here is [beta 3](https://goo.gl/w3PYdd) in case you hit some blockers with recent betas.
 
