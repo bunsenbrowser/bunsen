@@ -4,20 +4,19 @@
 
 Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to render an app that performs dat functions for sharing and consuming network resources. This project current creates Android APK's, but could support iOS someday.
 
-[![Image of Bunsen Browser displaying a wiki](docs/images/bunsen_browser_wiki.png)](docs/images/bunsen_browser_wiki_large.png)
+[![Image of Bunsen Browser displaying a portal](docs/images/bunsen_browser_home.png)](docs/images/bunsen_browser_home_large.png)
 
 ## Download
 
-Current version: [1.1.1: We're on Play store!](https://play.google.com/store/apps/details?id=org.bunsenbrowser)
-- Direct download from Github: [1.1.1](https://github.com/bunsenbrowser/bunsen/releases/tag/1.1.1): 
+Current version: [1.1.1](https://github.com/bunsenbrowser/bunsen/releases/tag/1.1.1). 
+- [Play store](https://play.google.com/store/apps/details?id=org.bunsenbrowser) 
+- [GitHub](https://github.com/bunsenbrowser/bunsen/releases/download/1.1.1/bunsen.apk) direct download
+- [dat://bunsen-apk.hashbase.io](dat://bunsen-apk.hashbase.io) 
+- [raw dat installer link](dat://4dc3f50557b0a9e28f94356cae1050c7d9a4205d0b0622340742e481d0cb25b5/)
 
-Version 1.1.1 limits the number of dats stored to 20. You can now enter a dat in the address box. 
+Version 1.1.1 limits the number of dats stored to 20. You can now enter a dat in the address box. And there is a peerList! [More details...](https://github.com/bunsenbrowser/bunsen/releases/tag/1.1.1)
 
-Here is [beta 3](https://goo.gl/w3PYdd) in case you hit some blockers with recent betas.
-
-Thanks to incredible support from @RangerMauve we were able to update [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen. Resolves issue [Security issue: Cookies, local database, etc. on a Dat available to every Dat](https://github.com/bunsenbrowser/bunsen/issues/30). 
-
-[Download beta 4 here!](https://github.com/bunsenbrowser/bunsen/releases/tag/0.9.0) | [Release History](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Releases)
+[Release History](https://github.com/bunsenbrowser/bunsen/wiki/Bunsen-Releases)
 
 ## How to use Bunsen
 
@@ -159,9 +158,8 @@ In order to get verified content, they spend less money going online as the same
 In that example, perhaps Jane and Sally don't even know each other. They can still trust that when they receive updates for their Dat archives, it came from the actual source.
 
 ## Credit
-- Chris Kelley https://github.com/chrisekelley
-- R.J. Steinert https://github.com/rjsteinert
+- Bunsen would not be here without the leadership and hard work of the folks behind Dat (https://datproject.org/) and Beaker Browser (beakerbrowser.com):  Paul Frazee (@pfrazee), Tara Vancil (@taravancil), Mathias Buus (@mafintosh), Max Ogden (@maxogden) and many other clever and creative folks. Thank you!!!
+- The lead Bunsen developers are Chris Kelley @chrisekelley and R.J. Steinert @rjsteinert
+- Another shout out to @RangerMauve for [dat-archive](https://github.com/RangerMauve/dat-gateway), which enables Bunsen to store dats as subdomains, enabling cookies tied to dats and better security for Bunsen.
 - Thanks to Ben Davis for providing the original Bunsen image for the logo. https://thenounproject.com/search/?q=bunsen&i=490710
-- Kudos to https://www.becompany.ch/en/blog/2016/10/19/creating-apache-cordova-app-with-angular2 for the primer on running an Angular app inside Cordova.
-- Many thanks to @mafintosh for leading the way with [node-on-android](https://github.com/node-on-mobile/node-on-android). This project depends on the node shared library his project provides.
-- And thank you to all the wonderful people who have worked so hard to make Dat (https://datproject.org/) and Beaker Browser (beakerbrowser.com) what is today!
+- Many thanks to @mafintosh for leading the way with [node-on-android](https://github.com/node-on-mobile/node-on-android). This project used to depend on the node shared library his project provides, and it was the only way for us to get started. 
