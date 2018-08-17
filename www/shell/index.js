@@ -1,7 +1,9 @@
 const serverUrl = 'http://localhost:3000/';
 // serverUrl = 'http://gateway.mauve.moe:3000/';
 const port = 3000;
-const bunsenAddress = "bunsen.hashbase.io/"
+// const bunsenAddress = "bunsen.hashbase.io/"
+// const bunsenAddress = "bunsen-dev.hashbase.io/"
+const bunsenAddress = "3384ef290d7aa0024814627980382e9ed15acbc072dc50eb25bdc3fbe25619ed/"
 // const bunsenAddress = "fork-ui2-bunsen.hashbase.io/"
 let datUrl;
 const selectQueue = []

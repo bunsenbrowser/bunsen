@@ -3,7 +3,9 @@ const mkdirp = require('mkdirp')
 var DatGateway = require('dat-gateway')
 // var ram = require('random-access-memory')
 // var Dat = require('dat-node')
-// const fs = require('fs');
+var DatArchive = require('node-dat-archive')
+const uuidv4 = require('uuid/v4');
+const fs = require('fs');
 const {DatSessionDataExtMsg} = require('@beaker/dat-session-data-ext-msg')
 const express = require('express');
 const expressWebSocket = require('express-ws');
@@ -14,6 +16,11 @@ expressWebSocket(app, null, {
     // ws options here
     perMessageDeflate: false,
 });
+var cors = require('cors')
+var bodyParser = require('body-parser');
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
@@ -48,8 +55,6 @@ gateway
 gateway.on('error', (error) => {
     console.log("error in gateway: " + error)
 })
-
-
 
 app.ws('/peerList', function(ws, req) {
     // convert ws instance to stream
@@ -86,6 +91,84 @@ app.ws('/peerList', function(ws, req) {
     //     console.log(msg);
     // });
     // console.log('socket', req.testing);
+});
+
+app.post('/create', async function (request, response) {
+    console.log("Creating a datArchive")
+    var title = request.body.title;
+    var description = request.body.description;
+    var type = request.body.type;
+    var author = request.body.author;
+    var uuid = uuidv4();
+    // var localPath = dir + '/';
+    var localPath = dir + '/' + uuid;
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions, title, description, type, author}
+    console.log("create " + JSON.stringify(data))
+    var archive = await DatArchive.create(data)
+    let url = archive.url
+    data.url = url
+    const newDir = url.replace('dat://','')
+    const newPath = dir + '/' + newDir;
+    fs.rename(localPath, newPath, (err) => {
+        if (err) throw err;
+        console.log('Rename complete!');
+    });
+    console.log("data with url: " + JSON.stringify(data))
+    response.send(JSON.stringify(data))
+});
+
+app.post('/getInfo', async function (request, response) {
+    console.log("getInfo for a DatArchive")
+    var url = request.body.url;
+    var opts = request.body.opts;
+    var datName = url.replace('dat://','')
+    console.log("getInfo for  " + url)
+    // var info = await DatArchive.getInfo(url)
+    var localPath = dir + '/' + datName
+    var archive = await DatArchive.load({
+        localPath:  localPath
+    })
+    var info = await archive.getInfo(url)
+    console.log("getInfo: " + JSON.stringify(info))
+    response.send(JSON.stringify(info))
+});
+
+app.post('/mkdir', async function (request, response) {
+    console.log("getInfo for a DatArchive")
+    var filename = request.body.filename;
+    var url = request.body.url;
+    var datName = url.replace('dat://','')
+    var filePath = dir + '/' + datName + '/' + filename + '/';
+    var localPath = dir + '/' + datName
+    // let data = {localPath, title, description, type, author}
+    console.log("mkdir for  " + filename)
+    // var archive = new DatArchive(url)
+    var archive = await DatArchive.load({
+        localPath:  localPath
+    })
+    var info = await archive.mkdir(filename)
+    console.log("data with url: " + JSON.stringify(info))
+    response.send(JSON.stringify(info))
+});
+
+app.post('/writeFile', async function (request, response) {
+    console.log("writeFile for a DatArchive")
+    var filename = request.body.filename;
+    var url = request.body.url;
+    var datName = url.replace('dat://','')
+    var filePath = dir + '/' + datName + '/' + filename + '/';
+    var localPath = dir + '/' + datName
+    // let data = {localPath, title, description, type, author}
+    console.log("writeFile for  " + filename)
+    // var archive = new DatArchive(url)
+    var archive = await DatArchive.load({
+        localPath:  localPath
+    })
+    var info = await archive.writeFile(filename)
+    console.log("data : " + JSON.stringify(info))
+    response.send(JSON.stringify(info))
 });
 
 app.listen(3001);

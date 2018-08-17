@@ -5,11 +5,15 @@
   "main": "index.js",
   "dependencies": {
     "@beaker/dat-session-data-ext-msg": "^1.1.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "dat-gateway": "git+https://github.com/RangerMauve/dat-gateway.git",
     "express": "^4.16.3",
     "express-ws": "^4.0.0",
     "hyperdrive-http": "^4.2.0",
+    "node-dat-archive": "^2.0.1",
     "path": "^0.12.7",
+    "uuid": "^3.3.2",
     "websocket-stream": "^5.1.2"
   },
   "devDependencies": {},
