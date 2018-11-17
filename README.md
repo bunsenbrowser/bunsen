@@ -61,7 +61,7 @@ npm install -g cordova@7.1.0
 git clone git@github.com:bunsenbrowser/bunsen
 cd bunsen
 npm install
-cd ../www/nodejs-project
+cd ./www/nodejs-project
 npm install
 cd ../..
 cordova build android
