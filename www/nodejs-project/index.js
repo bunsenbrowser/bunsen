@@ -93,6 +93,27 @@ app.ws('/peerList', function(ws, req) {
     // console.log('socket', req.testing);
 });
 
+// app.post('/create', async function (request, response) {
+//     console.log("Creating a datArchive")
+//     var title = request.body.title;
+//     var description = request.body.description;
+//     var type = request.body.type;
+//     var author = request.body.author;
+//     var uuid = uuidv4();
+//     // var localPath = dir + '/';
+//     var localPath = dir + '/' + uuid;
+//     var datOptions = {latest: true}
+//     var netOptions = null;
+//     let data = {localPath, datOptions, netOptions, title, description, type, author}
+//
+//     console.log("create " + JSON.stringify(data))
+//     var archive = await DatArchive.create(data)
+//     let url = archive.url
+//     data.url = url
+//     console.log("data.localPath " + data.localPath + " data object: " + JSON.stringify(data))
+//     response.send(JSON.stringify(data))
+// });
+
 app.post('/create', async function (request, response) {
     console.log("Creating a datArchive")
     var title = request.body.title;
@@ -111,11 +132,14 @@ app.post('/create', async function (request, response) {
     data.url = url
     const newDir = url.replace('dat://','')
     const newPath = dir + '/' + newDir;
+    console.log("renaming dat. ")
+    // await sleep(3000)
     fs.rename(localPath, newPath, (err) => {
         if (err) throw err;
-        console.log('Rename complete!');
+        console.log('Rename complete!' + localPath + " to " + newPath);
     });
-    console.log("data with url: " + JSON.stringify(data))
+    data.localPath = newPath
+    console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
     response.send(JSON.stringify(data))
 });
 
@@ -127,49 +151,138 @@ app.post('/getInfo', async function (request, response) {
     console.log("getInfo for  " + url)
     // var info = await DatArchive.getInfo(url)
     var localPath = dir + '/' + datName
-    var archive = await DatArchive.load({
-        localPath:  localPath
-    })
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    var archive = await DatArchive.load(data)
     var info = await archive.getInfo(url)
     console.log("getInfo: " + JSON.stringify(info))
     response.send(JSON.stringify(info))
 });
 
-app.post('/mkdir', async function (request, response) {
+
+app.post('/readFile', async function (request, response) {
+    console.log("read a DatArchive")
+    var filename = request.body.filename;
+    var url = request.body.url;
+    var datName = url.replace('dat://','')
+    // var filePath = dir + '/' + datName + '/' + filename + '/';
+    var localPath = dir + '/' + datName
+    console.log("loading into DatArchive " + localPath)
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    var archive = await DatArchive.load(data)
+    console.log("now reading the file " + filename)
+    // var manifest = JSON.parse(await archive.readFile(filename))
+    var manifest = JSON.parse(await archive.readFile(filename))
+    console.log("got the manifest from readfile.")
+    // var info = await archive.readFile(filename)
+    // var archive = await new DatArchive(url, {localPath: localPath})
+    // console.log("data : " + JSON.stringify(archive))
+    response.send(JSON.stringify(manifest))
+});
+
+app.post('/mkdir', async function (request, response, next) {
     console.log("getInfo for a DatArchive")
     var filename = request.body.filename;
     var url = request.body.url;
     var datName = url.replace('dat://','')
     var filePath = dir + '/' + datName + '/' + filename + '/';
     var localPath = dir + '/' + datName
-    // let data = {localPath, title, description, type, author}
+
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+
     console.log("mkdir for  " + filename)
-    // var archive = new DatArchive(url)
-    var archive = await DatArchive.load({
-        localPath:  localPath
-    })
-    var info = await archive.mkdir(filename)
-    console.log("data with url: " + JSON.stringify(info))
-    response.send(JSON.stringify(info))
+    var archive = await DatArchive.load(data)
+
+    var info;
+    try {
+        info = await archive.mkdir(filename)
+        console.log("data with url: " + JSON.stringify(info) + " filename: " + filename)
+        response.send(JSON.stringify(info))
+    } catch (e) {
+        console.log("Error: " + e)
+        // console.log("err.message: " + err.message)
+        response.status(400).send({ statusText: e.toString() });
+        // res.status(500).json({ error: e.toString() });
+        // err.statusCode = 403;
+        // next(err);
+    }
 });
 
-app.post('/writeFile', async function (request, response) {
-    console.log("writeFile for a DatArchive")
+app.post('/stat', async function (request, response) {
+    console.log("stat for a DatArchive")
     var filename = request.body.filename;
     var url = request.body.url;
+    var opts = request.body.opts;
     var datName = url.replace('dat://','')
-    var filePath = dir + '/' + datName + '/' + filename + '/';
+    console.log("stat for  " + url + " of filename: " + filename)
+    // var info = await DatArchive.getInfo(url)
     var localPath = dir + '/' + datName
-    // let data = {localPath, title, description, type, author}
-    console.log("writeFile for  " + filename)
-    // var archive = new DatArchive(url)
-    var archive = await DatArchive.load({
-        localPath:  localPath
-    })
-    var info = await archive.writeFile(filename)
-    console.log("data : " + JSON.stringify(info))
-    response.send(JSON.stringify(info))
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    var archive = await DatArchive.load(data)
+    try {
+        var info = await archive.stat(filename)
+        console.log("getInfo: " + JSON.stringify(info))
+        response.send(JSON.stringify(info))
+    } catch (e) {
+        console.log("Error: " + e)
+        response.status(400).send({ statusText: e.toString() });
+    }
 });
+
+app.post('/watch', async function (request, response) {
+    console.log("watch for a DatArchive")
+    // var filename = request.body.filename;
+    var url = request.body.url;
+    var opts = request.body.opts;
+    var datName = url.replace('dat://','')
+    console.log("stat for  " + url + " of filename: " + filename)
+    // var info = await DatArchive.getInfo(url)
+    var localPath = dir + '/' + datName
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    var archive = await DatArchive.load(data)
+    try {
+        var events = await archive.watch(filename)
+        console.log("watch: " + JSON.stringify(events))
+        response.send(JSON.stringify(events))
+    } catch (e) {
+        console.log("Error: " + e)
+        response.status(400).send({ statusText: e.toString() });
+    }
+});
+
+
+// app.post('/writeFile', async function (request, response) {
+//     console.log("write a DatArchive")
+//     var filename = request.body.filename;
+//     var url = request.body.url;
+//     var datName = url.replace('dat://','')
+//     var filePath = dir + '/' + datName + '/' + filename + '/';
+//     var localPath = dir + '/' + datName
+//     // let data = {localPath, title, description, type, author}
+//     console.log("writeFile for  " + filename)
+//     // var archive = new DatArchive(url)
+//     var archive = await DatArchive.load({
+//         localPath:  localPath
+//     })
+//     var info = await archive.writeFile(filename)
+//     console.log("data : " + JSON.stringify(info))
+//     response.send(JSON.stringify(info))
+// });
+
+// app.use(function(err, req, res, next) {
+//     console.error(err.message); // Log error message in our server's console
+//     if (!err.statusCode) err.statusCode = 500; // If err has no specified error code, set error code to 'Internal Server Error (500)'
+//     res.status(err.statusCode).send(err.message); // All HTTP requests must have a response, so let's send back an error with its status code and message
+// });
 
 app.listen(3001);
 
@@ -209,6 +322,12 @@ function decodeSessionData (sessionData) {
         console.error('Failed to parse local session data', e, sessionData)
         return null
     }
+}
+
+function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
 }
 
 // Dat(ram, function (err, dat) {
