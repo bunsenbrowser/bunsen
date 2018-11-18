@@ -96,12 +96,15 @@ simplehttpserver
 
 Access the app at http://localhost:8000
 
-If you are working on enabling any of the dependent dat app, share those as well
+If you are working on enabling any of the dependent dat apps, share those as well
 
 ```
 cd dat-wysiwywiki-app
 dat share
 ```
+
+The bunsen-datArchive-test (https://github.com/bunsenbrowser/bunsen-datArchive-test) provides tests for Bunsen's DatArchive API
+which can be helpful in developing dat applications that can be used with Bunsen and Beaker browser.
 
 #### Releasing APK's
 

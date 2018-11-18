@@ -242,7 +242,7 @@ app.post('/watch', async function (request, response) {
     var url = request.body.url;
     var opts = request.body.opts;
     var datName = url.replace('dat://','')
-    console.log("stat for  " + url + " of filename: " + filename)
+    console.log("watching " + url)
     // var info = await DatArchive.getInfo(url)
     var localPath = dir + '/' + datName
     var datOptions = {latest: true}
@@ -250,8 +250,9 @@ app.post('/watch', async function (request, response) {
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
     try {
-        var events = await archive.watch(filename)
+        var events = archive.watch()
         console.log("watch: " + JSON.stringify(events))
+        // todo: websockets!
         response.send(JSON.stringify(events))
     } catch (e) {
         console.log("Error: " + e)
