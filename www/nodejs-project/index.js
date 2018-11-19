@@ -35,7 +35,10 @@ const redirect = true
 
 var datSessionDataExtMsg = new DatSessionDataExtMsg()
 
+// websockets events
 let peerList = [];
+let watchEvents = [];
+let events;
 
 var dir = path.join(__dirname, datGatewayName)
 console.log("redirect: " + redirect)
@@ -62,7 +65,6 @@ app.ws('/peerList', function(ws, req) {
         // websocket-stream options here
         binary: false,
     });
-
 
     gateway.on('join', (dat) => {
         let connections = dat.network.connections.length
@@ -93,26 +95,47 @@ app.ws('/peerList', function(ws, req) {
     // console.log('socket', req.testing);
 });
 
-// app.post('/create', async function (request, response) {
-//     console.log("Creating a datArchive")
-//     var title = request.body.title;
-//     var description = request.body.description;
-//     var type = request.body.type;
-//     var author = request.body.author;
-//     var uuid = uuidv4();
-//     // var localPath = dir + '/';
-//     var localPath = dir + '/' + uuid;
-//     var datOptions = {latest: true}
-//     var netOptions = null;
-//     let data = {localPath, datOptions, netOptions, title, description, type, author}
-//
-//     console.log("create " + JSON.stringify(data))
-//     var archive = await DatArchive.create(data)
-//     let url = archive.url
-//     data.url = url
-//     console.log("data.localPath " + data.localPath + " data object: " + JSON.stringify(data))
-//     response.send(JSON.stringify(data))
-// });
+app.ws('/watchEvents', function(ws, req) {
+    // convert ws instance to stream
+    const stream = websocketStream(ws, {
+        // websocket-stream options here
+        binary: false,
+    });
+    stream.write("Starting the watch.")
+    // watchEvents.addEventListener('changed', function ({path}) {
+    // watchEvents.addEventListener('changed', function (path) {
+    //     console.log("Sending path.")
+    //     stream.write(path)
+    //     // res.push(path)
+    // })
+    // events.on('changed', function (path) {
+    //     console.log("Sending path.")
+    //     stream.write(path)
+    // })
+
+
+    events.on('changed', args => {
+        console.log(args.path, 'has changed')
+    })
+    events.on('updated', args => {
+        console.log(args.path, 'has updated')
+    })
+
+
+
+    stream.on('data', ([event, args]) => {
+        console.log("something data ")
+    })
+
+    // fs.createReadStream(watchEvents).pipe(stream);
+    ws.on('message', function(msg) {
+        console.log("I gotta message: " + msg);
+    });
+    // console.log('socket', req.testing);
+
+    ws.on('error', (err) => console.log('error: ' + err));
+
+});
 
 app.post('/create', async function (request, response) {
     console.log("Creating a datArchive")
@@ -128,18 +151,19 @@ app.post('/create', async function (request, response) {
     let data = {localPath, datOptions, netOptions, title, description, type, author}
     console.log("create " + JSON.stringify(data))
     var archive = await DatArchive.create(data)
+
     let url = archive.url
     data.url = url
     const newDir = url.replace('dat://','')
     const newPath = dir + '/' + newDir;
-    console.log("renaming dat. ")
+    // console.log("renaming dat. ")
     // await sleep(3000)
     fs.rename(localPath, newPath, (err) => {
         if (err) throw err;
-        console.log('Rename complete!' + localPath + " to " + newPath);
+        // console.log('Rename complete!' + localPath + " to " + newPath);
     });
     data.localPath = newPath
-    console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
+    // console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
     response.send(JSON.stringify(data))
 });
 
@@ -201,7 +225,7 @@ app.post('/mkdir', async function (request, response, next) {
     var info;
     try {
         info = await archive.mkdir(filename)
-        console.log("data with url: " + JSON.stringify(info) + " filename: " + filename)
+        // console.log("data with url: " + JSON.stringify(info) + " filename: " + filename)
         response.send(JSON.stringify(info))
     } catch (e) {
         console.log("Error: " + e)
@@ -240,20 +264,40 @@ app.post('/watch', async function (request, response) {
     console.log("watch for a DatArchive")
     // var filename = request.body.filename;
     var url = request.body.url;
-    var opts = request.body.opts;
+    var pathSpec = request.body.pathSpec;
     var datName = url.replace('dat://','')
-    console.log("watching " + url)
+    console.log("watching " + url + " pathSpec: " + pathSpec)
     // var info = await DatArchive.getInfo(url)
     var localPath = dir + '/' + datName
-    var datOptions = {latest: true}
+    var datOptions = {latest: true, live: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
+    console.log("archive.url from watch: " + archive.url)
+
+
     try {
-        var events = archive.watch()
-        console.log("watch: " + JSON.stringify(events))
-        // todo: websockets!
-        response.send(JSON.stringify(events))
+        events = archive.watch()
+        debugger;
+        events.addEventListener('changed', ({path}) => {
+            console.log(path, 'has been updated!')
+            watchEvents.push(path)
+        })
+        events.addEventListener('updated', ({path}) => {
+            console.log(path, 'has been updated!')
+            watchEvents.push(path)
+        })
+
+
+
+        // archive.watch(pathSpec, function ({path}) {
+        //     console.log("path: " + path)
+        //     watchEvents.push(path)
+        // })
+
+        console.log("watch: " + JSON.stringify(watchEvents))
+        response.send(JSON.stringify(watchEvents))
+
     } catch (e) {
         console.log("Error: " + e)
         response.status(400).send({ statusText: e.toString() });
@@ -261,23 +305,29 @@ app.post('/watch', async function (request, response) {
 });
 
 
-// app.post('/writeFile', async function (request, response) {
-//     console.log("write a DatArchive")
-//     var filename = request.body.filename;
-//     var url = request.body.url;
-//     var datName = url.replace('dat://','')
-//     var filePath = dir + '/' + datName + '/' + filename + '/';
-//     var localPath = dir + '/' + datName
-//     // let data = {localPath, title, description, type, author}
-//     console.log("writeFile for  " + filename)
-//     // var archive = new DatArchive(url)
-//     var archive = await DatArchive.load({
-//         localPath:  localPath
-//     })
-//     var info = await archive.writeFile(filename)
-//     console.log("data : " + JSON.stringify(info))
-//     response.send(JSON.stringify(info))
-// });
+app.post('/writeFile', async function (request, response) {
+    console.log("write a DatArchive")
+    var filename = request.body.filename;
+    var text = request.body.text;
+    var url = request.body.url;
+    var datName = url.replace('dat://','')
+    var filePath = dir + '/' + datName + '/' + filename + '/';
+    var localPath = dir + '/' + datName
+    var datOptions = {latest: true}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    var archive = await DatArchive.load(data)
+    console.log("writeFile for  " + filename)
+    // debugger;
+    archive._archive.on('update', onUpdate)
+    archive._archive.on('changed', onUpdate)
+    function onUpdate () {
+        console.log("emitting events onUpdate writeFile")
+    }
+    var info = await archive.writeFile(filename, text, 'utf8')
+    // console.log("Results of writeFile : " + JSON.stringify(info))
+    response.send(JSON.stringify(info))
+});
 
 // app.use(function(err, req, res, next) {
 //     console.error(err.message); // Log error message in our server's console

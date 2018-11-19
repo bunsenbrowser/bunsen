@@ -96,7 +96,7 @@ simplehttpserver
 
 Access the app at http://localhost:8000
 
-If you are working on enabling any of the dependent dat apps, share those as well
+If you are working on enabling any of the dependent dat apps, share those as well:
 
 ```
 cd dat-wysiwywiki-app
