@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.bunsenbrowser" version="1.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.bunsenbrowser" version="1.1.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Bunsen</name>
     <description>
         p2p4u&amp;me
@@ -33,7 +33,8 @@
     </platform>
     <preference name="AndroidLaunchMode" value="singleTask" />
     <preference name="AppendUserAgent" value="BunsenBrowser" />
-    <preference name="android-targetSdkVersion" value="26"/>
+    <preference name="android-minSdkVersion" value="23" />
+    <preference name="android-targetSdkVersion" value="26" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
@@ -43,5 +44,5 @@
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
-    <plugin name="nodejs-mobile-cordova" spec="^0.2.1" />
+    <plugin name="nodejs-mobile-cordova" spec="^0.2.2" />
 </widget>

@@ -15,3 +15,5 @@ www/nodejs-project/dat-gateway
 build.json
 
 www/nodejs-project/node_modules
+.gradle/
+www/nodejs-project/secret_keys/
