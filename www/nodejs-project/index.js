@@ -140,7 +140,7 @@ app.post('/create', async function (request, response) {
     var uuid = uuidv4();
     var localPath = datGatewayRoot + '/' + uuid;
     var store = storage(localPath, {secretDir: secretKeysRoot});
-    var datOptions = {latest: true, hd: store}
+    var datOptions = {latest: true, storage: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions, title, description, type, author}
     console.log("create DatArchive at " + JSON.stringify(localPath)  )
@@ -222,7 +222,7 @@ app.post('/mkdir', async function (request, response, next) {
     var datName = url.replace('dat://','')
     var localPath = datGatewayRoot + '/' + datName
     var store = storage(localPath, {secretDir: secretKeysRoot});
-    var datOptions = {latest: true, hd: store}
+    var datOptions = {latest: true, storage: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     console.log("mkdir for  " + filename)
@@ -316,7 +316,7 @@ app.post('/writeFile', async function (request, response) {
     var datName = url.replace('dat://','')
     var localPath = datGatewayRoot + '/' + datName
     var store = storage(localPath, {secretDir: secretKeysRoot});
-    var datOptions = {latest: true, hd: store}
+    var datOptions = {latest: true, storage: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)

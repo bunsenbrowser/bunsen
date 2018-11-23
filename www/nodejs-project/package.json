@@ -12,7 +12,7 @@
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
     "hyperdrive-http": "^4.3.4",
-    "node-dat-archive": "^2.2.0",
+    "node-dat-archive": "https://github.com/bunsenbrowser/node-dat-archive",
     "path": "^0.12.7",
     "uuid": "^3.3.2",
     "websocket-stream": "^5.1.2"
