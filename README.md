@@ -10,7 +10,7 @@ Bunsen is a front-end for [dat](https://datproject.org/) using Apache Cordova to
 
 Current version: [1.1.3](https://github.com/bunsenbrowser/bunsen/releases/tag/1.1.3). 
 - [Play store](https://play.google.com/store/apps/details?id=org.bunsenbrowser) 
-- [GitHub](https://github.com/bunsenbrowser/bunsen/releases/download/1.1.3/bunsen.apk) direct download
+- [GitHub](https://github.com/bunsenbrowser/bunsen/releases/download/1.1.3/bunsen-1.1.3.apk) direct download
 - [dat://bunsen-apk.hashbase.io](dat://bunsen-apk.hashbase.io) 
 - [raw dat installer link](dat://4dc3f50557b0a9e28f94356cae1050c7d9a4205d0b0622340742e481d0cb25b5/)
 
