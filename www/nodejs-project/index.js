@@ -1,8 +1,6 @@
 const path = require('path');
 const mkdirp = require('mkdirp')
 var DatGateway = require('dat-gateway')
-// var ram = require('random-access-memory')
-// var Dat = require('dat-node')
 var DatArchive = require('node-dat-archive')
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
@@ -10,6 +8,8 @@ const {DatSessionDataExtMsg} = require('@beaker/dat-session-data-ext-msg')
 const express = require('express');
 const expressWebSocket = require('express-ws');
 const websocketStream = require('websocket-stream/stream');
+var storage = require('dat-storage')
+
 const app = express();
 // extend express app with app.ws()
 expressWebSocket(app, null, {
@@ -25,13 +25,17 @@ app.use(bodyParser.json());
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
 
-const datGatewayName = 'dat-gateway';
+
 const max = 20;
 const period = 60 * 1000 // every minute
 const port = 3000
 const ttl = 43200 * 60 * 1000 // 30 days
 const dat = {temp:false}
 const redirect = true
+const datGatewayName = 'dat-gateway';
+const secretKeysName = 'secret_keys';
+var datGatewayRoot = path.join(__dirname, datGatewayName)
+var secretKeysRoot = path.join(__dirname, secretKeysName)
 
 var datSessionDataExtMsg = new DatSessionDataExtMsg()
 
@@ -40,10 +44,13 @@ let peerList = [];
 let watchEvents = [];
 let events;
 
-var dir = path.join(__dirname, datGatewayName)
-console.log("redirect: " + redirect)
-mkdirp.sync(dir) // make sure it exists
-const gateway = new DatGateway({ dir, dat, max, period, ttl, redirect })
+console.log("datGatewayRoot: " + datGatewayRoot)
+
+// make sure these dirs exists
+mkdirp.sync(datGatewayRoot)
+mkdirp.sync(secretKeysRoot)
+
+const gateway = new DatGateway({ dir:datGatewayRoot, dat, max, period, ttl, redirect })
 gateway
     .load()
     .then(() => {
@@ -102,35 +109,22 @@ app.ws('/watchEvents', function(ws, req) {
         binary: false,
     });
     stream.write("Starting the watch.")
-    // watchEvents.addEventListener('changed', function ({path}) {
-    // watchEvents.addEventListener('changed', function (path) {
-    //     console.log("Sending path.")
-    //     stream.write(path)
-    //     // res.push(path)
+
+    // events.on('changed', args => {
+    //     console.log(args.path, 'has changed')
     // })
-    // events.on('changed', function (path) {
-    //     console.log("Sending path.")
-    //     stream.write(path)
+    // events.on('updated', args => {
+    //     console.log(args.path, 'has updated')
     // })
-
-
-    events.on('changed', args => {
-        console.log(args.path, 'has changed')
-    })
-    events.on('updated', args => {
-        console.log(args.path, 'has updated')
-    })
-
-
-
-    stream.on('data', ([event, args]) => {
-        console.log("something data ")
-    })
+    //
+    // stream.on('data', ([event, args]) => {
+    //     console.log("something data ")
+    // })
 
     // fs.createReadStream(watchEvents).pipe(stream);
-    ws.on('message', function(msg) {
-        console.log("I gotta message: " + msg);
-    });
+    // ws.on('message', function(msg) {
+    //     console.log("I gotta message: " + msg);
+    // });
     // console.log('socket', req.testing);
 
     ws.on('error', (err) => console.log('error: ' + err));
@@ -144,26 +138,38 @@ app.post('/create', async function (request, response) {
     var type = request.body.type;
     var author = request.body.author;
     var uuid = uuidv4();
-    // var localPath = dir + '/';
-    var localPath = dir + '/' + uuid;
-    var datOptions = {latest: true}
+    var localPath = datGatewayRoot + '/' + uuid;
+    var store = storage(localPath, {secretDir: secretKeysRoot});
+    var datOptions = {latest: true, hd: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions, title, description, type, author}
-    console.log("create " + JSON.stringify(data))
-    var archive = await DatArchive.create(data)
+    console.log("create DatArchive at " + JSON.stringify(localPath)  )
 
+    try {
+        var archive = await DatArchive.create(data)
+    } catch (e) {
+        console.log("Error: " + e);
+        // console.trace()
+        var stack = new Error().stack
+        console.log( stack )
+        response.status(400).send({ statusText: e.toString() });
+    }
     let url = archive.url
     data.url = url
     const newDir = url.replace('dat://','')
-    const newPath = dir + '/' + newDir;
-    // console.log("renaming dat. ")
-    // await sleep(3000)
+    const newPath = datGatewayRoot + '/' + newDir;
+    // await sleep(1000)
     fs.rename(localPath, newPath, (err) => {
-        if (err) throw err;
-        // console.log('Rename complete!' + localPath + " to " + newPath);
+        if (err)  {
+            // throw err;
+            var stack = new Error().stack
+            console.log( stack )
+            // response.status(400).send({ statusText: err.toString() });
+        }
+        console.log('Rename complete!' + localPath + " to " + newPath);
     });
     data.localPath = newPath
-    // console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
+    console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
     response.send(JSON.stringify(data))
 });
 
@@ -174,14 +180,22 @@ app.post('/getInfo', async function (request, response) {
     var datName = url.replace('dat://','')
     console.log("getInfo for  " + url)
     // var info = await DatArchive.getInfo(url)
-    var localPath = dir + '/' + datName
+    var localPath = datGatewayRoot + '/' + datName
     var datOptions = {latest: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
-    var archive = await DatArchive.load(data)
-    var info = await archive.getInfo(url)
-    console.log("getInfo: " + JSON.stringify(info))
-    response.send(JSON.stringify(info))
+    try {
+        var archive = await DatArchive.load(data)
+        var info = await archive.getInfo(url)
+        console.log("getInfo: " + JSON.stringify(info))
+        response.send(JSON.stringify(info))
+    } catch (e) {
+        console.log("Error: " + e);
+        // console.trace()
+        var stack = new Error().stack
+        console.log( stack )
+        response.status(400).send({ statusText: e.toString() });
+    }
 });
 
 
@@ -190,20 +204,14 @@ app.post('/readFile', async function (request, response) {
     var filename = request.body.filename;
     var url = request.body.url;
     var datName = url.replace('dat://','')
-    // var filePath = dir + '/' + datName + '/' + filename + '/';
-    var localPath = dir + '/' + datName
+    var localPath = datGatewayRoot + '/' + datName
     console.log("loading into DatArchive " + localPath)
     var datOptions = {latest: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
     console.log("now reading the file " + filename)
-    // var manifest = JSON.parse(await archive.readFile(filename))
     var manifest = JSON.parse(await archive.readFile(filename))
-    console.log("got the manifest from readfile.")
-    // var info = await archive.readFile(filename)
-    // var archive = await new DatArchive(url, {localPath: localPath})
-    // console.log("data : " + JSON.stringify(archive))
     response.send(JSON.stringify(manifest))
 });
 
@@ -212,13 +220,11 @@ app.post('/mkdir', async function (request, response, next) {
     var filename = request.body.filename;
     var url = request.body.url;
     var datName = url.replace('dat://','')
-    var filePath = dir + '/' + datName + '/' + filename + '/';
-    var localPath = dir + '/' + datName
-
-    var datOptions = {latest: true}
+    var localPath = datGatewayRoot + '/' + datName
+    var store = storage(localPath, {secretDir: secretKeysRoot});
+    var datOptions = {latest: true, hd: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
-
     console.log("mkdir for  " + filename)
     var archive = await DatArchive.load(data)
 
@@ -245,7 +251,7 @@ app.post('/stat', async function (request, response) {
     var datName = url.replace('dat://','')
     console.log("stat for  " + url + " of filename: " + filename)
     // var info = await DatArchive.getInfo(url)
-    var localPath = dir + '/' + datName
+    var localPath = datGatewayRoot + '/' + datName
     var datOptions = {latest: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
@@ -268,13 +274,12 @@ app.post('/watch', async function (request, response) {
     var datName = url.replace('dat://','')
     console.log("watching " + url + " pathSpec: " + pathSpec)
     // var info = await DatArchive.getInfo(url)
-    var localPath = dir + '/' + datName
+    var localPath = datGatewayRoot + '/' + datName
     var datOptions = {latest: true, live: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
     console.log("archive.url from watch: " + archive.url)
-
 
     try {
         events = archive.watch()
@@ -287,8 +292,6 @@ app.post('/watch', async function (request, response) {
             console.log(path, 'has been updated!')
             watchEvents.push(path)
         })
-
-
 
         // archive.watch(pathSpec, function ({path}) {
         //     console.log("path: " + path)
@@ -311,9 +314,9 @@ app.post('/writeFile', async function (request, response) {
     var text = request.body.text;
     var url = request.body.url;
     var datName = url.replace('dat://','')
-    var filePath = dir + '/' + datName + '/' + filename + '/';
-    var localPath = dir + '/' + datName
-    var datOptions = {latest: true}
+    var localPath = datGatewayRoot + '/' + datName
+    var store = storage(localPath, {secretDir: secretKeysRoot});
+    var datOptions = {latest: true, hd: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)

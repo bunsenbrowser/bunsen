@@ -16,3 +16,4 @@ build.json
 
 www/nodejs-project/node_modules
 .gradle/
+www/nodejs-project/secret_keys/

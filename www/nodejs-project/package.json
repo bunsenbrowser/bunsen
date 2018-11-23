@@ -8,6 +8,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dat-gateway": "git+https://github.com/RangerMauve/dat-gateway.git",
+    "dat-storage": "^1.1.1",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
     "hyperdrive-http": "^4.3.4",
