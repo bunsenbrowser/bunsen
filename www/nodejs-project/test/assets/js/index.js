@@ -42,7 +42,7 @@ async function readFile() {
         let url = Test.archive.url
         let filename = "/dat.json"
         try {
-            let readFile = await Test.archive.readFile(url, filename)
+            let readFile = await Test.archive.readFile(filename)
             console.log("readFile returned" + JSON.stringify(readFile))
             document.querySelector("#readFileResponse").innerHTML = JSON.stringify(readFile)
         } catch (e) {
@@ -82,7 +82,16 @@ async function watch() {
     if (typeof Test.archive.watch === "function") {
         let pathSpec = '/*.txt'
         let watch = await Test.archive.watch(pathSpec)
-        socket2me();
+        watch.onmessage = function(ev) {
+            console.log('watch onmessage')
+        }
+        watch.addEventListener('changed', () => {
+            console.log('watch changed')
+        })
+        watch.addEventListener('invalidated', () => {
+            console.log('watch invalidated')
+        })
+        //socket2me();
         console.log("watch returned" + JSON.stringify(watch))
         document.querySelector("#watchResponse").innerHTML = JSON.stringify(watch)
         document.querySelector("#watchUrl").innerHTML = "<a href=" + Test.archive.url + ">Look at me!</a>"

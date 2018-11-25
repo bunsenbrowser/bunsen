@@ -8,11 +8,12 @@ class DatArchiveProxy {
         console.log(url)
     }
 
-    async readFile(path, filename) {
+    async readFile(path, options) {
+        // @TODO Support for options.
         console.log('I want to readFile: ' + path);
         const url = this.url
         // const resource = url.replace('dat://','')
-        const data = {url:url,filename: filename}
+        const data = {url:url,filename: path}
         // const data = {url:url}
         const appUrl = DATARCHIVE_URL + 'readFile'
         // const appUrl = DATARCHIVE_URL
@@ -30,7 +31,7 @@ class DatArchiveProxy {
             body: JSON.stringify(data), // body data type must match "Content-Type" header
         })
         // let response = await fetch(appUrl)
-        let result = await response.json();
+        let result = await response.text();
         // var blob = new Blob([buf], {type: 'image/png'})
         // return JSON.stringify(result);
         return result;
@@ -139,29 +140,25 @@ class DatArchiveProxy {
         }
     }
 
-    async watch(pathSpec) {
+    async watch(path, optionalCallback) {
+        // @TODO: Support for watching a specific path.
         const url = this.url
         console.log('I want to watch: ' + url);
-        const data = {url:url, pathSpec:pathSpec}
-        const appUrl = DATARCHIVE_URL + 'watch'
-        let response = await fetch(appUrl,{
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin", // include, same-origin, *omit
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            redirect: "follow", // manual, *follow, error
-            referrer: "no-referrer", // no-referrer, *client
-            body: JSON.stringify(data), // body data type must match "Content-Type" header
+        const EE = document.createElement('div')
+        const socket = new WebSocket(`${DATARCHIVE_URL.replace('http:','ws:')}watch/${this.url.replace('dat://','')}`);
+        socket.addEventListener('message', (event) => {
+            let message = { type: '', path: '' }
+            try {
+                message = JSON.parse(event.data)
+            } catch (e) { }
+            if (message.type === 'invalidated') EE.dispatchEvent(new CustomEvent('invalidated'))
+            if (message.type === 'changed') EE.dispatchEvent(new CustomEvent('changed'))
+            if (optionalCallback) optionalCallback({path: message.path})
         })
-        let result = await response.json();
-        // return JSON.stringify(result);
-        return result;
+        return EE
     }
 
-    async writeFile(text, filename) {
+    async writeFile(filename, text) {
         console.log('I want to writeFile: ' + text);
         const url = this.url
         // const resource = url.replace('dat://','')
