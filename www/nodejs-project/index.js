@@ -104,35 +104,6 @@ app.ws('/peerList', function(ws, req) {
     // console.log('socket', req.testing);
 });
 
-app.ws('/watchEvents', function(ws, req) {
-    // convert ws instance to stream
-    const stream = websocketStream(ws, {
-        // websocket-stream options here
-        binary: false,
-    });
-    stream.write("Starting the watch.")
-
-    // events.on('changed', args => {
-    //     console.log(args.path, 'has changed')
-    // })
-    // events.on('updated', args => {
-    //     console.log(args.path, 'has updated')
-    // })
-    //
-    // stream.on('data', ([event, args]) => {
-    //     console.log("something data ")
-    // })
-
-    // fs.createReadStream(watchEvents).pipe(stream);
-    // ws.on('message', function(msg) {
-    //     console.log("I gotta message: " + msg);
-    // });
-    // console.log('socket', req.testing);
-
-    ws.on('error', (err) => console.log('error: ' + err));
-
-});
-
 app.post('/create', async function (request, response) {
     console.log("Creating a datArchive")
     var title = request.body.title;
@@ -199,7 +170,6 @@ app.post('/getInfo', async function (request, response) {
         response.status(400).send({ statusText: e.toString() });
     }
 });
-
 
 app.post('/readFile', async function (request, response) {
     console.log("read a DatArchive")
@@ -268,13 +238,16 @@ app.post('/stat', async function (request, response) {
     }
 });
 
-app.post('/watch', async function (request, response) {
+app.ws('/watch/:datAddress', async function (ws, req) {
+    const stream = websocketStream(ws, {
+        // websocket-stream options here
+        binary: false,
+    });
     console.log("watch for a DatArchive")
     // var filename = request.body.filename;
-    var url = request.body.url;
-    var pathSpec = request.body.pathSpec;
-    var datName = url.replace('dat://','')
-    console.log("watching " + url + " pathSpec: " + pathSpec)
+    //var pathSpec = request.body.pathSpec;
+    var datName = req.params.datAddress
+    //console.log("watching " + url + " pathSpec: " + pathSpec)
     // var info = await DatArchive.getInfo(url)
     var localPath = datGatewayRoot + '/' + datName
     var datOptions = {latest: true, live: true}
@@ -282,27 +255,28 @@ app.post('/watch', async function (request, response) {
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
     console.log("archive.url from watch: " + archive.url)
-
     try {
         events = archive.watch()
-        debugger;
+        events.addEventListener('invalidated', ({path}) => {
+            console.log(path, 'has been updated!')
+            //stream.write(path)
+            ws.send(JSON.stringify({
+                type: 'invalidated',
+                path
+            }))
+        })
         events.addEventListener('changed', ({path}) => {
             console.log(path, 'has been updated!')
-            watchEvents.push(path)
+            //stream.write(path)
+            ws.send(JSON.stringify({
+                type: 'changed',
+                path
+            }))
         })
-        events.addEventListener('updated', ({path}) => {
-            console.log(path, 'has been updated!')
-            watchEvents.push(path)
-        })
-
         // archive.watch(pathSpec, function ({path}) {
         //     console.log("path: " + path)
         //     watchEvents.push(path)
         // })
-
-        console.log("watch: " + JSON.stringify(watchEvents))
-        response.send(JSON.stringify(watchEvents))
-
     } catch (e) {
         console.log("Error: " + e)
         response.status(400).send({ statusText: e.toString() });
