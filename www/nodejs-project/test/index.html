@@ -1,0 +1,83 @@
+<html>
+<head>
+    <title>Bunsen DatArchive Tests</title>
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">-->
+    <link href="./assets/css/index.css" rel="stylesheet">
+    <link href="./assets/css/material-components-web.min.css" rel="stylesheet">
+    <script src="./assets/js/material-components-web.min.js"></script>
+    <script src="./assets/js/websocket-stream@latest.js"></script>
+    <script src="./assets/js/uuid_v4@latest.js"></script>
+    <script src="./assets/js/datArchive.js"></script>
+    <script src="./assets/js/index.js"></script>
+</head>
+<body>
+
+<div class="flex-grid">
+    <div class="col"><img src="./assets/images/bunsen-xhdpi.png" alt="bunsen logo"/></div>
+    <div class="col header">Bunsen</div>
+</div>
+
+<h1>Bunsen DatArchive Tests</h1>
+
+<p>First create a darArchive. This creates a datArchive on the filesystem and url, suitable for sharing.</p>
+
+<div class="flex-grid">
+    <div class="col"><button id="createDocument" class="mdc-button mdc-button--outlined">Create document</button></div>
+    <div class="col"><div id="createDocumentResponse"></div></div>
+    <div class="col"><div id="createDocumentUrl"></div></div>
+</div>
+
+<p>Now do more stuff with your archive! Let's getInfo()</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="getInfo" class="mdc-button mdc-button--outlined">GetInfo</button></div>
+    <div class="col"><div id="getInfoResponse"></div></div>
+</div>
+
+<p>Let's readFile dat.json</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="readFile" class="mdc-button mdc-button--outlined">readFile</button></div>
+    <div class="col"><div id="readFileResponse"></div></div>
+</div>
+
+<p>Let's mkdir "hooty". Note that if you do it twice, it's not nice!</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="mkdir" class="mdc-button mdc-button--outlined">mkdir</button></div>
+    <div class="col"><div id="mkdirResponse"></div></div>
+</div>
+
+<p>Let's stat "hooty". If you didn't create "hooty" first, you'll make it ANGRY.</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="stat" class="mdc-button mdc-button--outlined">stat</button></div>
+    <div class="col"><div id="statResponse"></div></div>
+</div>
+
+<p>Let's start watching our datArchive.</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="watch" class="mdc-button mdc-button--outlined">watch</button></div>
+    <div class="col"><div id="watchResponse"></div></div>
+    <div class="col"><div id="watchUrl"></div></div>
+</div>
+
+<p>Enter some text to create a new file to share. You can do this more than once!</p>
+
+<div class="flex-grid divSpacer">
+    <div class="col"><button id="writeFile" class="mdc-button mdc-button--outlined">writeFile</button></div>
+    <div class="col"><div id="writeFileResponse"></div></div>
+</div>
+<div class="flex-grid divSpacer">
+    <div class="col">
+        <div class="mdc-text-field mdc-text-field--textarea">
+            <textarea id="writeFileTextarea" class="mdc-text-field__input" rows="8" cols="40">It's fun!</textarea>
+            <label for="writeFileTextarea" class="mdc-floating-label--float-above">Enter here</label>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

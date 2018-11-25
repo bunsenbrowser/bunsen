@@ -21,6 +21,8 @@ var bodyParser = require('body-parser');
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use('/test', express.static(path.join(__dirname, 'test')));
+
 
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
