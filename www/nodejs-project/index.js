@@ -153,14 +153,8 @@ app.post('/create', async function (request, response) {
 app.post('/load', async function (request, response) {
     console.log("Loading a datArchive")
     var datUrl = request.body.datUrl;
-    let key
-    try {
-        key = await DatArchive.resolveName(datUrl)
-    } catch(e) {
-        return response.send({})
-    }
+    let key = datUrl.replace('dat://', '')
     var localPath = datGatewayRoot + '/' + key;
-    console.log(localPath)
     try {
         await access(localPath)
     } catch (e) {
@@ -190,12 +184,7 @@ app.post('/getInfo', async function (request, response) {
     console.log("getInfo for  " + url)
     var opts = request.body.opts;
     var datName = url.replace('dat://','')
-    let key
-    try {
-        key = await DatArchive.resolveName(url)
-    } catch(e) {
-        return response.send({})
-    }
+    var key = datName
     var localPath = datGatewayRoot + '/' + key;
     try {
         await access(localPath)
@@ -291,17 +280,8 @@ app.ws('/watch/:datAddress', async function (ws, req) {
         binary: false,
     });
     console.log("watch for a DatArchive")
-    // var filename = request.body.filename;
-    //var pathSpec = request.body.pathSpec;
     var datName = req.params.datAddress
-    let key
-    try {
-        key = await DatArchive.resolveName(datName)
-    } catch(e) {
-        return response.send({})
-    }
-    //console.log("watching " + url + " pathSpec: " + pathSpec)
-    // var info = await DatArchive.getInfo(url)
+    let key = datName.replace('dat://', '')
     var localPath = datGatewayRoot + '/' + datName
     try {
         await access(localPath)
