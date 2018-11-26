@@ -1,9 +1,12 @@
 const path = require('path');
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 const mkdirp = require('mkdirp')
 var DatGateway = require('dat-gateway')
 var DatArchive = require('node-dat-archive')
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
+const access = util.promisify(fs.access);
 const {DatSessionDataExtMsg} = require('@beaker/dat-session-data-ext-msg')
 const express = require('express');
 const expressWebSocket = require('express-ws');
@@ -144,6 +147,42 @@ app.post('/create', async function (request, response) {
     data.localPath = newPath
     console.log("data.localPath after re-naming: " + data.localPath + " data object: " + JSON.stringify(data))
     response.send(JSON.stringify(data))
+});
+
+// rjsteinert: I'm not sure if doing this has any benefits. It downloads to disk but when doing things like reading files from archives you don't own, that comes from memory.
+app.post('/load', async function (request, response) {
+    console.log("Loading a datArchive")
+    var datUrl = request.body.datUrl;
+    let key
+    try {
+        key = await DatArchive.resolveName(datUrl)
+    } catch(e) {
+        return response.send({})
+
+    }
+    var localPath = datGatewayRoot + '/' + key;
+    console.log(localPath)
+    try {
+        await access(localPath)
+    } catch (e) {
+        const out = await exec(`cd ${datGatewayRoot} && ../node_modules/.bin/dat clone ${key}`)
+    }
+    var store = storage(localPath, {secretDir: secretKeysRoot});
+    var datOptions = {latest: true, storage: store}
+    var netOptions = null;
+    let data = {localPath, datOptions, netOptions}
+    console.log("create DatArchive at " + JSON.stringify(localPath)  )
+    try {
+        var archive = await DatArchive.load(data)
+    } catch (e) {
+        console.log("Error: " + e);
+        // console.trace()
+        var stack = new Error().stack
+        console.log( stack )
+        response.status(400).send({ statusText: e.toString() });
+    }
+    // Clientside DatArchive.load just returns a DatArchive object with URL property.
+    response.send(JSON.stringify({ url: archive.url}))
 });
 
 app.post('/getInfo', async function (request, response) {

@@ -5,7 +5,8 @@
 // })();
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    document.querySelector("#createDocument").addEventListener("click", create);
+    document.querySelector("#createArchive").addEventListener("click", create);
+    document.querySelector("#loadArchive").addEventListener("click", load);
     document.querySelector("#getInfo").addEventListener("click", getInfo);
     document.querySelector("#mkdir").addEventListener("click", mkdir);
     document.querySelector("#readFile").addEventListener("click", readFile);
@@ -22,7 +23,13 @@ async function create() {
         description: 'Testing Bunsen support of DatArchive API.'
     })
     console.log("create returned" + JSON.stringify(Test.archive))
-    document.querySelector("#createDocumentResponse").innerHTML = JSON.stringify(Test.archive)
+    document.querySelector("#createArchiveResponse").innerHTML = JSON.stringify(Test.archive)
+}
+
+async function load() {
+    Test.archive = await DatArchive.load(Test.archive.url)
+    console.log("load returned" + JSON.stringify(Test.archive))
+    document.querySelector("#loadArchiveResponse").innerHTML = JSON.stringify(Test.archive)
 }
 
 async function getInfo() {

@@ -5,12 +5,51 @@ class DatArchiveProxy {
 
     constructor(url) {
         this.url = url
-        console.log(url)
+    }
+
+    async create(archiveInfo) {
+        // let document = { title, description, type, author }
+        const url = DATARCHIVE_URL + 'create'
+        let response = await fetch(url,{
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin", // include, same-origin, *omit
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            redirect: "follow", // manual, *follow, error
+            referrer: "no-referrer", // no-referrer, *client
+            body: JSON.stringify(archiveInfo), // body data type must match "Content-Type" header
+        })
+        let result = await response.json();
+        // return JSON.stringify(result);
+        const archive = new DatArchive(null)
+        const mergedArchive = Object.assign(archive, result);
+        return mergedArchive;
+    }
+
+    static async load(datUrl) {
+        const url = DATARCHIVE_URL + 'load'
+        let response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin", // include, same-origin, *omit
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            redirect: "follow", // manual, *follow, error
+            referrer: "no-referrer", // no-referrer, *client
+            body: JSON.stringify({ datUrl }) // body data type must match "Content-Type" header
+        })
+        let result = await response.json()
+        const archive = new DatArchive(null)
+        return Object.assign(archive, result)
     }
 
     async readFile(path, options) {
         // @TODO Support for options.
-        console.log('I want to readFile: ' + path);
         const url = this.url
         // const resource = url.replace('dat://','')
         const data = {url:url,filename: path}
@@ -37,32 +76,8 @@ class DatArchiveProxy {
         return result;
     }
 
-    async create(document) {
-        // let document = { title, description, type, author }
-        console.log('I want to create: ' + JSON.stringify(document));
-        const url = DATARCHIVE_URL + 'create'
-        let response = await fetch(url,{
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin", // include, same-origin, *omit
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            redirect: "follow", // manual, *follow, error
-            referrer: "no-referrer", // no-referrer, *client
-            body: JSON.stringify(document), // body data type must match "Content-Type" header
-        })
-        let result = await response.json();
-        // return JSON.stringify(result);
-        const archive = new DatArchive(null)
-        const mergedArchive = Object.assign(archive, result);
-        return mergedArchive;
-    }
-
     async getInfo(opts) {
         const url = this.url
-        console.log('I want to getInfo: ' + url);
         // const resource = url.replace('dat://','')
         const data = {url:url, opts:opts}
         const appUrl = DATARCHIVE_URL + 'getInfo'
@@ -85,7 +100,6 @@ class DatArchiveProxy {
 
     async stat(filename) {
         const url = this.url
-        console.log('I want to stat: ' + url + " for filename: " + filename);
         // const resource = url.replace('dat://','')
         // var path = url+ "/" + filename
         const data = {url:url, filename:filename}
@@ -108,7 +122,6 @@ class DatArchiveProxy {
     }
 
     async mkdir(filename) {
-        console.log('I want to mkdir: ' + filename);
         const url = this.url
         // const resource = url.replace('dat://','')
         const data = {url:url,filename: filename}
@@ -143,7 +156,6 @@ class DatArchiveProxy {
     async watch(path, optionalCallback) {
         // @TODO: Support for watching a specific path.
         const url = this.url
-        console.log('I want to watch: ' + url);
         const EE = document.createElement('div')
         const socket = new WebSocket(`${DATARCHIVE_URL.replace('http:','ws:')}watch/${this.url.replace('dat://','')}`);
         socket.addEventListener('message', (event) => {
@@ -159,7 +171,6 @@ class DatArchiveProxy {
     }
 
     async writeFile(filename, text) {
-        console.log('I want to writeFile: ' + text);
         const url = this.url
         // const resource = url.replace('dat://','')
         const data = {url:url,filename: filename,text: text}

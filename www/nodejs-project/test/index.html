@@ -22,10 +22,19 @@
 <p>First create a darArchive. This creates a datArchive on the filesystem and url, suitable for sharing.</p>
 
 <div class="flex-grid">
-    <div class="col"><button id="createDocument" class="mdc-button mdc-button--outlined">Create document</button></div>
-    <div class="col"><div id="createDocumentResponse"></div></div>
-    <div class="col"><div id="createDocumentUrl"></div></div>
+    <div class="col"><button id="createArchive" class="mdc-button mdc-button--outlined">Create Dat Archive</button></div>
+    <div class="col"><div id="createArchiveResponse"></div></div>
+    <div class="col"><div id="createArchiveUrl"></div></div>
 </div>
+
+<p>Now load that archive from the P2P network as if you were a peer loading it up for something.</p>
+
+<div class="flex-grid">
+    <div class="col"><button id="loadArchive" class="mdc-button mdc-button--outlined">Load Dat Archive</button></div>
+    <div class="col"><div id="loadArchiveResponse"></div></div>
+    <div class="col"><div id="loadArchiveUrl"></div></div>
+</div>
+
 
 <p>Now do more stuff with your archive! Let's getInfo()</p>
 
