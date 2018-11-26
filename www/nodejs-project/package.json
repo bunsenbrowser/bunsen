@@ -7,6 +7,7 @@
     "@beaker/dat-session-data-ext-msg": "^1.1.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
+    "dat": "^13.11.4",
     "dat-gateway": "git+https://github.com/RangerMauve/dat-gateway.git",
     "dat-storage": "^1.1.1",
     "express": "^4.16.4",
