@@ -305,25 +305,28 @@ app.ws('/watch/:datAddress', async function (ws, req) {
     try {
         events = archive.watch()
         events.addEventListener('invalidated', ({path}) => {
-            console.log(path, 'has been updated!')
-            //stream.write(path)
-            ws.send(JSON.stringify({
-                type: 'invalidated',
-                path
-            }))
+            try {
+                ws.send(JSON.stringify({
+                    type: 'invalidated',
+                    path
+                }))
+            } catch (e) {
+                // Do nothing. A client probably left.
+                // @TODO Need to cleanup?
+            }
         })
         events.addEventListener('changed', ({path}) => {
-            console.log(path, 'has been updated!')
-            //stream.write(path)
-            ws.send(JSON.stringify({
-                type: 'changed',
-                path
-            }))
+            try {
+                ws.send(JSON.stringify({
+                    type: 'changed',
+                    path
+                }))
+            } catch (e) {
+                // Do nothing. A client probably left.
+                // @TODO Need to cleanup?
+            }
+
         })
-        // archive.watch(pathSpec, function ({path}) {
-        //     console.log("path: " + path)
-        //     watchEvents.push(path)
-        // })
     } catch (e) {
         console.log("Error: " + e)
         response.status(400).send({ statusText: e.toString() });
