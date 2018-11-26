@@ -94,14 +94,20 @@ async function watch() {
         }
         watch.addEventListener('changed', () => {
             console.log('watch changed')
+            let messageEl = document.createElement('li')
+            messageEl.innerText = `change in archive detected at ${new Date().toISOString()}`
+            document.querySelector("#watchResponse").appendChild(messageEl)
         })
         watch.addEventListener('invalidated', () => {
             console.log('watch invalidated')
+            let messageEl = document.createElement('li')
+            messageEl.innerText = `invalidated archive detected at ${new Date().toISOString()}`
+            document.querySelector("#watchResponse").appendChild(messageEl)
         })
-        //socket2me();
+        let messageEl = document.createElement('li')
+        messageEl.innerText = `watch started at ${new Date().toISOString()}`
+        document.querySelector("#watchResponse").appendChild(messageEl)
         console.log("watch returned" + JSON.stringify(watch))
-        document.querySelector("#watchResponse").innerHTML = JSON.stringify(watch)
-        document.querySelector("#watchUrl").innerHTML = "<a href=" + Test.archive.url + ">Look at me!</a>"
     } else {
         alert("Create the document first pleeeze.")
     }
