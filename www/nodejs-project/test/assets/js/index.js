@@ -42,9 +42,9 @@ async function readFile() {
         let url = Test.archive.url
         let filename = "/dat.json"
         try {
-            let readFile = await Test.archive.readFile(filename)
-            console.log("readFile returned" + JSON.stringify(readFile))
-            document.querySelector("#readFileResponse").innerHTML = JSON.stringify(readFile)
+            let fileContents = await Test.archive.readFile(filename)
+            console.log("readFile returned" + fileContents)
+            document.querySelector("#readFileResponse").innerHTML = fileContents
         } catch (e) {
             console.log("Error reading " + url + " error: " + JSON.stringify(e))
         }

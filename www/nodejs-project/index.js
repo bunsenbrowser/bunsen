@@ -177,14 +177,11 @@ app.post('/readFile', async function (request, response) {
     var url = request.body.url;
     var datName = url.replace('dat://','')
     var localPath = datGatewayRoot + '/' + datName
-    console.log("loading into DatArchive " + localPath)
     var datOptions = {latest: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     var archive = await DatArchive.load(data)
-    console.log("now reading the file " + filename)
-    var manifest = JSON.parse(await archive.readFile(filename))
-    response.send(JSON.stringify(manifest))
+    response.send(await archive.readFile(filename))
 });
 
 app.post('/mkdir', async function (request, response, next) {
