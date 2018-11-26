@@ -158,7 +158,6 @@ app.post('/load', async function (request, response) {
         key = await DatArchive.resolveName(datUrl)
     } catch(e) {
         return response.send({})
-
     }
     var localPath = datGatewayRoot + '/' + key;
     console.log(localPath)
@@ -284,9 +283,20 @@ app.ws('/watch/:datAddress', async function (ws, req) {
     // var filename = request.body.filename;
     //var pathSpec = request.body.pathSpec;
     var datName = req.params.datAddress
+    let key
+    try {
+        key = await DatArchive.resolveName(datName)
+    } catch(e) {
+        return response.send({})
+    }
     //console.log("watching " + url + " pathSpec: " + pathSpec)
     // var info = await DatArchive.getInfo(url)
     var localPath = datGatewayRoot + '/' + datName
+    try {
+        await access(localPath)
+    } catch (e) {
+        const out = await exec(`cd ${datGatewayRoot} && ../node_modules/.bin/dat clone ${key}`)
+    }
     var datOptions = {latest: true, live: true}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
