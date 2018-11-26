@@ -187,11 +187,22 @@ app.post('/load', async function (request, response) {
 app.post('/getInfo', async function (request, response) {
     console.log("getInfo for a DatArchive")
     var url = request.body.url;
+    console.log("getInfo for  " + url)
     var opts = request.body.opts;
     var datName = url.replace('dat://','')
-    console.log("getInfo for  " + url)
+    let key
+    try {
+        key = await DatArchive.resolveName(url)
+    } catch(e) {
+        return response.send({})
+    }
+    var localPath = datGatewayRoot + '/' + key;
+    try {
+        await access(localPath)
+    } catch (e) {
+        const out = await exec(`cd ${datGatewayRoot} && ../node_modules/.bin/dat clone ${key}`)
+    }
     // var info = await DatArchive.getInfo(url)
-    var localPath = datGatewayRoot + '/' + datName
     var store = storage(localPath, {secretDir: secretKeysRoot});
     var datOptions = {latest: true, storage: store}
     var netOptions = null;
