@@ -154,7 +154,8 @@ app.post('/getInfo', async function (request, response) {
     console.log("getInfo for  " + url)
     // var info = await DatArchive.getInfo(url)
     var localPath = datGatewayRoot + '/' + datName
-    var datOptions = {latest: true}
+    var store = storage(localPath, {secretDir: secretKeysRoot});
+    var datOptions = {latest: true, storage: store}
     var netOptions = null;
     let data = {localPath, datOptions, netOptions}
     try {
