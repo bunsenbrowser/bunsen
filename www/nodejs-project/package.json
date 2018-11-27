@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@beaker/dat-session-data-ext-msg": "^1.1.1",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dat": "^13.11.4",
@@ -12,6 +13,7 @@
     "dat-storage": "^1.1.1",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
+    "hex-to-32": "^2.0.0",
     "hyperdrive-http": "^4.3.4",
     "node-dat-archive": "https://github.com/bunsenbrowser/node-dat-archive",
     "path": "^0.12.7",
