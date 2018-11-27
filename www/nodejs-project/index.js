@@ -156,7 +156,7 @@ app.post('/load', async function (request, response) {
     console.log("Loading a datArchive")
     var datUrl = request.body.datUrl;
     let key = datUrl.replace('dat://', '')
-    await axios.get(`http://${hexTo32.encode(key)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(key)
     var localPath = datGatewayRoot + '/' + key;
     try {
         await access(localPath)
@@ -188,7 +188,7 @@ app.post('/getInfo', async function (request, response) {
     var opts = request.body.opts;
     var datName = url.replace('dat://','')
     var key = datName
-    await axios.get(`http://${hexTo32.encode(key)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(key)
     var localPath = datGatewayRoot + '/' + key;
     try {
         await access(localPath)
@@ -219,7 +219,7 @@ app.post('/readFile', async function (request, response) {
     var filename = request.body.filename;
     var url = request.body.url;
     var datName = url.replace('dat://','')
-    await axios.get(`http://${hexTo32.encode(datName)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(datName)
     var localPath = datGatewayRoot + '/' + datName
     var datOptions = {latest: true}
     var netOptions = null;
@@ -262,7 +262,7 @@ app.post('/stat', async function (request, response) {
     var url = request.body.url;
     var opts = request.body.opts;
     var datName = url.replace('dat://','')
-    await axios.get(`http://${hexTo32.encode(datName)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(datName)
     console.log("stat for  " + url + " of filename: " + filename)
     // var info = await DatArchive.getInfo(url)
     var localPath = datGatewayRoot + '/' + datName
@@ -288,7 +288,7 @@ app.ws('/watch/:datAddress', async function (ws, req) {
     console.log("watch for a DatArchive")
     var datName = req.params.datAddress
     let key = datName.replace('dat://', '')
-    await axios.get(`http://${hexTo32.encode(key)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(key)
     var localPath = datGatewayRoot + '/' + datName
     try {
         await access(localPath)
@@ -338,7 +338,7 @@ app.post('/writeFile', async function (request, response) {
     var text = request.body.text;
     var url = request.body.url;
     var datName = url.replace('dat://','')
-    await axios.get(`http://${hexTo32.encode(datName)}.lvh.me:3000/dat.json`)
+    await loadArchiveOnGateway(datName)
     var localPath = datGatewayRoot + '/' + datName
     var store = storage(localPath, {secretDir: secretKeysRoot});
     var datOptions = {latest: true, storage: store}
@@ -400,6 +400,15 @@ function decodeSessionData (sessionData) {
     } catch (e) {
         console.error('Failed to parse local session data', e, sessionData)
         return null
+    }
+}
+
+async function loadArchiveOnGateway(key) { 
+    try {
+        await axios.get(`http://localhost:3000/${key}`)
+        await axios.get(`http://${hexTo32.encode(key)}.lvh.me:3000/dat.json`)
+    } catch (e) {
+
     }
 }
 
