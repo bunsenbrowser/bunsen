@@ -141,6 +141,9 @@ The node_modules packages have been compiled in termux on a Nexus 5X.
 When you view a Dat site, you help host it. This democratizes the Internet so as demand increases, so does your hosting. You do not need expensive hosting or advertising to support your voice.
 
 ### Millions of people use the "offline web" but cannot trust its content, Bunsen and Dat solve this
+
+Note: This use case is currently impeded by this bug (https://github.com/bunsenbrowser/bunsen/issues/60). Volunteers are encouraged to jump in.
+
 Millions of people living under repressive regimes are blocked from the Internet and depend on outside access to digital content by way of smuggled USB Flash Drives. There are 6 billion people offline who have are offline and not able to verify content they receive while offline causing issues around misinformation, land rights, forged medical data, and many others.
 
 Bunsen uses Dat to shine a light on the offline web by solving two problems.
