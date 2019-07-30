@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const mkdirp = require('mkdirp')
@@ -14,6 +15,7 @@ const express = require('express');
 const expressWebSocket = require('express-ws');
 const websocketStream = require('websocket-stream/stream');
 var storage = require('dat-storage')
+var cordova = require('cordova-bridge');
 
 const app = express();
 // extend express app with app.ws()
@@ -23,7 +25,13 @@ expressWebSocket(app, null, {
 });
 var cors = require('cors')
 var bodyParser = require('body-parser');
-app.use(cors())
+
+var corsOptions = {
+    origin: 'http://lvh.me',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/test', express.static(path.join(__dirname, 'test')));
@@ -31,7 +39,13 @@ app.use('/test', express.static(path.join(__dirname, 'test')));
 
 console.log("cwd: " + process.cwd())
 console.log("__dirname: " + __dirname)
+console.log("os.homedir(): " + os.homedir())
+console.log("os.platform(): " + os.platform())
+// console.log("process.userPath: " + process.userPath)
 
+
+let writeableDir = cordova.app.datadir()
+console.log('writeableDir: ' + writeableDir);
 
 const max = 20;
 const period = 60 * 1000 // every minute
@@ -41,8 +55,10 @@ const dat = {temp:false}
 const redirect = true
 const datGatewayName = 'dat-gateway';
 const secretKeysName = 'secret_keys';
-var datGatewayRoot = path.join(__dirname, datGatewayName)
-var secretKeysRoot = path.join(__dirname, secretKeysName)
+var datGatewayRoot = path.join(writeableDir, datGatewayName)
+// var datGatewayRoot = path.join(os.homedir(), datGatewayName)
+var secretKeysRoot = path.join(writeableDir, secretKeysName)
+// var secretKeysRoot = path.join(os.homedir(), secretKeysName)
 
 var datSessionDataExtMsg = new DatSessionDataExtMsg()
 
@@ -54,8 +70,49 @@ let events;
 console.log("datGatewayRoot: " + datGatewayRoot)
 
 // make sure these dirs exists
-mkdirp.sync(datGatewayRoot)
-mkdirp.sync(secretKeysRoot)
+// mkdirp.sync(datGatewayRoot, function (err) {
+//     if (err) console.error(err)
+//     else console.log('Created' + datGatewayRoot)
+// });
+try {
+    fs.mkdirSync(datGatewayRoot)
+} catch (e) {
+    console.error(e)
+}
+
+
+console.log("secretKeysRoot: " + secretKeysRoot)
+
+// mkdirp.sync(secretKeysRoot, function (err) {
+//     if (err) console.error(err)
+//     else console.log('Created' + secretKeysRoot)
+// });
+
+
+try {
+    fs.mkdirSync(secretKeysRoot)
+} catch (e) {
+    console.error(e)
+}
+
+try {
+    let testDir = datGatewayRoot + "/test1"
+    console.log("tryng to create: " + testDir)
+    fs.mkdirSync(testDir)
+} catch (e) {
+    console.log("error mkdir test1: " + e)
+    console.error(e)
+}
+
+fs.readdir(datGatewayRoot, function(err, items) {
+    console.log("Files in datGatewayRoot: " + items);
+
+    for (var i=0; i<items.length; i++) {
+        console.log(items[i]);
+    }
+});
+
+console.log("Now launching the gateway at: " + datGatewayRoot)
 
 const gateway = new DatGateway({ dir:datGatewayRoot, dat, max, period, ttl, redirect })
 gateway
@@ -403,7 +460,7 @@ function decodeSessionData (sessionData) {
     }
 }
 
-async function loadArchiveOnGateway(key) { 
+async function loadArchiveOnGateway(key) {
     try {
         await axios.get(`http://localhost:3000/${key}`)
         await axios.get(`http://${hexTo32.encode(key)}.lvh.me:3000/dat.json`)

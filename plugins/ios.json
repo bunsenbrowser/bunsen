@@ -1,0 +1,28 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "org.bunsenbrowser"
+    },
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "dat",
+      "PACKAGE_NAME": "org.bunsenbrowser"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "org.bunsenbrowser"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "org.bunsenbrowser"
+    },
+    "nodejs-mobile-cordova": {
+      "PACKAGE_NAME": "org.bunsenbrowser"
+    }
+  },
+  "dependent_plugins": {}
+}

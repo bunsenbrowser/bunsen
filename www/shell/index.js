@@ -1,5 +1,9 @@
-const serverUrl = 'http://localhost:3000/';
-// serverUrl = 'http://gateway.mauve.moe:3000/';
+
+// const serverUrl = 'http://localhost:3000/';
+const serverUrl = 'http://lvh.me:3000/';
+// const serverUrl = 'http://gateway.mauve.moe:3000/';
+// const serverUrl = 'http://kinotel.com:3000/';
+
 const port = 3000;
 const bunsenAddress = "bunsen.hashbase.io/"
 // const bunsenAddress = "bunsen-dev.hashbase.io/"
@@ -13,6 +17,7 @@ const selectionItems = document.getElementById('selection-items')
 const DEFAULT_SELECT_MESSAGE = 'Select an archive'
 
 window.handleOpenURL = (url) => {
+    console.log("using first handleOpenURL to open " + url)
     window.handleOpenURL_LastURL = url;
 };
 
@@ -20,6 +25,7 @@ window.handleOpenURL = (url) => {
 // override open handler to navigate on further custom url scheme actions
 window.handleOpenURL = (url) => {
     // this context is called outside of angular zone!
+    console.log("opening " + url)
     setTimeout(() => {
             handleOpenUrl(url);
     }, 0);
@@ -67,7 +73,7 @@ document.addEventListener('deviceready', () => {
     console.log('deviceready');
     startNodeProject();
 
-    function channelListener(msg) {
+    function channelListener(msg) {dd
         console.log('[cordova] received: ' + msg);
     };
 
@@ -91,7 +97,7 @@ document.addEventListener('deviceready', () => {
 }, false);
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    console.log('DOMContentLoaded test')
+    console.log('DOMContentLoaded')
 
     document.querySelector('#client-frame').style.display = "none";
     document.querySelector('#client-frame').addEventListener('load', this.onLoadIframe.bind(this));
@@ -111,7 +117,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             pong(msg);
         }
         xmlhttp.onerror = function() {
-            var msg = "not connected"
+            var msg = "not connected to " + host + ":" + port
             console.log(msg);
             pong(msg);
         }
