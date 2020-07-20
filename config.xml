@@ -33,7 +33,8 @@
     </platform>
     <preference name="AndroidLaunchMode" value="singleTask" />
     <preference name="AppendUserAgent" value="BunsenBrowser" />
-    <preference name="android-targetSdkVersion" value="26"/>
+    <preference name="android-minSdkVersion" value="24" />
+    <preference name="android-targetSdkVersion" value="26" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
